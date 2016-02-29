@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Red java script
+		</title>
+		<style>
+			#control{
+				position: absolute;
+				right: 20px;
+				top: 20px;
+				width: 30%;
+				height: 90%;
+				border: solid 1px;
+			}
+			
+			
+			#pantallaSvg{
+				position: absolute;
+				left: 20px;
+				top: 20px;
+				width: 65%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+			
+			#play{
+				position: absolute;
+				left: 20px;
+				top: 5px;
+				
+				width: 60px;
+				height: 10px;
+				border: solid 1px;
+				background-color: #66AA66;
+			}
+			#stop{
+				position: absolute;
+				left: 100px;
+				top: 5px;
+				
+				width: 60px;
+				height: 10px;
+				border: solid 1px;
+				background-color: #AA6666;
+			}
+			#verDepolarizacion{
+				position: absolute;
+				left: 170px;
+				top: 5px;
+				
+				width: 60px;
+				height: 10px;
+				border: solid 1px;
+				background-color: #AAAAAA;
+			}
+			
+			#COEF_AXON_UMBRAL_ref{
+				position: absolute;
+				top: 5px;
+				left: 20px;
+				font-size: 9px;
+			}
+			#COEF_AXON_UMBRAL{
+				position: absolute;
+				top: 20px;
+				left: 20px;
+				width: 90%;
+			}
+			
+			#COEF_DENDRITA_DECAIMIENTO_ref{
+				position: absolute;
+				top: 45px;
+				left: 20px;
+				font-size: 9px;
+			}
+			#COEF_DENDRITA_DECAIMIENTO{
+				position: absolute;
+				top: 60px;
+				left: 20px;
+				width: 90%;
+			}
+			
+			
+			#COEF_SINAPSIS_ENTRENAMIENTO_ref{
+				position: absolute;
+				top: 85px;
+				left: 20px;
+				font-size: 9px;
+			}
+			#COEF_SINAPSIS_ENTRENAMIENTO{
+				position: absolute;
+				top: 100px;
+				left: 20px;
+				width: 90%;
+			}
+			#control_texto{
+				position: absolute;
+				top: 115px;
+				left: 5px;
+				right: 5px;
+			}
+			
+		
+		</style>
+		
+	</head>
+	
+	<body>
+		<div id="play">
+		</div>
+		<div id="stop">
+		</div>
+		
+		<div id="verDepolarizacion">
+		</div>
+		
+		<svg id="pantallaSvg" >
+		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
+		</svg>
+		
+		<div id="control">
+			
+			<div id="COEF_AXON_UMBRAL_ref">COEF_AXON_UMBRAL: </div>
+			<input id="COEF_AXON_UMBRAL" type="range" min="0" max="255" value="100" />
+			<div id="COEF_DENDRITA_DECAIMIENTO_ref">COEF_DENDRITA_DECAIMIENTO: </div>
+			<input id="COEF_DENDRITA_DECAIMIENTO" type="range" min="0" max="255" value="100" />
+			<div id="COEF_SINAPSIS_ENTRENAMIENTO_ref">COEF_SINAPSIS_ENTRENAMIENTO: </div>
+			<input id="COEF_SINAPSIS_ENTRENAMIENTO" type="range" min="0" max="255" value="100" />
+			<div id="control_texto"></div>
+		</div>
+		
+	</body>
+	
+	
+	
+	<script src="lib/jquery-2.1.3.min.js"></script>
+	<script src="lib/snap.svg-min.js"></script>
+	<script src="GuiRed.js"></script>
+	<script src="Test.js"></script>
+	
+	
+	<script src="Entrada.js"></script>
+	<script src="Salida.js"></script>
+	
+	<script src="Red.js"></script>
+	<script src="Neurona.js"></script>
+	<script src="Axon.js"></script>
+	<script src="Dendrita.js"></script>
+	<script src="Sinapsis.js"></script>
+		
+	<script>
+		
+		//GLOBAL PARA FÁCIL DEBUG
+		var red;
+		var salida;
+		
+		$(function(){
+			$('body').on('contextmenu', function(e){
+				e.stopPropagation();
+				return false;
+			});
+			
+
+			//crear entrada
+			var entrada;
+			
+			
+			console.log('comienzo');
+			
+			//crear red
+			red = new Red({
+				//size: {x:128,y:8}
+				size: {x:64,y:32}
+			});
+			
+			//crear entrada
+			entrada = new Entrada({
+				red: red,
+				box: {
+					x0: 0,
+					y0: red.size.y - 1,
+					x1: red.size.x - 1,
+					y1: red.size.y - 1
+				}
+			});
+			
+			salida = new Salida({
+				red: red,
+				box: {
+					x0: 0,
+					y0: 0,
+					x1: red.size.x - 1,
+					y1: 0
+				}
+			});
+			
+			
+			//RED HOMOGENEA
+			red.insertarAxones({
+				modo: 'relativo',
+				cantDendritas: 1,
+				/*
+				boxRed: {
+					x0: 0,
+					y0: 0,
+					x1: red.size.x - 1,
+					y1: 0
+				},
+				
+				boxRelativo	: {
+					x0 	: -2,//-999,
+					y0 	: 7,
+					x1 	: 2,//999,
+					y1 	: 7
+				}
+				*/
+				boxRed: {
+					x0: 0,
+					y0: 0,
+					x1: red.size.x - 1,
+					y1: red.size.y - 1
+				},
+				boxRelativo	: {
+					x0 	: -1,//-999,
+					y0 	: 1,
+					x1 	: 1,//999,
+					y1 	: 1
+				}
+			});
+			
+
+			
+			var guiRed = new GuiRed({
+				red: red,
+				x: 1,
+				y: 1
+			});
+			
+			
+			red.onProcesar(function(){
+				guiRed.refresh();
+				
+				//WATCH
+				var keyNeurona = red.id + "x20y5"
+				try{
+					var texto = "";
+					texto += "x20y5";
+					texto += " - dendrita 0 " + "</BR>";
+					texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
+					texto += " - valorDepolarizacion " + "</BR>";
+					texto += " - " + red.neuronas[keyNeurona].axon.valorDepolarizacion + "</BR>";
+				}catch(e){
+					//debugger;
+				}
+				guiRed.mapaNeuronaCelda[keyNeurona].attr({
+					stroke: "#005500"
+				});
+				
+				$('#control_texto').html(texto);
+				
+			});
+			
+			
+			//red.play();
+			
+			var test = new Test({
+				guiRed: guiRed
+			});
+			
+			test.play();
+			$('#play').on('click', function(){
+				test.play();
+			});
+			$('#stop').on('click', function(){
+				test.stop();
+			});
+			
+			$('#verDepolarizacion').on('mousedown', function(){
+				guiRed.modo="DEPOLARIZACION";
+			});
+			$('#verDepolarizacion').on('mouseup', function(){
+				guiRed.modo="ACTIVACION";
+			});
+			
+			
+			
+			
+			
+			$('#COEF_AXON_UMBRAL').change(function(){
+				Axon.prototype.COEF_AXON_UMBRAL =  ($(this).val() / 255);
+				$('#COEF_AXON_UMBRAL_ref').text("COEF_AXON_UMBRAL: " + Axon.prototype.COEF_AXON_UMBRAL);
+			});
+			$('#COEF_DENDRITA_DECAIMIENTO').change(function(){
+				Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO =  ($(this).val() / 255);
+				$('#COEF_DENDRITA_DECAIMIENTO_ref').text("COEF_DENDRITA_DECAIMIENTO: " + Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO);
+			});
+			$('#COEF_SINAPSIS_ENTRENAMIENTO').change(function(){
+				Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO =  ($(this).val() / 255);
+				$('#COEF_SINAPSIS_ENTRENAMIENTO_ref').text("COEF_SINAPSIS_ENTRENAMIENTO: " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO);
+				
+			});
+			
+			$('#COEF_AXON_UMBRAL').val(Axon.prototype.COEF_AXON_UMBRAL * 255);
+			$('#COEF_AXON_UMBRAL').change();
+			$('#COEF_DENDRITA_DECAIMIENTO').val(Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO * 255);
+			$('#COEF_DENDRITA_DECAIMIENTO').change();
+			$('#COEF_SINAPSIS_ENTRENAMIENTO').val(Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO * 255);
+			$('#COEF_SINAPSIS_ENTRENAMIENTO').change();
+			
+			
+			
+			console.log('fin');
+		});
+	</script>
+</html>
