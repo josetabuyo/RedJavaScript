@@ -26,7 +26,11 @@ Axon.prototype = {
 	depolarizar: function(valor){
 		var axon = this;
 		
-		axon.valorDepolarizacion = valor;
+		if(valor < 1.0){
+			axon.valorDepolarizacion = valor;
+		}else{
+			axon.valorDepolarizacion = 1.0;
+		}
 		
 		if(axon.valorDepolarizacion > axon.COEF_AXON_UMBRAL){
 			axon.activar(1);

@@ -29,7 +29,7 @@ Dendrita.prototype = {
 			
 			for(key in sinapsis){
 				var sinap = sinapsis[key];
-				suma += sinap.entrenar(dendrita.valor);
+				suma += sinap.entrenar(dendrita.valor * dendrita.neurona.axon.valor);
 			}
 			
 		}

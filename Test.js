@@ -14,9 +14,17 @@ var Test = function(opt){
 Test.prototype = {
 	start: function (){
 	},
-	neuronaCoordCurrent: null,
-	neuronaCoordLast: null,
+	estado: {
+		current:	{
+			neuronaCoord: {x:null, y:null}
+		}
+	},
+	patron: {
+		entrada: [0,1,0,1,1,1,0,0,1,1,1,0,1,0],
+		salida: [0,1,0,1,1,1,0,0,1,1,1,0,1,0]
+	},
 	testInterval: null,
+	
 	stop: function(){
 		
 		clearInterval(this.testInterval);
@@ -26,39 +34,48 @@ Test.prototype = {
 		
 		
 		
+		
 		test.testInterval = setInterval(function() {
 			
-			if(test.neuronaCoordLast != null){
-				//ENTRADA
-				test.guiRed.axonSetByCoord(0,  test.neuronaCoordLast.x, test.guiRed.red.size.y - 1);
-				//SALIDA
-				test.guiRed.axonSetByCoord(0, test.neuronaCoordLast.x, 0);
+			
+			var testIndex =  test.estado.current.neuronaCoord.x;
+			
+			if(testIndex == null){
+				testIndex = 0;
+				test.estado.current.neuronaCoord = {x: testIndex, y: test.guiRed.red.size.y - 1};
 			
 			}
 			
-			if(test.neuronaCoordCurrent == null){
-				test.neuronaCoordCurrent = {x:0, y: test.guiRed.red.size.y - 1};
-			}
 			
 			
-			//ENTRADA
-			test.guiRed.axonSetByCoord(1,  test.neuronaCoordCurrent.x, test.guiRed.red.size.y - 1);
-			//SALIDA
-			test.guiRed.axonSetByCoord(1, test.neuronaCoordCurrent.x, 0);
+			for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
+				var x = testIndex - iEntrada;
+				var y = test.guiRed.red.size.y - 1;
 				
-			
-			test.neuronaCoordLast = {
-				x: test.neuronaCoordCurrent.x,
-				y: test.neuronaCoordCurrent.y
-			};
-			
-			test.neuronaCoordCurrent.x++;
-			
-			if(test.neuronaCoordCurrent.x >= test.guiRed.red.size.x){
-				test.neuronaCoordCurrent.x = 0
+				if(x < 0){
+					x = test.guiRed.red.size.x + x;
+				}
+				
+				var index = test.patron.entrada.length - 1 - iEntrada;
+				
+				test.guiRed.axonSetByCoord(test.patron.entrada[index],  x, y);
+				test.guiRed.axonSetByCoord(test.patron.salida[index],  x, 0);
+				
 			}
+			
+			
+			
+			test.estado.current.neuronaCoord.x++;
+			if(test.estado.current.neuronaCoord.x >= test.guiRed.red.size.x){
+				test.estado.current.neuronaCoord.x = 0;
+			}
+			
+			
+			
 			
 			test.guiRed.red.procesar();
+			
+			
 			
 		}, 100);
 

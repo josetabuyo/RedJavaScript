@@ -20,10 +20,12 @@ Sinapsis.prototype = {
 		}
 		
 	},
-	entrenar: function(valorActivacionDendrita){
+	entrenar: function(valorEntrenamiento){
 		var sinap = this;
 		
-		sinap.peso += (sinap.axon.valor - sinap.peso) * valorActivacionDendrita * sinap.COEF_SINAPSIS_ENTRENAMIENTO;
+		valorEntrenamiento = (valorEntrenamiento - 0.5)
+		
+		sinap.peso += (sinap.axon.valor - sinap.peso) * valorEntrenamiento * sinap.COEF_SINAPSIS_ENTRENAMIENTO;
 		
 	},
 	procesar: function(){

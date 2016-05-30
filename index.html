@@ -197,36 +197,27 @@
 			});
 			
 			
-			//RED HOMOGENEA
 			red.insertarAxones({
 				modo: 'relativo',
 				cantDendritas: 1,
-				/*
-				boxRed: {
-					x0: 0,
-					y0: 0,
-					x1: red.size.x - 1,
-					y1: 0
-				},
-				
 				boxRelativo	: {
 					x0 	: -2,//-999,
-					y0 	: 7,
-					x1 	: 2,//999,
-					y1 	: 7
-				}
-				*/
-				boxRed: {
-					x0: 0,
-					y0: 0,
-					x1: red.size.x - 1,
-					y1: red.size.y - 1
-				},
-				boxRelativo	: {
-					x0 	: -1,//-999,
 					y0 	: 1,
-					x1 	: 1,//999,
-					y1 	: 1
+					x1 	: 2,//999,
+					y1 	: 2
+				}
+			});
+			
+			//SALIDA: se agregan conexiones (aclaro, como un json es un mapa sin repetición, si creo dos veces la misma sinapsis la pisa, no duplica)
+			red.insertarAxones({
+				modo: 'relativo',
+				cantDendritas: 1,
+				boxRed: salida.box,
+				boxRelativo	: {
+					x0 	: -6,//-999,
+					y0 	: 0,
+					x1 	: 6,//999,
+					y1 	: 3
 				}
 			});
 			
