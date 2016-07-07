@@ -7,6 +7,8 @@ var Neurona = function(opt){
 		tipo: "INTERNA",
 		id: null,
 		dendritas: [],
+		tensionSuperficial: 0
+		
 	}, opt);
 	
 	if(!this.id){
@@ -26,7 +28,18 @@ Neurona.prototype = {
 		});
 		
 	},
-	
+	activar: function(valor){
+		var neurona = this;
+		
+		if(valor < 1.0){
+			neurona.tensionSuperficial = valor;
+		}else{
+			neurona.tensionSuperficial = 1.0;
+		}
+		
+		neurona.axon.activar(valor);
+		
+	},
 	procesar: function(){
 		try{
 			var neurona = this;
@@ -46,7 +59,11 @@ Neurona.prototype = {
 			
 			
 			//TODO: neurona.axon.depolarizar(sumaValorDendritas / neurona.dendritas.length);
-			neurona.axon.depolarizar(sumaValorDendritas);
+			//neurona.axon.depolarizar(sumaValorDendritas);
+			
+			neurona.activar(sumaValorDendritas / neurona.dendritas.length);
+			
+			
 			
 			if(neurona.axon.valor>0){
 				

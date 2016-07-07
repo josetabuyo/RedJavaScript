@@ -8,7 +8,7 @@
 			#control{
 				position: absolute;
 				right: 20px;
-				top: 20px;
+				top: 40px;
 				width: 30%;
 				height: 90%;
 				border: solid 1px;
@@ -18,7 +18,7 @@
 			#pantallaSvg{
 				position: absolute;
 				left: 20px;
-				top: 20px;
+				top: 40px;
 				width: 65%;
 				height: 90%;
 				border: solid 1px;
@@ -31,31 +31,40 @@
 				top: 5px;
 				
 				width: 60px;
-				height: 10px;
+				height: 20px;
 				border: solid 1px;
 				background-color: #66AA66;
 			}
 			#stop{
 				position: absolute;
-				left: 100px;
+				left: 90px;
 				top: 5px;
 				
 				width: 60px;
-				height: 10px;
+				height: 20px;
 				border: solid 1px;
 				background-color: #AA6666;
 			}
-			#verDepolarizacion{
+			#step{
 				position: absolute;
-				left: 170px;
+				left: 160px;
 				top: 5px;
 				
 				width: 60px;
-				height: 10px;
+				height: 20px;
 				border: solid 1px;
 				background-color: #AAAAAA;
 			}
-			
+			#verTensionSuperficial{
+				position: absolute;
+				left: 230px;
+				top: 5px;
+				
+				width: 60px;
+				height: 20px;
+				border: solid 1px;
+				background-color: #AAAAAA;
+			}
 			#COEF_AXON_UMBRAL_ref{
 				position: absolute;
 				top: 5px;
@@ -109,12 +118,21 @@
 	
 	<body>
 		<div id="play">
+		play
 		</div>
 		<div id="stop">
+		stop
 		</div>
 		
-		<div id="verDepolarizacion">
+		<div id="step">
+		step
 		</div>
+		
+		<div id="verTensionSuperficial">
+		tension
+		</div>
+		
+		
 		
 		<svg id="pantallaSvg" >
 		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
@@ -240,8 +258,8 @@
 					texto += "x20y5";
 					texto += " - dendrita 0 " + "</BR>";
 					texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
-					texto += " - valorDepolarizacion " + "</BR>";
-					texto += " - " + red.neuronas[keyNeurona].axon.valorDepolarizacion + "</BR>";
+					texto += " - tensionSuperficial " + "</BR>";
+					texto += " - " + red.neuronas[keyNeurona].tensionSuperficial + "</BR>";
 				}catch(e){
 					//debugger;
 				}
@@ -260,7 +278,8 @@
 				guiRed: guiRed
 			});
 			
-			test.play();
+			//test.play();
+			
 			$('#play').on('click', function(){
 				test.play();
 			});
@@ -268,10 +287,14 @@
 				test.stop();
 			});
 			
-			$('#verDepolarizacion').on('mousedown', function(){
+			$('#step').on('click', function(){
+				test.step();
+			});
+			
+			$('#verTensionSuperficial').on('mousedown', function(){
 				guiRed.modo="DEPOLARIZACION";
 			});
-			$('#verDepolarizacion').on('mouseup', function(){
+			$('#verTensionSuperficial').on('mouseup', function(){
 				guiRed.modo="ACTIVACION";
 			});
 			

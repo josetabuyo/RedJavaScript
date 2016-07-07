@@ -30,8 +30,8 @@ Salida.prototype = {
 				var neurona = salida.red.neuronas[keyNeurona];
 				neurona.tipo = "SALIDA";
 				neurona.axon.sinapsis = {};
-				neurona.axon.depolarizar = function(valor){
-					this.valorDepolarizacion = valor;
+				neurona.activar = function(valor){
+					this.tensionSuperficial = valor;
 				};
 				
 				neurona.axon.activar = function(valor){

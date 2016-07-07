@@ -206,7 +206,7 @@ GuiRed.prototype = {
 				
 				var valor;
 				if(grafico.modo=="DEPOLARIZACION"){
-					valor = axon.valorDepolarizacion;
+					valor = neurona.tensionSuperficial;
 				} else if(grafico.modo=="ACTIVACION"){
 					valor = axon.valor;
 				}

@@ -32,8 +32,8 @@ Entrada.prototype = {
 				neurona.procesar = null;
 				neurona.dendritas = [];
 				neurona.axon.activar = function(valor){
+					this.neurona.tensionSuperficial = valor;
 					this.__proto__.activar.call(this, valor);
-					this.valorDepolarizacion = valor;
 				};
 				
 			}
