@@ -24,47 +24,35 @@
 				border: solid 1px;
 				overflow: scroll;
 			}
-			
-			#play{
+			.boton{
 				position: absolute;
-				left: 20px;
 				top: 5px;
-				
 				width: 60px;
 				height: 20px;
 				border: solid 1px;
+			}
+
+			#play{
+				left: 20px;
 				background-color: #66AA66;
 			}
 			#stop{
-				position: absolute;
 				left: 90px;
-				top: 5px;
-				
-				width: 60px;
-				height: 20px;
-				border: solid 1px;
 				background-color: #AA6666;
 			}
 			#step{
-				position: absolute;
 				left: 160px;
-				top: 5px;
-				
-				width: 60px;
-				height: 20px;
-				border: solid 1px;
 				background-color: #AAAAAA;
 			}
 			#verTensionSuperficial{
-				position: absolute;
 				left: 230px;
-				top: 5px;
-				
-				width: 60px;
-				height: 20px;
-				border: solid 1px;
 				background-color: #AAAAAA;
 			}
+			#resetRed{
+				left: 300px;
+				background-color: #AAAAAA;
+			}
+
 			#COEF_AXON_UMBRAL_ref{
 				position: absolute;
 				top: 5px;
@@ -117,21 +105,23 @@
 	</head>
 	
 	<body>
-		<div id="play">
-		play
+		<div id="play" class="boton">
+			play
 		</div>
-		<div id="stop">
-		stop
-		</div>
-		
-		<div id="step">
-		step
+		<div id="stop" class="boton">
+			stop
 		</div>
 		
-		<div id="verTensionSuperficial">
-		tension
+		<div id="step" class="boton">
+			step
 		</div>
 		
+		<div id="verTensionSuperficial" class="boton">
+			tension
+		</div>
+		<div id="resetRed" class="boton">
+			resetRed
+		</div>
 		
 		
 		<svg id="pantallaSvg" >
@@ -181,16 +171,32 @@
 			});
 			
 
-			//crear entrada
-			var entrada;
+			var resetRed = function(){
+				for(iNeurona in red.neuronas){
+					var oNeurona = red.neuronas[iNeurona];
+					oNeurona.tensionSuperficial = 0;
+					oNeurona.axon.valor = 0;
+					for(iDendrita in oNeurona.dendritas){
+						var oDendrita = oNeurona.dendritas[iDendrita];
+						
+						if(Object.keys(oDendrita.sinapsis).length > 0){
+							var suma = 0;
+							for(iSinapsis in oDendrita.sinapsis){
+								var oSinapsis = oDendrita.sinapsis[iSinapsis];
+								oSinapsis.peso = Math.random();
+							}
+						}
+						
+					};
+				}
+			};
 			
-			
-			console.log('comienzo');
+			console.log('setupRed');
 			
 			//crear red
 			red = new Red({
 				//size: {x:128,y:8}
-				size: {x:64,y:32}
+				size: {x:64,y:16}
 			});
 			
 			//crear entrada
@@ -238,10 +244,7 @@
 					y1 	: 3
 				}
 			});
-			
-
-			
-			var guiRed = new GuiRed({
+			guiRed = new GuiRed({
 				red: red,
 				x: 1,
 				y: 1
@@ -271,15 +274,16 @@
 				
 			});
 			
-			
-			//red.play();
-			
-			var test = new Test({
-				guiRed: guiRed
+			test = new Test({
+				guiRed: guiRed,
+				entrada: entrada,
+				salida: salida,
+				noise: false,
+				step: Test.prototype.secada
 			});
+			console.log('fin setupRed');
 			
-			//test.play();
-			
+
 			$('#play').on('click', function(){
 				test.play();
 			});
@@ -291,14 +295,16 @@
 				test.step();
 			});
 			
+			
 			$('#verTensionSuperficial').on('mousedown', function(){
 				guiRed.modo="DEPOLARIZACION";
 			});
 			$('#verTensionSuperficial').on('mouseup', function(){
 				guiRed.modo="ACTIVACION";
 			});
-			
-			
+			$('#resetRed').on('click', function(){
+				resetRed();
+			});
 			
 			
 			
@@ -323,9 +329,7 @@
 			$('#COEF_SINAPSIS_ENTRENAMIENTO').val(Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO * 255);
 			$('#COEF_SINAPSIS_ENTRENAMIENTO').change();
 			
-			
-			
-			console.log('fin');
+
 		});
 	</script>
 </html>

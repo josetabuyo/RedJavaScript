@@ -23,10 +23,12 @@ Sinapsis.prototype = {
 	entrenar: function(valorEntrenamiento){
 		var sinap = this;
 		
-		valorEntrenamiento = (valorEntrenamiento - 0.5)
+		valorEntrenamiento = (valorEntrenamiento - 0.5);
 		
 		sinap.peso += (sinap.axon.valor - sinap.peso) * valorEntrenamiento * sinap.COEF_SINAPSIS_ENTRENAMIENTO;
-		
+		if(sinap.peso < 0){
+			sinap.peso = 0.0;
+		}		
 	},
 	procesar: function(){
 		return this.valor = this.axon.valor * this.peso;

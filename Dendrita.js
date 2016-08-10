@@ -1,5 +1,5 @@
 
-/************** :CAPA: ************/
+/************** :DENDRITA: ************/
 var Dendrita = function(opt){
 	$.extend(this, {
 		neurona: null,
@@ -13,7 +13,7 @@ var Dendrita = function(opt){
 };
 
 Dendrita.prototype = {
-	COEF_DENDRITA_DECAIMIENTO: 0.03,
+	COEF_DENDRITA_DECAIMIENTO: 0.1,
 	start: function(){
 		
 	},
@@ -24,8 +24,6 @@ Dendrita.prototype = {
 		
 		if(Object.keys(sinapsis).length > 0){
 			var suma = 0;
-			
-			
 			
 			for(key in sinapsis){
 				var sinap = sinapsis[key];
