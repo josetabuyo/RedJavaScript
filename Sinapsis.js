@@ -4,6 +4,7 @@
 var Sinapsis = function(opt){
 	$.extend(this, {
 		neurona: null, 		// container
+		dendrita: null,
 		axon: null, 		//un Axon
 		peso: null,			//peso
 		valor: 0
@@ -13,25 +14,34 @@ var Sinapsis = function(opt){
 };
 
 Sinapsis.prototype = {
-	COEF_SINAPSIS_ENTRENAMIENTO: 0.5,
+	COEF_UMBRAL_PESO: 0.25,
+	
 	start: function(){
+		var self = this;
 		if(!this.peso){
 			this.peso = Math.random();
+			if(self.peso < self.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
+				self.kill();
+			}	
 		}
 		
 	},
 	entrenar: function(valorEntrenamiento){
-		var sinap = this;
+		var self = this;
 		
 		valorEntrenamiento = (valorEntrenamiento - 0.5);
 		
-		sinap.peso += (sinap.axon.valor - sinap.peso) * valorEntrenamiento * sinap.COEF_SINAPSIS_ENTRENAMIENTO;
-		if(sinap.peso < 0){
-			sinap.peso = 0.0;
+		self.peso += (self.axon.valor - self.peso) * valorEntrenamiento * self.COEF_SINAPSIS_ENTRENAMIENTO;
+		if(self.peso < self.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
+			self.kill();
 		}		
 	},
 	procesar: function(){
 		return this.valor = this.axon.valor * this.peso;
+	},
+	kill: function(){
+		var self = this;
+		delete self.dendrita.sinapsis[self.id];
 	}
 	
 };

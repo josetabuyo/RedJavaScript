@@ -57,10 +57,6 @@ Neurona.prototype = {
 				
 			};
 			
-			
-			//TODO: neurona.axon.depolarizar(sumaValorDendritas / neurona.dendritas.length);
-			//neurona.axon.depolarizar(sumaValorDendritas);
-			
 			neurona.activar(sumaValorDendritas);
 			
 			

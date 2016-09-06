@@ -16,8 +16,7 @@ var Axon = function(opt){
 	
 };
 Axon.prototype = {
-	COEF_AXON_UMBRAL: 0.19,
-	//COEF_AXON_UMBRAL: 0.19,
+	COEF_AXON_UMBRAL: 0.5,
 	start: function (){
 		var axon = this;
 		//nada

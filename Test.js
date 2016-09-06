@@ -41,7 +41,7 @@ Test.prototype = {
 		var testIndex =  test.estado.current.neuronaCoord.x;
 			
 		if(testIndex == null){
-			testIndex = 0;
+			testIndex = Math.round(test.guiRed.red.size.x / 2);
 			test.estado.current.neuronaCoord = {x: testIndex, y: test.guiRed.red.size.y - 1};
 		}
 		
@@ -96,7 +96,7 @@ Test.prototype = {
 		
 		
 		if(!test.foco){
-			test.foco = 0.0;
+			test.foco = test.guiRed.red.size.x / 2;
 		}
 		
 		for(var i = test.entrada.box.x0; i <= test.entrada.box.x1; i++){

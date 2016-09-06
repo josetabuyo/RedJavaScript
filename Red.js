@@ -19,7 +19,7 @@ var Red = function(opt){
 
 
 Red.prototype = {
-	COEF_UMBRAL_SINAPSIS_PESO: 0,
+	COEF_UMBRAL_SINAPSIS_PESO: 0.2,
 	start: function(){
 		var red = this;
 		
@@ -45,7 +45,7 @@ Red.prototype = {
 		var red = this;
 		
 		opt = $.extend({
-			modo			: 'full',
+			modo			: 'relativo',
 			entrada			: (typeof(opt.entrada) != "undefined") ? opt.entrada : red,
 			peso			: null,
 			cantDendritas	: 5,
@@ -112,13 +112,19 @@ Red.prototype = {
 							
 							var axonEntrante = opt.entrada.neurona[keyNeurona_AxonEntrante].axon;
 							
-							var sinapsis = new Sinapsis({
-								neurona: neuronaPadre,
-								axon: axonEntrante,
-								peso: opt.peso
-							});
+							if(!opt.peso){
+								opt.peso = Math.random()
+							};
 							
-							if(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
+							if(opt.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
+								
+								var sinapsis = new Sinapsis({
+									neurona: neuronaPadre,
+									axon: axonEntrante,
+									peso: opt.peso,
+									id: keyNeurona_AxonEntrante
+								});
+							
 								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 								opt.entrada.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[keyNeurona] = sinapsis;
 							}							
@@ -180,11 +186,11 @@ Red.prototype = {
 			//========================================		
 					
 					var keyNeurona = red.id + "x"+rx+"y"+ry;
-					var neuronaPadre = red.neuronas[keyNeurona]
+					var neuronaPadre = red.neuronas[keyNeurona];
 					
 					
 					for(var iDentrita = 0; iDentrita < opt.cantDendritas; iDentrita++){
-					
+						
 						var dendrita = new Dendrita({
 							neurona: neuronaPadre
 						});
@@ -192,9 +198,6 @@ Red.prototype = {
 						/*DEBUG:****************************/try{
 						neuronaPadre.dendritas.push(dendrita);
 						/*DEBUG:****************************/}catch(e){debugger;}
-						
-						
-						
 						
 						// RECORRO LA ENTRADA
 						//========================================
@@ -227,8 +230,10 @@ Red.prototype = {
 									var axonEntrante = opt.entrada.neuronas[keyNeurona_AxonEntrante].axon;
 									var sinapsis = new Sinapsis({
 										neurona: neuronaPadre,
+										dendrita: dendrita,
 										axon: axonEntrante,
-										peso: opt.peso
+										peso: opt.peso,
+										id: keyNeurona_AxonEntrante
 									});
 									
 									
@@ -274,7 +279,6 @@ Red.prototype = {
 		
 		var bufferAux = {};
 		
-		try{
 			for(key in red.bufferNeuronasProcess){
 				bufferAux[key] = red.bufferNeuronasProcess[key];
 			}
@@ -282,11 +286,13 @@ Red.prototype = {
 			red.bufferNeuronasProcess = {};
 			
 			for(key in bufferAux){
-				bufferAux[key].procesar();
+				try{
+					bufferAux[key].procesar();
+				}catch(e){
+					//debugger;
+					//es lo más barato
+				}
 			}
-		}catch(e){
-			debugger;
-		}
 		
 		red.onProcesar();
 	
