@@ -21,7 +21,7 @@ Axon.prototype = {
 		var axon = this;
 		//nada
 	},
-	activar: function(valor){
+	activar: function(){
 		var axon = this;
 		
 		

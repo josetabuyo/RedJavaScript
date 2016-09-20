@@ -52,9 +52,11 @@ Dendrita.prototype = {
 			valor = suma / Object.keys(sinapsis).length;
 		}
 		
-		dendrita.valor += valor;
+		
+		dendrita.valor += valor * self.peso;
 		dendrita.valor -= dendrita.valor * dendrita.COEF_DENDRITA_DECAIMIENTO;
 		
-		return valor * self.peso;
+		
+		return valor;
 	}
 };

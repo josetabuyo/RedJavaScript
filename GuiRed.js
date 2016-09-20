@@ -121,12 +121,20 @@ GuiRed.prototype = {
 			for(keySinapsis in dendrita.sinapsis){
 				
 				var sinapsis = dendrita.sinapsis[keySinapsis];
-				
-				var color = Math.floor(sinapsis.peso * 200) + 55;
-				grafico.mapaNeuronaCelda[sinapsis.axon.neurona.id].attr({
-					fill: "rgb(55, "+color+", 55)",
-					stroke: "#005500"
-				});
+				var pesoEfectivo = sinapsis.peso * dendrita.peso;
+				if(pesoEfectivo>0){
+					var color = Math.floor(pesoEfectivo * 200) + 55;
+					grafico.mapaNeuronaCelda[sinapsis.axon.neurona.id].attr({
+						fill: "rgb(55, "+color+", 55)",
+						stroke: "#005500"
+					});
+				}else{
+					var color = Math.floor(Math.abs(pesoEfectivo) * 200) + 55;
+					grafico.mapaNeuronaCelda[sinapsis.axon.neurona.id].attr({
+						fill: "rgb("+color+", 55, "+color+")",
+						stroke: "#550055"
+					});
+				}
 			}
 		}
 	},

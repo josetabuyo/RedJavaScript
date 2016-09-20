@@ -199,7 +199,7 @@
 			//crear red
 			red = new Red({
 				//size: {x:128,y:8}
-				size: {x:64,y:8}
+				size: {x:32,y:32}
 			});
 			
 			//crear entrada
@@ -225,6 +225,13 @@
 			
 			
 			red.insertarAxones({
+				modo: 'dendritas_radiales_pesadas',
+				dendritas_pesos: [1.0, 0, 0, -1.5, 0.5]
+			});
+			
+			//SALIDA: se agregan conexiones (aclaro, como un json es un mapa sin repetición, si creo dos veces la misma sinapsis la pisa, no duplica)
+			/*
+			red.insertarAxones({
 				modo: 'relativo',
 				cantDendritas: 1,
 				boxRelativo	: {
@@ -235,8 +242,6 @@
 				}
 			});
 			
-			//SALIDA: se agregan conexiones (aclaro, como un json es un mapa sin repetición, si creo dos veces la misma sinapsis la pisa, no duplica)
-			/*
 			red.insertarAxones({
 				modo: 'relativo',
 				cantDendritas: 1,
@@ -258,8 +263,8 @@
 				y: 1
 			});
 			
-			
 			red.onProcesar(function(){
+				
 				guiRed.refresh();
 				
 				//WATCH
@@ -282,6 +287,7 @@
 				
 			});
 			
+			
 			test = new Test({
 				guiRed: guiRed,
 				entrada: entrada,
@@ -289,6 +295,7 @@
 				noise: false,
 				step: Test.prototype.secada
 			});
+			
 			console.log('fin setupRed');
 			
 

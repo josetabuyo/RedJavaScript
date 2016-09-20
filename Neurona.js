@@ -31,13 +31,15 @@ Neurona.prototype = {
 	activar: function(valor){
 		var neurona = this;
 		
-		if(valor < 1.0){
-			neurona.tensionSuperficial = valor;
-		}else{
+		if(valor < 0){
+			neurona.tensionSuperficial = 0;
+		}else if(valor > 1.0){
 			neurona.tensionSuperficial = 1.0;
+		}else{
+			neurona.tensionSuperficial = valor;
 		}
 		
-		neurona.axon.activar(valor);
+		neurona.axon.activar();
 		
 	},
 	procesar: function(){
@@ -53,14 +55,15 @@ Neurona.prototype = {
 				
 				
 				dendrita.procesar();
+				
 				sumaValorDendritas += dendrita.valor;
 				
 			};
 			
-			neurona.activar(sumaValorDendritas);
+			neurona.activar(sumaValorDendritas / neurona.dendritas.length);
 			
 			
-			
+			/*
 			if(neurona.axon.valor>0){
 				
 				for(iDendrita in neurona.dendritas){
@@ -68,6 +71,7 @@ Neurona.prototype = {
 					dendrita.entrenar();
 				};
 			}
+			*/
 			
 		}catch(e){
 			debugger;
