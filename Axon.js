@@ -16,7 +16,7 @@ var Axon = function(opt){
 	
 };
 Axon.prototype = {
-	COEF_AXON_UMBRAL: 0.5,
+	
 	start: function (){
 		var axon = this;
 		//nada
@@ -24,13 +24,11 @@ Axon.prototype = {
 	activar: function(){
 		var axon = this;
 		
-		
-		if(axon.neurona.tensionSuperficial > axon.COEF_AXON_UMBRAL){
+		if(axon.neurona.tensionSuperficial > axon.neurona.COEF_UMBRAL_SPIKE){
 			axon.valor = 1;
-		}else{
+		}else if(axon.neurona.tensionSuperficial < axon.neurona.COEF_UMBRAL_SPIKE_MIN_TENSION){
 			axon.valor = 0;
 		}
-			
 		
 		for(clave in axon.sinapsis){
 			var neuronaVecina = axon.sinapsis[clave].neurona;

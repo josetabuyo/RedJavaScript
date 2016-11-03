@@ -3,7 +3,7 @@
 /************** :SINAPSIS: ************/
 var Sinapsis = function(opt){
 	$.extend(this, {
-		neurona: null, 		// container
+		neurona: null, 		//container
 		dendrita: null,
 		axon: null, 		//un Axon
 		peso: null,			//peso
@@ -14,17 +14,15 @@ var Sinapsis = function(opt){
 };
 
 Sinapsis.prototype = {
-	COEF_UMBRAL_PESO: 0.25,
-	
+	COEF_SINAPSIS_ENTRENAMIENTO: 0,
 	start: function(){
 		var self = this;
 		if(!this.peso){
 			this.peso = Math.random();
 			if(self.peso < self.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
 				self.kill();
-			}	
+			}
 		}
-		
 	},
 	entrenar: function(valorEntrenamiento){
 		var self = this;
@@ -34,7 +32,7 @@ Sinapsis.prototype = {
 		self.peso += (self.axon.valor - self.peso) * valorEntrenamiento * self.COEF_SINAPSIS_ENTRENAMIENTO;
 		if(self.peso < self.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
 			self.kill();
-		}		
+		}
 	},
 	procesar: function(){
 		return this.valor = this.axon.valor * this.peso;

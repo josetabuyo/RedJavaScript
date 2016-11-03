@@ -32,8 +32,6 @@ Dendrita.prototype = {
 			
 		}
 		
-		
-		dendrita.valor = 0.0
 	},
 	procesar: function(){
 		var self = this;
@@ -54,6 +52,9 @@ Dendrita.prototype = {
 		
 		
 		dendrita.valor += valor * self.peso;
+		
+		
+		
 		dendrita.valor -= dendrita.valor * dendrita.COEF_DENDRITA_DECAIMIENTO;
 		
 		

@@ -30,15 +30,6 @@ Salida.prototype = {
 				var neurona = salida.red.neuronas[keyNeurona];
 				neurona.tipo = "SALIDA";
 				neurona.axon.sinapsis = {};
-				/*
-				neurona.activar = function(valor){
-					this.tensionSuperficial = valor;
-				};
-				neurona.axon.activar = function(valor){
-					this.__proto__.activar.call(this, valor);
-					this.neurona.red.bufferNeuronasProcess[this.neurona.id] = this.neurona;
-				};
-				*/
 				
 			}
 		}

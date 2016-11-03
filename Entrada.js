@@ -29,11 +29,15 @@ Entrada.prototype = {
 				var keyNeurona = entrada.red.id + "x" + i + "y" + j;
 				var neurona = entrada.red.neuronas[keyNeurona];
 				neurona.tipo = "ENTRADA";
-				neurona.procesar = null;
 				neurona.dendritas = [];
-				neurona.axon.activar = function(valor){
-					this.neurona.tensionSuperficial = valor;
-					this.__proto__.activar.call(this, valor);
+				neurona.procesar = function(){
+					var neurona = this;
+					
+					neurona.setTension(neurona.tensionSuperficial);
+					
+					if(neurona.axon.valor == 1){
+						neurona.red.bufferNeuronasProcess[neurona.id] = neurona;
+					}
 				};
 				
 			}

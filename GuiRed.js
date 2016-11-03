@@ -1,5 +1,5 @@
 //grafico la entrada
-var paper = Snap("#pantallaSvg");
+var paper = Snap("#svgRed");
 
 var GuiRed = function(opt){
 	$.extend(this, {
@@ -8,11 +8,8 @@ var GuiRed = function(opt){
 		modo:"ACTIVACION",
 		x: 0,
 		y: 0,
-		mapaNeuronaCelda: {},
-		paso: {
-			x: 6,
-			y: 6
-		}
+		mapaNeuronaCelda: {}
+		
 	}, opt);
 	
 	
@@ -27,7 +24,10 @@ var GuiRed = function(opt){
 
 
 GuiRed.prototype = {
-	
+	paso: {
+		x: 6,
+		y: 6
+	},
 	keyByPixelPos: function(pixelPosX, pixelPosY){
 		var grafico = this;
 		var x = (Math.floor(pixelPosX / grafico.paso.x ) - grafico.x);
@@ -55,37 +55,6 @@ GuiRed.prototype = {
 		return keyNeurona = Object.keys(grafico.red.neuronas)[index];
 		
 	},
-	axonSetByPixelPos: function(valor, pixelPosX, pixelPosY){
-		var grafico = this;
-		
-		var keyNeurona = grafico.keyByPixelPos(pixelPosX, pixelPosY);
-		
-		grafico.axonSetByKey(valor, keyNeurona);
-		
-	},
-	axonSetByCoord: function(valor, x, y){
-		var grafico = this;
-		var keyNeurona = grafico.keyByCoord(x, y);
-		
-		grafico.axonSetByKey(valor, keyNeurona);
-
-
-	},
-	axonSetByIndex: function(valor, index){
-		var grafico = this;
-		
-		var keyNeurona = Object.keys(grafico.red.neuronas)[index];
-		
-		grafico.axonSetByKey(valor, keyNeurona);
-		
-	},
-	axonSetByKey:function(valor, keyNeurona){
-		var grafico = this;
-		
-		grafico.red.neuronas[keyNeurona].axon.activar(valor);
-	},
-	
-	
 	dendritasWatchByPixelPos: function(pixelPosX, pixelPosY){
 		var grafico = this;
 		
@@ -170,29 +139,20 @@ GuiRed.prototype = {
 						console.log(grafico.red.neuronas[keyNeurona]);
 						
 					}else{
-						grafico.axonSetByPixelPos(1, this.node.x.baseVal.value, this.node.y.baseVal.value);
+						grafico.red.neuronas[keyNeurona].activarExternal(1);
+						
+						
 					}
 				});
 				
 				celda.mouseup(function(e){
+					var keyNeurona = grafico.keyByPixelPos(this.node.x.baseVal.value, this.node.y.baseVal.value);
+					
 					if (e.button === 2) {
 					}else{
-						grafico.axonSetByPixelPos(0, this.node.x.baseVal.value, this.node.y.baseVal.value);
+						grafico.red.neuronas[keyNeurona].activarExternal(0);
 					}
 				});
-				/*
-				celda.mouseover(function(e){
-					
-					grafico.axonSetByPixelPos(1, this.node.x.baseVal.value, this.node.y.baseVal.value);
-					
-				});
-				*/
-				/*celda.mouseout(function(e){
-					
-					grafico.axonSetByPixelPos(0, this.node.x.baseVal.value, this.node.y.baseVal.value);
-					
-				});
-				*/
 			}
 		}
 		

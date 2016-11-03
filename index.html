@@ -15,7 +15,7 @@
 			}
 			
 			
-			#pantallaSvg{
+			#svgRed{
 				position: absolute;
 				left: 20px;
 				top: 40px;
@@ -24,6 +24,18 @@
 				border: solid 1px;
 				overflow: scroll;
 			}
+			
+			#svgPatronesTest{
+				position: absolute;
+				left: 20px;
+				top: 91%;
+				width: 65%;
+				height: 9%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+			
+			
 			.boton{
 				position: absolute;
 				top: 5px;
@@ -53,13 +65,13 @@
 				background-color: #AAAAAA;
 			}
 
-			#COEF_AXON_UMBRAL_ref{
+			#COEF_UMBRAL_SPIKE_ref{
 				position: absolute;
 				top: 5px;
 				left: 20px;
 				font-size: 9px;
 			}
-			#COEF_AXON_UMBRAL{
+			#COEF_UMBRAL_SPIKE{
 				position: absolute;
 				top: 20px;
 				left: 20px;
@@ -124,20 +136,26 @@
 		</div>
 		
 		
-		<svg id="pantallaSvg" >
+		<svg id="svgRed" >
 		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
 		</svg>
 		
 		<div id="control">
 			
-			<div id="COEF_AXON_UMBRAL_ref">COEF_AXON_UMBRAL: </div>
-			<input id="COEF_AXON_UMBRAL" type="range" min="0" max="255" value="100" />
+			<div id="COEF_UMBRAL_SPIKE_ref">COEF_UMBRAL_SPIKE: </div>
+			<input id="COEF_UMBRAL_SPIKE" type="range" min="0" max="255" value="100" />
 			<div id="COEF_DENDRITA_DECAIMIENTO_ref">COEF_DENDRITA_DECAIMIENTO: </div>
 			<input id="COEF_DENDRITA_DECAIMIENTO" type="range" min="0" max="255" value="100" />
 			<div id="COEF_SINAPSIS_ENTRENAMIENTO_ref">COEF_SINAPSIS_ENTRENAMIENTO: </div>
 			<input id="COEF_SINAPSIS_ENTRENAMIENTO" type="range" min="0" max="255" value="100" />
 			<div id="control_texto"></div>
 		</div>
+		
+		<svg id="svgPatronesTest" >
+		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
+		</svg>
+		
+		
 		
 	</body>
 	
@@ -223,11 +241,77 @@
 				}
 			});
 			
-			
 			red.insertarAxones({
 				modo: 'dendritas_radiales_pesadas',
-				dendritas_pesos: [1.0, 0, 0, -1.5, 0.5]
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y0,
+					x1: red.box.x1,
+					y1: red.box.y1
+				},
+				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
 			});
+			
+			/*
+			//Conexion a la Entrada
+			red.insertarAxones({
+				modo: 'relativo',
+				dendritas_pesos: [1],
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y1-2,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				},
+				boxRelativo	: {
+					x0 	: -4,
+					y0 	: 1,
+					x1 	: 4,
+					y1 	: 2
+				}
+			});
+			*/
+			
+			
+			
+			/*
+			//entrada con campana reforzada
+			red.insertarAxones({
+				modo: 'dendritas_radiales_pesadas',
+				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y1-2,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				},
+				boxRelativo	: {
+					x0 	: -5,
+					y0 	: -1,
+					x1 	: 5,
+					y1 	: 0
+				}
+			});
+			*/
+			
+			
+			//Refuerzo de entrada
+			red.insertarAxones({
+				modo: 'relativo',
+				cantDendritas: 5,
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y1-5,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				},
+				boxEntrada: entrada.box,
+				boxRelativo	: {
+					x0 	: -4,
+					x1 	: 4
+				}
+			});
+			
 			
 			//SALIDA: se agregan conexiones (aclaro, como un json es un mapa sin repetición, si creo dos veces la misma sinapsis la pisa, no duplica)
 			/*
@@ -245,7 +329,7 @@
 			red.insertarAxones({
 				modo: 'relativo',
 				cantDendritas: 1,
-				boxRed: salida.box,
+				boxTarget: salida.box,
 				boxRelativo	: {
 					x0 	: -4,//-999,
 					y0 	: 1,
@@ -293,7 +377,7 @@
 				entrada: entrada,
 				salida: salida,
 				noise: false,
-				step: Test.prototype.secada
+				step: Test.prototype.debugEstandar
 			});
 			
 			console.log('fin setupRed');
@@ -323,9 +407,9 @@
 			
 			
 			
-			$('#COEF_AXON_UMBRAL').change(function(){
-				Axon.prototype.COEF_AXON_UMBRAL =  ($(this).val() / 255);
-				$('#COEF_AXON_UMBRAL_ref').text("COEF_AXON_UMBRAL: " + Axon.prototype.COEF_AXON_UMBRAL);
+			$('#COEF_UMBRAL_SPIKE').change(function(){
+				Neurona.prototype.COEF_UMBRAL_SPIKE =  ($(this).val() / 255);
+				$('#COEF_UMBRAL_SPIKE_ref').text("COEF_UMBRAL_SPIKE: " + Neurona.prototype.COEF_UMBRAL_SPIKE);
 			});
 			$('#COEF_DENDRITA_DECAIMIENTO').change(function(){
 				Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO =  ($(this).val() / 255);
@@ -337,8 +421,8 @@
 				
 			});
 			
-			$('#COEF_AXON_UMBRAL').val(Axon.prototype.COEF_AXON_UMBRAL * 255);
-			$('#COEF_AXON_UMBRAL').change();
+			$('#COEF_UMBRAL_SPIKE').val(Neurona.prototype.COEF_UMBRAL_SPIKE * 255);
+			$('#COEF_UMBRAL_SPIKE').change();
 			$('#COEF_DENDRITA_DECAIMIENTO').val(Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO * 255);
 			$('#COEF_DENDRITA_DECAIMIENTO').change();
 			$('#COEF_SINAPSIS_ENTRENAMIENTO').val(Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO * 255);
