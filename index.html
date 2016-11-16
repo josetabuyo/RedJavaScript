@@ -247,13 +247,29 @@
 					x0: red.box.x0,
 					y0: red.box.y0,
 					x1: red.box.x1,
-					y1: red.box.y1
+					y1: red.box.y1-1
 				},
 				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
 			});
 			
 			/*
-			//Conexion a la Entrada
+			//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
+			*/
+			red.insertarAxones({
+				modo: 'full_random_fixed_input',
+				dendritas_pesos: [2.0],
+				densidadConexionado: 0.7,
+				entrada	: entrada,
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y0,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				}
+			});
+			
+			
+			/*
 			red.insertarAxones({
 				modo: 'relativo',
 				dendritas_pesos: [1],
@@ -295,49 +311,7 @@
 			*/
 			
 			
-			//Refuerzo de entrada
-			red.insertarAxones({
-				modo: 'relativo',
-				cantDendritas: 5,
-				boxTarget: {
-					x0: red.box.x0,
-					y0: red.box.y1-5,
-					x1: red.box.x1,
-					y1: red.box.y1-1
-				},
-				boxEntrada: entrada.box,
-				boxRelativo	: {
-					x0 	: -4,
-					x1 	: 4
-				}
-			});
 			
-			
-			//SALIDA: se agregan conexiones (aclaro, como un json es un mapa sin repetición, si creo dos veces la misma sinapsis la pisa, no duplica)
-			/*
-			red.insertarAxones({
-				modo: 'relativo',
-				cantDendritas: 1,
-				boxRelativo	: {
-					x0 	: -4,//-999,
-					y0 	: -2,
-					x1 	: 4,//999,
-					y1 	: 2
-				}
-			});
-			
-			red.insertarAxones({
-				modo: 'relativo',
-				cantDendritas: 1,
-				boxTarget: salida.box,
-				boxRelativo	: {
-					x0 	: -4,//-999,
-					y0 	: 1,
-					x1 	: 2,//999,
-					y1 	: 4
-				}
-			});
-			*/
 			
 			
 			

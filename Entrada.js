@@ -12,9 +12,6 @@ var Entrada = function(opt){
 		}
 	}, opt);
 	
-	if(!this.id){
-		this.id = Math.random();
-	}
 	
 	this.start();
 };

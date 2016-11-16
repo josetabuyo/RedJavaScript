@@ -19,7 +19,7 @@ var Neurona = function(opt){
 };
 
 Neurona.prototype = {
-	COEF_UMBRAL_SPIKE: 0.8,
+	COEF_UMBRAL_SPIKE: 0.16,
 	COEF_UMBRAL_SPIKE_MIN_TENSION: 0.2,
 	COEF_TENSION_DECAIMIENTO: 0.1,
 	start: function(){

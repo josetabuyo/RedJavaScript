@@ -49,10 +49,11 @@ Red.prototype = {
 		var red = this;
 		
 		opt = $.extend({
-			modo			: 'relativo',
-			entrada			: (typeof(opt.entrada) != "undefined") ? opt.entrada : red,
-			peso			: null,
-			cantDendritas	: 5,
+			modo				: 'relativo',
+			entrada				: (typeof(opt.entrada) != "undefined") ? opt.entrada : red,
+			peso				: null,
+			cantDendritas		: 1,
+			densidadConexionado	: (typeof(opt.densidadConexionado) != "undefined") ? opt.densidadConexionado : 1.0,
 			boxRelativo		: {
 				x0 	: null,
 				y0 	: null,
@@ -66,10 +67,10 @@ Red.prototype = {
 				y1 	: red.size.y-1				
 			},
 			boxEntrada	: (typeof(opt.entrada) != "undefined")?{
-				x0 	: 0,
-				y0 	: 0,
-				x1 	: opt.entrada.size.x-1,
-				y1 	: opt.entrada.size.y-1				
+				x0 	: opt.entrada.box.x0,
+				y0 	: opt.entrada.box.y0,
+				x1 	: opt.entrada.box.x1,
+				y1 	: opt.entrada.box.y1				
 			}:{
 				x0 	: 0,
 				y0 	: 0,
@@ -262,7 +263,118 @@ Red.prototype = {
 			}
 		}
 	},
+	
+	eachNeuronaDendrita: function(opt, callback){
+		
+		/*
+		Para usar dentro de un modo de interconexión
+		EJEMPLO DE LLAMADO
+			red.eachNeuronaDendrita({
+				
+			});
+		*/
+		
+		var red = this;
+		
+		red.eachNeurona(opt.boxTarget, function(rx, ry, neurona){
+			
+			if(typeof(opt.dendritas_pesos) != "undefined"){
+				opt.cantDendritas = opt.dendritas_pesos.length;
+			}
+			
+			for(var iDentrita = 0; iDentrita < opt.cantDendritas; iDentrita++){
+				
+				var dendrita = new Dendrita({
+					neurona: neurona
+				});
+				
+				if(typeof(opt.dendritas_pesos) != "undefined"){
+					dendrita.peso = opt.dendritas_pesos[iDentrita]
+				}
+				
+				/*DEBUG:****************************/try{
+				neurona.dendritas.push(dendrita);
+				/*DEBUG:****************************/}catch(e){debugger;}
+				
+				callback(dendrita);
+				
+				
+			}
+		});
+	},
 	/*MODOS DE INSERCIÓN*/
+	
+	modo_full_random_fixed_input: function(opt){
+		/*
+		Para usar dentro de un modo de interconexión
+		EJEMPLO DE LLAMADO
+			red.insertarAxones({
+				modo: 'full_random_fixed_input',
+				dendritas_pesos: [1],
+				entrada	: entrada,
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y1-2,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				}
+				
+			});
+		*/
+		
+		
+		var red = this;
+		
+		
+		
+		
+		red.eachNeuronaDendrita(opt, function(dendrita){
+			// RECORRO LA ENTRADA
+			//========================================
+			var neurona = dendrita.neurona;
+			
+			for(var ex = opt.boxEntrada.x0; ex <= opt.boxEntrada.x1; ex++){
+				for(var ey = opt.boxEntrada.y0; ey <= opt.boxEntrada.y1; ey++){
+			//========================================		
+					
+					var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+					
+					if(keyNeurona_AxonEntrante != neurona.id){
+						
+						var axonEntrante = red.neuronas[keyNeurona_AxonEntrante].axon;
+						
+						var sinapsis = new Sinapsis({
+							neurona: neurona,
+							dendrita: dendrita,
+							axon: axonEntrante,
+							peso: opt.peso,
+							id: keyNeurona_AxonEntrante
+						});
+						
+						if(opt.densidadConexionado < 1){
+							if(
+								(Math.random() > opt.densidadConexionado) &&
+								(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO)
+							){
+								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
+								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
+							}
+						}else{
+							if(
+								(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO)
+							){
+								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
+								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
+							}
+						}
+						
+					}
+				}
+			}
+			
+		});
+		
+	},
 	modo_full: function(opt){
 		var red = this;
 		// RECORRO LA RED
@@ -315,52 +427,6 @@ Red.prototype = {
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 							opt.entrada.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[keyNeurona] = sinapsis;
 						}							
-					}
-				}
-			}
-		}
-	},
-	modo_feed_foward_full: function(opt){
-		var red = this;
-		// RECORRO LA RED
-		//========================================
-		for(var rx = 1; rx < red.size.x; rx++){
-			for(var ry = 0; ry < red.size.y; ry++){
-		//========================================		
-				
-				var keyNeurona = red.id + "x"+rx+"y"+ry;
-				var neuronaPadre = red.neuronas[keyNeurona];
-				
-				
-				var dendrita = new Dendrita({
-					neurona: neuronaPadre
-				});
-				neuronaPadre.dendritas.push(dendrita);
-				
-				
-				// RECORRO LA ENTRADA: el renglón anterior
-				
-				
-				opt.entrada = red;
-				//========================================
-				var ex = rx - 1;
-				for(var ey = 0; ey < opt.entrada.size.y; ey++){
-				//========================================
-					
-					
-					var keyNeurona_AxonEntrante = opt.entrada.id + "x"+ex+"y"+ey;
-						
-					var axonEntrante = opt.entrada.neurona[keyNeurona_AxonEntrante].axon;
-					
-					var sinapsis = new Sinapsis({
-						neurona: neuronaPadre,
-						axon: axonEntrante
-					});
-					
-					
-					if(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
-						dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-						opt.entrada.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[keyNeurona] = sinapsis;
 					}
 				}
 			}
