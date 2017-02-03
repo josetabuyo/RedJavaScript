@@ -64,6 +64,14 @@
 				left: 300px;
 				background-color: #AAAAAA;
 			}
+			#loadRed{
+				left: 370px;
+				background-color: #AAAAAA;
+			}
+			#saveRed{
+				left: 440px;
+				background-color: #AAAAAA;
+			}
 
 			#COEF_UMBRAL_SPIKE_ref{
 				position: absolute;
@@ -134,7 +142,12 @@
 		<div id="resetRed" class="boton">
 			resetRed
 		</div>
-		
+		<div id="loadRed" class="boton">
+			load red
+		</div>
+		<div id="saveRed" class="boton">
+			save red
+		</div>
 		
 		<svg id="svgRed" >
 		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
@@ -163,18 +176,23 @@
 	
 	<script src="lib/jquery-2.1.3.min.js"></script>
 	<script src="lib/snap.svg-min.js"></script>
+	
+	<script src="lib/vortex.min.js"></script>
+	<script src="lib/socket.io.js"></script>
+	<script src="lib/underscore-min.js"></script>
+	
+	
 	<script src="GuiRed.js"></script>
 	<script src="Test.js"></script>
 	
 	
-	<script src="Entrada.js"></script>
-	<script src="Salida.js"></script>
+	<script src="red/Constructor.js"></script>
 	
-	<script src="Red.js"></script>
-	<script src="Neurona.js"></script>
-	<script src="Axon.js"></script>
-	<script src="Dendrita.js"></script>
-	<script src="Sinapsis.js"></script>
+	<script src="red/Red.js"></script>
+	<script src="red/Neurona.js"></script>
+	<script src="red/Axon.js"></script>
+	<script src="red/Dendrita.js"></script>
+	<script src="red/Sinapsis.js"></script>
 		
 	<script>
 		
@@ -220,28 +238,31 @@
 				size: {x:32,y:32}
 			});
 			
-			//crear entrada
-			entrada = new Entrada({
-				red: red,
-				box: {
-					x0: 0,
-					y0: red.size.y - 1,
-					x1: red.size.x - 1,
-					y1: red.size.y - 1
-				}
-			});
 			
-			salida = new Salida({
-				red: red,
-				box: {
-					x0: 0,
-					y0: 0,
-					x1: red.size.x - 1,
-					y1: 0
-				}
-			});
+			Constructor.red = red;
 			
-			red.insertarAxones({
+			
+			
+			
+			var boxEntrada = {
+				x0: 0,
+				y0: red.size.y - 1,
+				x1: red.size.x - 1,
+				y1: red.size.y - 1
+			};
+			Constructor.makeEntrada(boxEntrada);
+			
+			
+			var boxSalida = {
+				x0: 0,
+				y0: 0,
+				x1: red.size.x - 1,
+				y1: 0
+			};
+			Constructor.makeSalida(boxSalida);
+			
+			
+			Constructor.insertarAxones({
 				modo: 'dendritas_radiales_pesadas',
 				boxTarget: {
 					x0: red.box.x0,
@@ -255,11 +276,11 @@
 			/*
 			//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
 			*/
-			red.insertarAxones({
+			Constructor.insertarAxones({
 				modo: 'full_random_fixed_input',
-				dendritas_pesos: [2.0],
+				dendritas_pesos: [1.5],
 				densidadConexionado: 0.7,
-				entrada	: entrada,
+				boxEntrada: boxEntrada,
 				boxTarget: {
 					x0: red.box.x0,
 					y0: red.box.y0,
@@ -270,7 +291,7 @@
 			
 			
 			/*
-			red.insertarAxones({
+			Constructor.insertarAxones({
 				modo: 'relativo',
 				dendritas_pesos: [1],
 				boxTarget: {
@@ -292,7 +313,7 @@
 			
 			/*
 			//entrada con campana reforzada
-			red.insertarAxones({
+			Constructor.insertarAxones({
 				modo: 'dendritas_radiales_pesadas',
 				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
 				boxTarget: {
@@ -334,6 +355,11 @@
 					texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
 					texto += " - tensionSuperficial " + "</BR>";
 					texto += " - " + red.neuronas[keyNeurona].tensionSuperficial + "</BR>";
+					
+					texto += " - COEF_SINAPSIS_ENTRENAMIENTO" + "</BR>";
+					texto += " - " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO + "</BR>";
+					
+					
 				}catch(e){
 					//debugger;
 				}
@@ -348,10 +374,11 @@
 			
 			test = new Test({
 				guiRed: guiRed,
-				entrada: entrada,
-				salida: salida,
+				red: red,
+				boxEntrada: boxEntrada,
+				boxSalida: boxSalida,
 				noise: false,
-				step: Test.prototype.debugEstandar
+				step: Test.prototype.secada
 			});
 			
 			console.log('fin setupRed');
@@ -380,7 +407,6 @@
 			});
 			
 			
-			
 			$('#COEF_UMBRAL_SPIKE').change(function(){
 				Neurona.prototype.COEF_UMBRAL_SPIKE =  ($(this).val() / 255);
 				$('#COEF_UMBRAL_SPIKE_ref').text("COEF_UMBRAL_SPIKE: " + Neurona.prototype.COEF_UMBRAL_SPIKE);
@@ -401,6 +427,94 @@
 			$('#COEF_DENDRITA_DECAIMIENTO').change();
 			$('#COEF_SINAPSIS_ENTRENAMIENTO').val(Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO * 255);
 			$('#COEF_SINAPSIS_ENTRENAMIENTO').change();
+			
+			
+			
+			Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
+			
+			
+			
+			
+			$('#saveRed').on('click', function(){
+				
+				var _red = {
+					size: red.size,
+					box: red.box,
+					neuronas: {}
+				};
+				
+				
+				Constructor.eachNeurona(red.box, function(rx, ry, neurona){
+					
+					var _neurona = {
+						id: neurona.id,
+						tipo: neurona.tipo,
+						dendritas: []
+					};
+					
+					
+					for(iDendrita in neurona.dendritas){
+						
+						var _dendrita = {
+							sinapsis: {},
+							peso: neurona.dendritas[iDendrita].peso
+						};
+						
+						
+						for(key in neurona.dendritas[iDendrita].sinapsis){
+							var sinapsis = neurona.dendritas[iDendrita].sinapsis[key];
+							var _sinapsis = {
+								id: sinapsis.id,
+								peso: sinapsis.peso
+								
+							};
+							
+							
+							_dendrita.sinapsis[sinapsis.id] = _sinapsis;
+							
+						}
+						
+						_neurona.dendritas.push(_dendrita);
+						
+					};
+					_red.neuronas[neurona.id] = _neurona;
+				});
+				
+				
+				Vx.send({
+					tipoDeMensaje: 'escribirArchivo',
+					path:'red.json',
+					data: JSON.stringify(_red)
+					
+				}, function(mensaje){
+					
+					console.log(mensaje);
+				});
+			});
+			
+			
+			
+			$('#loadRed').on('click', function(){
+			
+				
+				
+				Vx.send({
+					tipoDeMensaje: 'leerArchivo',
+					path:'red.json'
+					
+				}, function(mensaje){
+					
+					var _red = JSON.parse(mensaje.data);
+					
+					var red = new Red(
+						$.extend({},
+							_red
+						)
+					);
+					
+					console.log('red loaded...');
+				});
+			});
 			
 
 		});

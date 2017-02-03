@@ -42,13 +42,13 @@ Test.prototype = {
 		var testIndex =  test.estado.current.neuronaCoord.x;
 			
 		if(testIndex == null){
-			testIndex = Math.round(test.guiRed.red.size.x / 2);
-			test.estado.current.neuronaCoord = {x: testIndex, y: test.guiRed.red.size.y - 1};
+			testIndex = Math.round(test.red.size.x / 2);
+			test.estado.current.neuronaCoord = {x: testIndex, y: test.red.size.y - 1};
 		}
 		
 		
-		for(var i = test.entrada.box.x0; i <= test.entrada.box.x1; i++){
-			for(var j = test.entrada.box.y0; j <= test.entrada.box.y1; j++){
+		for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
+			for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
 				var valor;
 				
 				if(test.noise){
@@ -59,7 +59,7 @@ Test.prototype = {
 				
 				var keyNeurona = test.guiRed.keyByCoord(i, j);
 				
-				test.guiRed.red.neuronas[keyNeurona].activarExternal(valor);
+				test.red.neuronas[keyNeurona].activarExternal(valor);
 				
 				
 				
@@ -72,33 +72,33 @@ Test.prototype = {
 		
 		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
 			var x = testIndex - iEntrada;
-			var y = test.guiRed.red.size.y - 1;
+			var y = test.red.size.y - 1;
 			
 			if(x < 0){
-				x = test.guiRed.red.size.x + x;
+				x = test.red.size.x + x;
 			}
 			
 			var index = test.patron.entrada.length - 1 - iEntrada;
 			
 			var keyNeuronaEntrada = test.guiRed.keyByCoord(x, y);
-			test.guiRed.red.neuronas[keyNeuronaEntrada].activarExternal(test.patron.entrada[index]);
+			test.red.neuronas[keyNeuronaEntrada].activarExternal(test.patron.entrada[index]);
 			
 			var keyNeuronaSalida = test.guiRed.keyByCoord(x, 0);
-			test.guiRed.red.neuronas[keyNeuronaSalida].activarExternal(test.patron.salida[index]);
+			test.red.neuronas[keyNeuronaSalida].activarExternal(test.patron.salida[index]);
 			
 		}
 		
 		
 		
 		test.estado.current.neuronaCoord.x++;
-		if(test.estado.current.neuronaCoord.x >= test.guiRed.red.size.x){
+		if(test.estado.current.neuronaCoord.x >= test.red.size.x){
 			test.estado.current.neuronaCoord.x = 0;
 		}
 		
 		
 		
 		
-		test.guiRed.red.procesar();
+		test.red.procesar();
 	},
 	
 	foco: null,
@@ -107,7 +107,7 @@ Test.prototype = {
 	keyPressDerecha: function(){
 		this.offset++;
 		
-		if(this.offset >= this.guiRed.red.size.x){
+		if(this.offset >= this.red.size.x){
 			this.offset = 0;
 		}
 		
@@ -116,15 +116,15 @@ Test.prototype = {
 		this.offset--;
 		
 		if(this.offset < 0){
-			this.offset = this.guiRed.red.size.x - 1;
+			this.offset = this.red.size.x - 1;
 		}
 	},
 	
 	printEntrada: function(){
 		var test = this;
 		
-		for(var i = test.entrada.box.x0; i <= test.entrada.box.x1; i++){
-			for(var j = test.entrada.box.y0; j <= test.entrada.box.y1; j++){
+		for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
+			for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
 				var valor = 0;
 				
 				if(test.noise){
@@ -135,7 +135,7 @@ Test.prototype = {
 				
 				var keyNeurona = test.guiRed.keyByCoord(i, j);
 				
-				test.guiRed.red.neuronas[keyNeurona].activarExternal(valor);
+				test.red.neuronas[keyNeurona].activarExternal(valor);
 				
 			}
 		}
@@ -144,20 +144,20 @@ Test.prototype = {
 		
 		
 		if(!test.foco){
-			test.foco = test.guiRed.red.size.x / 2;
+			test.foco = test.red.size.x / 2;
 		}
 		
 		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
 			
 			var x = test.foco - iEntrada + Math.round(test.patron.entrada.length / 2) + test.offset;
-			var y = test.guiRed.red.size.y - 1;
+			var y = test.red.size.y - 1;
 			
 			if(x < 0){
-				x = x + test.guiRed.red.size.x;
+				x = x + test.red.size.x;
 			}
 			
-			if(x > test.guiRed.red.size.x - 1){
-				x = x - test.guiRed.red.size.x;
+			if(x > test.red.size.x - 1){
+				x = x - test.red.size.x;
 			}
 			
 
@@ -167,7 +167,7 @@ Test.prototype = {
 				var valor = test.patron.entrada[index];
 				
 				
-				test.guiRed.red.neuronas[keyNeurona].activarExternal(valor);
+				test.red.neuronas[keyNeurona].activarExternal(valor);
 				
 				
 			}catch(e){
@@ -186,11 +186,11 @@ Test.prototype = {
 			y: 0.0
 		};
 
-		for(var i = test.salida.box.x0; i <= test.salida.box.x1; i++){
-			for(var j = test.salida.box.y0; j <= test.salida.box.y1; j++){
+		for(var i = test.boxSalida.x0; i <= test.boxSalida.x1; i++){
+			for(var j = test.boxSalida.y0; j <= test.boxSalida.y1; j++){
 				
-				var keyNeurona = test.salida.red.id + "x" + i + "y" + j;
-				var neurona = test.salida.red.neuronas[keyNeurona];
+				var keyNeurona = test.red.id + "x" + i + "y" + j;
+				var neurona = test.red.neuronas[keyNeurona];
 				
 				sumaTension += neurona.tensionSuperficial;
 				sumaProducto.x += neurona.tensionSuperficial * (i+1);
@@ -202,7 +202,7 @@ Test.prototype = {
 				}
 				
 				
-				if(sumaTension > test.salida.box.x1){
+				if(sumaTension > test.boxSalida.x1){
 					// DEBUG: no debería pasar esto
 					debugger;
 				}
@@ -232,13 +232,20 @@ Test.prototype = {
 		
 		test.printEntrada();
 		
-		test.guiRed.red.procesar();
+		test.red.procesar();
 		
 		//ubico el foco en la media.x de la salida
 		
 		test.foco = test.obtenerSalida('mediaX');
 		
-		if(!test.foco)	test.foco = test.guiRed.red.size.x / 2;
+		var dolor_set = test.foco + test.offset;
+		
+		var dolor_target = test.red.size.x / 2;
+		
+		var dolor = Math.abs(dolor_target - dolor_set) / dolor_target;
+		
+		
+		//Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO = (-dolor) * 0.1;
 	},
 	debugEstandar: function(){
 		console.log('testeo con step debugEstandar');
@@ -246,7 +253,7 @@ Test.prototype = {
 		
 		test.printEntrada();
 		
-		test.guiRed.red.procesar();
+		test.red.procesar();
 		
 	},
 	
