@@ -7,6 +7,7 @@ var Red = function(opt){
 		bufferNeuronasProcess: {}
 	}, opt);
 	
+	
 	if(!this.id){
 		this.id = Math.random();
 	}
@@ -20,60 +21,8 @@ Red.prototype = {
 	start: function(){
 		var red = this;
 		
-		if(Object.keys(red.neuronas).length > 0){
-			for(key in red.neuronas){
-				var _neurona = red.neuronas[key];
-				
-				var neurona = new Neurona(
-					$.extend({},
-						_neurona,
-						{
-							red: red
-						}
-					)
-				);
-				
-				red.neuronas[neurona.id] = neurona;
-				
-				for(iDendrita in neurona.dendritas){
-					
-					var _dendrita = neurona.dendritas[iDendrita];
-					
-					var dendrita = new Dendrita(
-						$.extend({},
-							_dendrita,
-							{
-								neurona: neurona
-							}
-						)
-						
-					);
-					
-					
-					neurona.dendritas[iDendrita] = dendrita;
-					
-					
-					for(key in dendrita.sinapsis){
-						
-						var _sinapsis = dendrita.sinapsis[key];
-						
-						var sinapsis = new Sinapsis(
-							$.extend({},
-								_sinapsis,
-								{
-									dendrita: dendrita,
-									axon: red.neuronas[_sinapsis.id]
-								}
-							)
-						);
-						
-						dendrita.sinapsis[sinapsis.id] = sinapsis;
-					}
-				};
-				
-			}
+		if(Object.keys(red.neuronas).length == 0){
 			
-		}else{
 			for(var i = 0; i < red.size.x; i++){
 				for(var j = 0; j < red.size.y; j++){
 					
@@ -88,6 +37,7 @@ Red.prototype = {
 				}
 			}
 		}
+		
 		/*Para mantener interzaf cómoda y común*/
 		red.box = {
 			x0: 0,
@@ -105,10 +55,6 @@ Red.prototype = {
 			if(Object.keys(red.bufferNeuronasProcess).length > 0){
 				red.procesar();
 			}
-			
-			//DEBUG
-			$('#log').text(red.neuronas[red.id+"x0y0"].axon.valor);
-			
 			
 		}, 10);
 

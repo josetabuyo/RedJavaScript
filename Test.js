@@ -269,21 +269,21 @@ Test.prototype = {
 	},
 	
 	start: function (){
-		var self =  this;
+		var test =  this;
 		
-		if(!self.step){
-			self.step = self.desplazamientoConstante;
+		if(!test.step){
+			test.step = test.desplazamientoConstante;
 		}
 		
 		$(document).keydown(function(event) {
 			if(event.which == 37){
-				self.keyPressIzquierda();
+				test.keyPressIzquierda();
 			
 			}else if(event.which == 39){
-				self.keyPressDerecha();
+				test.keyPressDerecha();
 			}
 		});
-		self.graficoPatron();
+		test.graficoPatron();
 		
 	},
 	graficoPatron: function (){

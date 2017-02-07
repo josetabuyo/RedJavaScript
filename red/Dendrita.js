@@ -35,7 +35,7 @@ Dendrita.prototype = {
 		
 	},
 	procesar: function(){
-		var self = this;
+		var dendrita = this;
 		
 		var dendrita = this;
 		var sinapsis = dendrita.sinapsis;
@@ -52,7 +52,7 @@ Dendrita.prototype = {
 		}
 		
 		
-		dendrita.valor += valor * self.peso;
+		dendrita.valor += valor * dendrita.peso;
 		
 		
 		

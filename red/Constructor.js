@@ -1,6 +1,132 @@
 var Constructor = {
 	red: null,
+	getRedData: function(){
+		
+		var _red = {
+			size: red.size,
+			box: red.box,
+			id: red.id,
+			neuronas: {}
+		};
+		
+		
+		Constructor.eachNeurona(red.box, function(rx, ry, neurona){
+			
+			var _neurona = {
+				id: neurona.id,
+				tipo: neurona.tipo,
+				dendritas: []
+			};
+			
+			
+			for(iDendrita in neurona.dendritas){
+				
+				var _dendrita = {
+					sinapsis: {},
+					peso: neurona.dendritas[iDendrita].peso
+				};
+				
+				
+				for(key in neurona.dendritas[iDendrita].sinapsis){
+					var sinapsis = neurona.dendritas[iDendrita].sinapsis[key];
+					var _sinapsis = {
+						id: sinapsis.id,
+						peso: sinapsis.peso
+						
+					};
+					
+					
+					_dendrita.sinapsis[sinapsis.id] = _sinapsis;
+					
+				}
+				
+				_neurona.dendritas.push(_dendrita);
+				
+			};
+			
+			_red.neuronas[neurona.id] = _neurona;
+		});
+		
+		return _red;
+	},
 	
+	setRedData: function(_red){
+		var constructor = this;
+		
+		constructor.red = new Red(_red);
+		
+		var red = constructor.red;
+		
+		
+		
+		
+		for(key in red.neuronas){
+			
+			var _neurona = red.neuronas[key];
+			
+			var neurona = new Neurona(
+				$.extend({},
+					_neurona,
+					{
+						red: red
+					}
+				)
+			);
+			
+			red.neuronas[neurona.id] = neurona;
+		
+		};
+		
+		
+		for(key in red.neuronas){
+			
+			var neurona = red.neuronas[key];
+			
+			for(iDendrita in neurona.dendritas){
+				
+				var _dendrita = neurona.dendritas[iDendrita];
+				
+				var dendrita = new Dendrita(
+					$.extend({},
+						_dendrita,
+						{
+							neurona: neurona
+						}
+					)
+					
+				);
+				
+				
+				neurona.dendritas[iDendrita] = dendrita;
+				
+				
+				for(key in dendrita.sinapsis){
+					
+					var _sinapsis = dendrita.sinapsis[key];
+					
+					var neurona_AxonEntrante = red.neuronas[_sinapsis.id];
+					
+					var sinapsis = new Sinapsis(
+						$.extend({},
+							_sinapsis,
+							{
+								dendrita: dendrita,
+								neurona: neurona_AxonEntrante
+							}
+						)
+					);
+					
+					neurona_AxonEntrante.axon.sinapsis[neurona.id] = sinapsis;
+					
+					dendrita.sinapsis[sinapsis.id] = sinapsis;
+				}
+			};
+			
+		}
+		
+		return red;
+		
+	},
 	makeEntrada: function(box){
 		var red = this.red;
 		

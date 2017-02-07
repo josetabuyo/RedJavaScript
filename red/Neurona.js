@@ -21,14 +21,18 @@ Neurona.prototype = {
 	start: function(){
 		var neurona = this;
 		
-		this.axon = new Axon({
-			neurona: neurona,
-			id: neurona.id
-		});
+		this.axon = new Axon($.extend({},
+			neurona.axon,
+			{
+				neurona: neurona,
+				id: neurona.id
+			}
+		));
 		
 	},
 	setTension: function(tensionSuperficial){
 		var neurona = this;
+
 		
 		tensionSuperficial -= tensionSuperficial * neurona.COEF_TENSION_DECAIMIENTO;
 		
@@ -57,8 +61,12 @@ Neurona.prototype = {
 			sumaValorDendritas += dendrita.valor;
 			
 		};
-	
-		return sumaValorDendritas / neurona.dendritas.length;
+		
+		if(neurona.dendritas.length > 0){
+			return sumaValorDendritas / neurona.dendritas.length;
+		}else{
+			return 0
+		}
 	},
 	activarExternal: function(valor){
 		var neurona = this;
@@ -78,14 +86,14 @@ Neurona.prototype = {
 		* derivada en la sumatoria para lograr así un filtro pasa altos,
 		* para que no se quede siempre en la misma, que cambie!!!!
 		*/
-		var valorDendritas = neurona.procesarDendritas()
+		var valorDendritas = neurona.procesarDendritas();
 		
 		var tensionAnterior = neurona.tensionSuperficial;
 		
 		var COEF_PID = 0.5;
 		
-		neurona.setTension( (1-COEF_PID) * valorDendritas + COEF_PID * (valorDendritas - tensionAnterior) );
-		
+		//neurona.setTension( (1-COEF_PID) * valorDendritas + COEF_PID * (valorDendritas - tensionAnterior) );
+		neurona.setTension(valorDendritas);
 		
 		if(neurona.axon.valor>0){
 			

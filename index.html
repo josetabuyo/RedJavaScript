@@ -64,12 +64,16 @@
 				left: 300px;
 				background-color: #AAAAAA;
 			}
-			#loadRed{
+			#newRed{
 				left: 370px;
 				background-color: #AAAAAA;
 			}
-			#saveRed{
+			#loadRed{
 				left: 440px;
+				background-color: #AAAAAA;
+			}
+			#saveRed{
+				left: 510px;
 				background-color: #AAAAAA;
 			}
 
@@ -142,6 +146,9 @@
 		<div id="resetRed" class="boton">
 			resetRed
 		</div>
+		<div id="newRed" class="boton">
+			new red
+		</div>
 		<div id="loadRed" class="boton">
 			load red
 		</div>
@@ -198,7 +205,9 @@
 		
 		//GLOBAL PARA FÁCIL DEBUG
 		var red;
-		var salida;
+		var test;
+		var guiRed;
+		
 		
 		$(function(){
 			$('body').on('contextmenu', function(e){
@@ -232,154 +241,7 @@
 			
 			console.log('setupRed');
 			
-			//crear red
-			red = new Red({
-				//size: {x:128,y:8}
-				size: {x:32,y:32}
-			});
 			
-			
-			Constructor.red = red;
-			
-			
-			
-			
-			var boxEntrada = {
-				x0: 0,
-				y0: red.size.y - 1,
-				x1: red.size.x - 1,
-				y1: red.size.y - 1
-			};
-			Constructor.makeEntrada(boxEntrada);
-			
-			
-			var boxSalida = {
-				x0: 0,
-				y0: 0,
-				x1: red.size.x - 1,
-				y1: 0
-			};
-			Constructor.makeSalida(boxSalida);
-			
-			
-			Constructor.insertarAxones({
-				modo: 'dendritas_radiales_pesadas',
-				boxTarget: {
-					x0: red.box.x0,
-					y0: red.box.y0,
-					x1: red.box.x1,
-					y1: red.box.y1-1
-				},
-				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
-			});
-			
-			/*
-			//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
-			*/
-			Constructor.insertarAxones({
-				modo: 'full_random_fixed_input',
-				dendritas_pesos: [1.5],
-				densidadConexionado: 0.7,
-				boxEntrada: boxEntrada,
-				boxTarget: {
-					x0: red.box.x0,
-					y0: red.box.y0,
-					x1: red.box.x1,
-					y1: red.box.y1-1
-				}
-			});
-			
-			
-			/*
-			Constructor.insertarAxones({
-				modo: 'relativo',
-				dendritas_pesos: [1],
-				boxTarget: {
-					x0: red.box.x0,
-					y0: red.box.y1-2,
-					x1: red.box.x1,
-					y1: red.box.y1-1
-				},
-				boxRelativo	: {
-					x0 	: -4,
-					y0 	: 1,
-					x1 	: 4,
-					y1 	: 2
-				}
-			});
-			*/
-			
-			
-			
-			/*
-			//entrada con campana reforzada
-			Constructor.insertarAxones({
-				modo: 'dendritas_radiales_pesadas',
-				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
-				boxTarget: {
-					x0: red.box.x0,
-					y0: red.box.y1-2,
-					x1: red.box.x1,
-					y1: red.box.y1-1
-				},
-				boxRelativo	: {
-					x0 	: -5,
-					y0 	: -1,
-					x1 	: 5,
-					y1 	: 0
-				}
-			});
-			*/
-			
-			
-			
-			
-			
-			
-			guiRed = new GuiRed({
-				red: red,
-				x: 1,
-				y: 1
-			});
-			
-			red.onProcesar(function(){
-				
-				guiRed.refresh();
-				
-				//WATCH
-				var keyNeurona = red.id + "x20y5"
-				try{
-					var texto = "";
-					texto += "x20y5";
-					texto += " - dendrita 0 " + "</BR>";
-					texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
-					texto += " - tensionSuperficial " + "</BR>";
-					texto += " - " + red.neuronas[keyNeurona].tensionSuperficial + "</BR>";
-					
-					texto += " - COEF_SINAPSIS_ENTRENAMIENTO" + "</BR>";
-					texto += " - " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO + "</BR>";
-					
-					
-				}catch(e){
-					//debugger;
-				}
-				guiRed.mapaNeuronaCelda[keyNeurona].attr({
-					stroke: "#005500"
-				});
-				
-				$('#control_texto').html(texto);
-				
-			});
-			
-			
-			test = new Test({
-				guiRed: guiRed,
-				red: red,
-				boxEntrada: boxEntrada,
-				boxSalida: boxSalida,
-				noise: false,
-				step: Test.prototype.secada
-			});
 			
 			console.log('fin setupRed');
 			
@@ -435,50 +297,192 @@
 			
 			
 			
-			$('#saveRed').on('click', function(){
+			
+			
+			
+			var setWorld = function(){
 				
-				var _red = {
-					size: red.size,
-					box: red.box,
-					neuronas: {}
+				guiRed = new GuiRed({
+					red: red,
+					x: 1,
+					y: 1
+				});
+				
+				red.onProcesar(function(){
+					
+					guiRed.refresh();
+					
+					//WATCH
+					var keyNeurona = red.id + "x20y5"
+					try{
+						var texto = "";
+						texto += "x20y5";
+						texto += " - dendrita 0 " + "</BR>";
+						texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
+						texto += " - tensionSuperficial " + "</BR>";
+						texto += " - " + red.neuronas[keyNeurona].tensionSuperficial + "</BR>";
+						
+						texto += " - COEF_SINAPSIS_ENTRENAMIENTO" + "</BR>";
+						texto += " - " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO + "</BR>";
+						
+						
+					}catch(e){
+						//debugger;
+					}
+					guiRed.mapaNeuronaCelda[keyNeurona].attr({
+						stroke: "#005500"
+					});
+					
+					$('#control_texto').html(texto);
+					
+				});
+				
+				
+				//DEBUG: boxEntrada y boxSalida
+				// no deberían estar acá,
+				//no sé como hacer para que se obtenga de la red a testear,
+				//puede ser que lo guarde como dato de la red, debería poder no usarse
+				
+				var boxEntrada = {
+					x0: 0,
+					y0: red.size.y - 1,
+					x1: red.size.x - 1,
+					y1: red.size.y - 1
+				};
+				var boxSalida = {
+					x0: 0,
+					y0: 0,
+					x1: red.size.x - 1,
+					y1: 0
 				};
 				
-				
-				Constructor.eachNeurona(red.box, function(rx, ry, neurona){
-					
-					var _neurona = {
-						id: neurona.id,
-						tipo: neurona.tipo,
-						dendritas: []
-					};
-					
-					
-					for(iDendrita in neurona.dendritas){
-						
-						var _dendrita = {
-							sinapsis: {},
-							peso: neurona.dendritas[iDendrita].peso
-						};
-						
-						
-						for(key in neurona.dendritas[iDendrita].sinapsis){
-							var sinapsis = neurona.dendritas[iDendrita].sinapsis[key];
-							var _sinapsis = {
-								id: sinapsis.id,
-								peso: sinapsis.peso
-								
-							};
-							
-							
-							_dendrita.sinapsis[sinapsis.id] = _sinapsis;
-							
-						}
-						
-						_neurona.dendritas.push(_dendrita);
-						
-					};
-					_red.neuronas[neurona.id] = _neurona;
+				test = new Test({
+					guiRed: guiRed,
+					red: red,
+					boxEntrada: boxEntrada,
+					boxSalida: boxSalida,
+					noise: false,
+					step: Test.prototype.secada
 				});
+					
+			};
+			
+			
+			
+			
+			
+			
+			
+			$('#newRed').on('click', function(){
+				//crear red
+				red = new Red({
+					//size: {x:128,y:8}
+					size: {x:32,y:32},
+					neuronas: {}
+				});
+				
+				
+				Constructor.red = red;
+				
+				
+				var boxEntrada = {
+					x0: 0,
+					y0: red.size.y - 1,
+					x1: red.size.x - 1,
+					y1: red.size.y - 1
+				};
+				Constructor.makeEntrada(boxEntrada);
+				
+				
+				var boxSalida = {
+					x0: 0,
+					y0: 0,
+					x1: red.size.x - 1,
+					y1: 0
+				};
+				Constructor.makeSalida(boxSalida);
+				
+				
+				Constructor.insertarAxones({
+					modo: 'dendritas_radiales_pesadas',
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
+				});
+				
+				/*
+				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
+				*/
+				Constructor.insertarAxones({
+					modo: 'full_random_fixed_input',
+					dendritas_pesos: [1.5],
+					densidadConexionado: 0.7,
+					boxEntrada: boxEntrada,
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					}
+				});
+				
+				
+				/*
+				Constructor.insertarAxones({
+					modo: 'relativo',
+					dendritas_pesos: [1],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y1-2,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -4,
+						y0 	: 1,
+						x1 	: 4,
+						y1 	: 2
+					}
+				});
+				*/
+				
+				
+				
+				/*
+				//entrada con campana reforzada
+				Constructor.insertarAxones({
+					modo: 'dendritas_radiales_pesadas',
+					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y1-2,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -5,
+						y0 	: -1,
+						x1 	: 5,
+						y1 	: 0
+					}
+				});
+				*/
+				
+				console.log('red created...');
+				
+				
+				setWorld();
+				
+				
+			});
+			
+			$('#saveRed').on('click', function(){
+				
+				var _red = Constructor.getRedData();
 				
 				
 				Vx.send({
@@ -487,7 +491,7 @@
 					data: JSON.stringify(_red)
 					
 				}, function(mensaje){
-					
+					console.log('red saved...');
 					console.log(mensaje);
 				});
 			});
@@ -495,8 +499,6 @@
 			
 			
 			$('#loadRed').on('click', function(){
-			
-				
 				
 				Vx.send({
 					tipoDeMensaje: 'leerArchivo',
@@ -506,13 +508,13 @@
 					
 					var _red = JSON.parse(mensaje.data);
 					
-					var red = new Red(
-						$.extend({},
-							_red
-						)
-					);
+					red = Constructor.setRedData(_red);
 					
 					console.log('red loaded...');
+					
+					setWorld();
+					
+					
 				});
 			});
 			
