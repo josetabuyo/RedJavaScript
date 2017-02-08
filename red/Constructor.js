@@ -111,7 +111,7 @@ var Constructor = {
 							_sinapsis,
 							{
 								dendrita: dendrita,
-								neurona: neurona_AxonEntrante
+								neurona_AxonEntrante: neurona_AxonEntrante
 							}
 						)
 					);
@@ -393,11 +393,12 @@ var Constructor = {
 					
 					if(keyNeurona_AxonEntrante != neurona.id){
 						
-						var axonEntrante = red.neuronas[keyNeurona_AxonEntrante].axon;
+						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
+						var axonEntrante = neurona_AxonEntrante.axon;
 						
 						var sinapsis = new Sinapsis({
+							neurona_AxonEntrante: neurona_AxonEntrante,
 							dendrita: dendrita,
-							axon: axonEntrante,
 							peso: opt.peso,
 							id: keyNeurona_AxonEntrante
 						});
@@ -460,7 +461,8 @@ var Constructor = {
 						
 						var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
 						
-						var axonEntrante = red.neuronas[keyNeurona_AxonEntrante].axon;
+						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
+						var axonEntrante = neurona_AxonEntrante.axon;
 						
 						if(!opt.peso){
 							opt.peso = Math.random()
@@ -469,8 +471,7 @@ var Constructor = {
 						if(opt.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
 							
 							var sinapsis = new Sinapsis({
-								neurona: neuronaPadre,
-								axon: axonEntrante,
+								neurona_AxonEntrante: neurona_AxonEntrante,
 								peso: opt.peso,
 								id: keyNeurona_AxonEntrante
 							});
@@ -546,14 +547,16 @@ var Constructor = {
 						
 						var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
 						
+						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
+						
+						
 						if(keyNeurona_AxonEntrante != neurona.id){
 							
-							var axonEntrante = red.neuronas[keyNeurona_AxonEntrante].axon;
+							var axonEntrante = neurona_AxonEntrante.axon;
 							
 							var sinapsis = new Sinapsis({
-								neurona: neurona,
+								neurona_AxonEntrante: neurona_AxonEntrante,
 								dendrita: dendrita,
-								axon: axonEntrante,
 								peso: opt.peso,
 								id: keyNeurona_AxonEntrante
 							});
@@ -635,9 +638,8 @@ var Constructor = {
 					){
 					
 						var sinapsis = new Sinapsis({
-							neurona: neurona,
+							neurona_AxonEntrante: neurona_AxonEntrante,
 							dendrita: dendrita,
-							axon: neurona_AxonEntrante.axon,
 							peso: opt.peso,
 							id: neurona_AxonEntrante.id
 						});

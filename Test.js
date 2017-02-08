@@ -18,6 +18,7 @@ var Test = function(opt){
 
 Test.prototype = {
 	NOISE_LEVEL: 0.01,
+	running: false,
 	estado: {
 		current:	{
 			neuronaCoord: {x:null, y:null}
@@ -29,12 +30,6 @@ Test.prototype = {
 		salida: [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
 	},
 	testInterval: null,
-	
-	stop: function(){
-		
-		clearInterval(this.testInterval);
-	},
-	
 	
 	desplazamientoConstante: function(){
 		var test = this;
@@ -260,14 +255,22 @@ Test.prototype = {
 	play: function(){
 		var test = this;
 		
-		test.testInterval = setInterval(function() {
+		if(!test.running){
+			test.testInterval = setInterval(function() {
+				
+				test.step();
+				
+			}, 0);
 			
-			test.step();
+			test.running = true;
 			
-		}, 100);
-
+			
+		}
 	},
-	
+	stop: function(){
+		clearInterval(this.testInterval);
+		test.running = false;
+	},
 	start: function (){
 		var test =  this;
 		
