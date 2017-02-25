@@ -6,6 +6,15 @@ var Constructor = {
 			size: red.size,
 			box: red.box,
 			id: red.id,
+			
+			COEF_UMBRAL_SINAPSIS_PESO		: Red.prototype.COEF_UMBRAL_SINAPSIS_PESO,
+			COEF_UMBRAL_SPIKE				: Neurona.prototype.COEF_UMBRAL_SPIKE,
+			COEF_UMBRAL_SPIKE_MIN_TENSION	: Neurona.prototype.COEF_UMBRAL_SPIKE_MIN_TENSION,
+			COEF_PID						: Neurona.prototype.COEF_PID,
+			COEF_TENSION_DECAIMIENTO		: Neurona.prototype.COEF_TENSION_DECAIMIENTO,
+			COEF_DENDRITA_DECAIMIENTO		: Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO,
+			COEF_SINAPSIS_ENTRENAMIENTO		: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
+			
 			neuronas: {}
 		};
 		
@@ -58,6 +67,14 @@ var Constructor = {
 		var red = constructor.red;
 		
 		
+		Red.prototype.COEF_UMBRAL_SINAPSIS_PESO 		= _red.COEF_UMBRAL_SINAPSIS_PESO		;
+		Neurona.prototype.COEF_UMBRAL_SPIKE				= _red.COEF_UMBRAL_SPIKE				;
+		Neurona.prototype.COEF_UMBRAL_SPIKE_MIN_TENSION	= _red.COEF_UMBRAL_SPIKE_MIN_TENSION	;
+		Neurona.prototype.COEF_PID						= _red.COEF_PID							;
+		Neurona.prototype.COEF_TENSION_DECAIMIENTO		= _red.COEF_TENSION_DECAIMIENTO			;
+		Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO	= _red.COEF_DENDRITA_DECAIMIENTO		;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO	= _red.COEF_SINAPSIS_ENTRENAMIENTO		;
+		
 		
 		
 		for(key in red.neuronas){
@@ -74,7 +91,10 @@ var Constructor = {
 			);
 			
 			red.neuronas[neurona.id] = neurona;
-		
+			if(neurona.tipo == 'ENTRADA'){
+				constructor.makeEntradaNeurona(neurona);
+			}
+			
 		};
 		
 		
@@ -127,26 +147,30 @@ var Constructor = {
 		return red;
 		
 	},
+	
+	makeEntradaNeurona: function(neurona){
+		neurona.tipo = "ENTRADA";
+		neurona.dendritas = [];
+		neurona.procesar = function(){
+			var neurona = this;
+			
+			neurona.setTension(neurona.tensionSuperficial);
+			
+			if(neurona.axon.valor == 1){
+				neurona.red.bufferNeuronasProcess[neurona.id] = neurona;
+			}
+		};
+	},
 	makeEntrada: function(box){
-		var red = this.red;
+		var constructor = this;
+		var red = constructor.red;
 		
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
 				
 				var keyNeurona = red.id + "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
-				neurona.tipo = "ENTRADA";
-				neurona.dendritas = [];
-				neurona.procesar = function(){
-					var neurona = this;
-					
-					neurona.setTension(neurona.tensionSuperficial);
-					
-					if(neurona.axon.valor == 1){
-						neurona.red.bufferNeuronasProcess[neurona.id] = neurona;
-					}
-				};
-				
+				constructor.makeEntradaNeurona(neurona);
 			}
 		}
 		

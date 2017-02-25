@@ -77,50 +77,42 @@
 				background-color: #AAAAAA;
 			}
 
-			#COEF_UMBRAL_SPIKE_ref{
-				position: absolute;
-				top: 5px;
+			
+			#plantillas{
+				display: none;
+			}
+			
+			ul {
+				list-style-type: none;
+				margin:0;
+				padding:0;
+			}
+
+
+			#plantilla_sly{
+			
+			}
+			
+			#plantilla_sly
+			div.sly_ref{
 				left: 20px;
 				font-size: 9px;
 			}
-			#COEF_UMBRAL_SPIKE{
-				position: absolute;
+			
+			#plantilla_sly
+			input.sly_input{
+				position: relative;
 				top: 20px;
 				left: 20px;
 				width: 90%;
 			}
 			
-			#COEF_DENDRITA_DECAIMIENTO_ref{
-				position: absolute;
-				top: 45px;
-				left: 20px;
-				font-size: 9px;
-			}
-			#COEF_DENDRITA_DECAIMIENTO{
-				position: absolute;
-				top: 60px;
-				left: 20px;
-				width: 90%;
-			}
-			
-			
-			#COEF_SINAPSIS_ENTRENAMIENTO_ref{
-				position: absolute;
-				top: 85px;
-				left: 20px;
-				font-size: 9px;
-			}
-			#COEF_SINAPSIS_ENTRENAMIENTO{
-				position: absolute;
-				top: 100px;
-				left: 20px;
-				width: 90%;
-			}
 			#control_texto{
 				position: absolute;
-				top: 115px;
+				bottom: 5px;
 				left: 5px;
 				right: 5px;
+				display: none;
 			}
 			
 		
@@ -162,12 +154,16 @@
 		
 		<div id="control">
 			
-			<div id="COEF_UMBRAL_SPIKE_ref">COEF_UMBRAL_SPIKE: </div>
-			<input id="COEF_UMBRAL_SPIKE" type="range" min="0" max="255" value="100" />
-			<div id="COEF_DENDRITA_DECAIMIENTO_ref">COEF_DENDRITA_DECAIMIENTO: </div>
-			<input id="COEF_DENDRITA_DECAIMIENTO" type="range" min="0" max="255" value="100" />
-			<div id="COEF_SINAPSIS_ENTRENAMIENTO_ref">COEF_SINAPSIS_ENTRENAMIENTO: </div>
-			<input id="COEF_SINAPSIS_ENTRENAMIENTO" type="range" min="0" max="255" value="100" />
+			<ul id="coeficientes">
+				<li>COEF_UMBRAL_SPIKE</li>
+				<li>COEF_UMBRAL_SPIKE_MIN_TENSION</li>
+				<li>COEF_PID</li>
+				<li>COEF_TENSION_DECAIMIENTO</li>
+				<li>COEF_DENDRITA_DECAIMIENTO</li>
+				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
+				<li>COEF_UMBRAL_SINAPSIS_PESO</li>
+			<ul>
+			
 			<div id="control_texto"></div>
 		</div>
 		
@@ -175,6 +171,14 @@
 		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
 		</svg>
 		
+		
+		<div id="plantillas">
+			<li id="plantilla_sly">
+				<div class="sly_ref">
+				</div>
+				<input class="sly_input" type="range" min="0" max="255" value="100" />
+			</li>
+		</div>
 		
 		
 	</body>
@@ -215,7 +219,7 @@
 				return false;
 			});
 			
-
+			
 			var resetRed = function(){
 				for(iNeurona in red.neuronas){
 					var oNeurona = red.neuronas[iNeurona];
@@ -238,6 +242,7 @@
 				test.estado.current.neuronaCoord = {x: testIndex, y: red.size.y - 1};
 				
 			};
+			
 			
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
@@ -267,27 +272,53 @@
 			});
 			
 			
-			$('#COEF_UMBRAL_SPIKE').change(function(){
-				Neurona.prototype.COEF_UMBRAL_SPIKE =  ($(this).val() / 255);
-				$('#COEF_UMBRAL_SPIKE_ref').text("COEF_UMBRAL_SPIKE: " + Neurona.prototype.COEF_UMBRAL_SPIKE);
-			});
-			$('#COEF_DENDRITA_DECAIMIENTO').change(function(){
-				Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO =  ($(this).val() / 255);
-				$('#COEF_DENDRITA_DECAIMIENTO_ref').text("COEF_DENDRITA_DECAIMIENTO: " + Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO);
-			});
-			$('#COEF_SINAPSIS_ENTRENAMIENTO').change(function(){
-				Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO =  ($(this).val() / 255);
-				$('#COEF_SINAPSIS_ENTRENAMIENTO_ref').text("COEF_SINAPSIS_ENTRENAMIENTO: " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO);
+			
+			
+			
+			
+			
+			
+			
+			$('ul#coeficientes>li').each(function(index, item){
 				
-			});
+				var nameSly = $(item).text();
+				
+				var newLi = $('#plantilla_sly').clone()
+						.attr('id', nameSly+'_container');
+				
+				newLi.find('div.sly_ref').text(nameSly);
+				
+				newLi.find('input.sly_input').attr('id', nameSly);
+				
+				//$(item).html(newLi.html());
+				$(item).replaceWith(newLi)
+			})
 			
-			$('#COEF_UMBRAL_SPIKE').val(Neurona.prototype.COEF_UMBRAL_SPIKE * 255);
-			$('#COEF_UMBRAL_SPIKE').change();
-			$('#COEF_DENDRITA_DECAIMIENTO').val(Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO * 255);
-			$('#COEF_DENDRITA_DECAIMIENTO').change();
-			$('#COEF_SINAPSIS_ENTRENAMIENTO').val(Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO * 255);
-			$('#COEF_SINAPSIS_ENTRENAMIENTO').change();
 			
+			
+			var configSlyCoef = function(nameSly, proto){
+				var objSly = $('#'+ nameSly);
+				
+				objSly.change(function(){
+					var value = ($(this).val() / 255);
+					
+					proto[nameSly] = value;
+					
+					$(this).parent().find('div.sly_ref').text(nameSly + ": " + proto[nameSly]);
+				});
+				objSly.val(proto[nameSly] * 255);
+				objSly.change();
+			};
+			
+			
+			configSlyCoef('COEF_UMBRAL_SINAPSIS_PESO', Red.prototype);
+			configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
+			configSlyCoef('COEF_UMBRAL_SPIKE_MIN_TENSION', Neurona.prototype);
+			configSlyCoef('COEF_PID', Neurona.prototype);
+			configSlyCoef('COEF_TENSION_DECAIMIENTO', Neurona.prototype);
+			configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
+			configSlyCoef('COEF_DENDRITA_DECAIMIENTO', Dendrita.prototype);
+			configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
 			
 			
 			Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
@@ -413,7 +444,7 @@
 				
 				/*
 				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
-				*/
+				
 				Constructor.insertarAxones({
 					modo: 'full_random_fixed_input',
 					dendritas_pesos: [1.5],
@@ -426,26 +457,25 @@
 						y1: red.box.y1-1
 					}
 				});
+				*/
 				
-				
-				/*
+				//Prueba con entrada relativa, para que fluya
 				Constructor.insertarAxones({
 					modo: 'relativo',
 					dendritas_pesos: [1],
 					boxTarget: {
 						x0: red.box.x0,
-						y0: red.box.y1-2,
+						y0: red.box.y0,
 						x1: red.box.x1,
 						y1: red.box.y1-1
 					},
 					boxRelativo	: {
 						x0 	: -4,
-						y0 	: 1,
+						y0 	: 2,
 						x1 	: 4,
-						y1 	: 2
+						y1 	: 3
 					}
 				});
-				*/
 				
 				
 				

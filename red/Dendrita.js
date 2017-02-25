@@ -47,6 +47,7 @@ Dendrita.prototype = {
 				suma += sinap.procesar();
 			}
 			
+			
 			// Activacion Promedio
 			valor = suma / Object.keys(sinapsis).length;
 		}

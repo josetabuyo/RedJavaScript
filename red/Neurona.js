@@ -18,6 +18,7 @@ Neurona.prototype = {
 	COEF_UMBRAL_SPIKE: 0.16,
 	COEF_UMBRAL_SPIKE_MIN_TENSION: 0.2,
 	COEF_TENSION_DECAIMIENTO: 0.1,
+	COEF_PID: 0.5,
 	start: function(){
 		var neurona = this;
 		
@@ -90,9 +91,7 @@ Neurona.prototype = {
 		
 		var tensionAnterior = neurona.tensionSuperficial;
 		
-		var COEF_PID = 0.5;
-		
-		//neurona.setTension( (1-COEF_PID) * valorDendritas + COEF_PID * (valorDendritas - tensionAnterior) );
+		//neurona.setTension( (1 - neurona.COEF_PID) * valorDendritas + neurona.COEF_PID * (valorDendritas - tensionAnterior) );
 		neurona.setTension(valorDendritas);
 		
 		if(neurona.axon.valor>0){
