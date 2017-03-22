@@ -184,7 +184,7 @@ GuiRed.prototype = {
 				
 				if(neurona.tipo == "ENTRADA"){
 					
-					//No tengo valor de depolarización en la entrada, solo activación
+					//No tengo tensionSuperficial en la entrada, solo activación
 					valor = axon.valor;
 					var byteRojo = Math.floor(valor / 2 * 255);
 					var byteVerde = Math.floor(valor / 2 * 255);

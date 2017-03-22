@@ -14,7 +14,7 @@ var Dendrita = function(opt){
 };
 
 Dendrita.prototype = {
-	COEF_DENDRITA_DECAIMIENTO: 0.37,
+	COEF_DENDRITA_DECAIMIENTO: 0.651,
 	start: function(){
 		
 	},

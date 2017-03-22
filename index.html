@@ -2,39 +2,49 @@
 <html>
 	<head>
 		<title>
-			Red java script
+			Red Neuronal by joZbuyo
 		</title>
 		<style>
-			#control{
-				position: absolute;
-				right: 20px;
-				top: 40px;
-				width: 30%;
-				height: 90%;
-				border: solid 1px;
-			}
-			
 			
 			#svgRed{
 				position: absolute;
-				left: 20px;
+				left: 0px;
 				top: 40px;
-				width: 65%;
+				width: 40%;
 				height: 90%;
 				border: solid 1px;
 				overflow: scroll;
+			}
+			
+			#svgWorld{
+				position: absolute;
+				left: 40%;
+				top: 40px;
+				width: 39%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+			
+			#control{
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				width: 20%;
+				height: 90%;
+				border: solid 1px;
+				font-size: 10px;
 			}
 			
 			#svgPatronesTest{
 				position: absolute;
-				left: 20px;
-				top: 91%;
-				width: 65%;
-				height: 9%;
+				right: 0px;
+				top: 5px;
+				width: 20%;
+				height: 20px;
 				border: solid 1px;
 				overflow: scroll;
 			}
-			
 			
 			.boton{
 				position: absolute;
@@ -107,15 +117,6 @@
 				width: 90%;
 			}
 			
-			#control_texto{
-				position: absolute;
-				bottom: 5px;
-				left: 5px;
-				right: 5px;
-				display: none;
-			}
-			
-		
 		</style>
 		
 	</head>
@@ -152,6 +153,10 @@
 		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
 		</svg>
 		
+		
+		<svg id="svgWorld" >
+		</svg>
+		
 		<div id="control">
 			
 			<ul id="coeficientes">
@@ -164,7 +169,6 @@
 				<li>COEF_UMBRAL_SINAPSIS_PESO</li>
 			<ul>
 			
-			<div id="control_texto"></div>
 		</div>
 		
 		<svg id="svgPatronesTest" >
@@ -214,39 +218,15 @@
 		
 		
 		$(function(){
+			
+			Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
+			
+			
 			$('body').on('contextmenu', function(e){
 				e.stopPropagation();
 				return false;
 			});
 			
-			
-			var resetRed = function(){
-				for(iNeurona in red.neuronas){
-					var oNeurona = red.neuronas[iNeurona];
-					oNeurona.tensionSuperficial = 0;
-					oNeurona.axon.valor = 0;
-					for(iDendrita in oNeurona.dendritas){
-						var oDendrita = oNeurona.dendritas[iDendrita];
-						
-						if(Object.keys(oDendrita.sinapsis).length > 0){
-							var suma = 0;
-							for(iSinapsis in oDendrita.sinapsis){
-								var oSinapsis = oDendrita.sinapsis[iSinapsis];
-								oSinapsis.peso = Math.random();
-							}
-						}
-						
-					};
-				}
-				var testIndex = Math.round(Math.random() * red.size.x);
-				test.estado.current.neuronaCoord = {x: testIndex, y: red.size.y - 1};
-				
-			};
-			
-			
-			console.log('*****************************************************');
-			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
-			console.log('*****************************************************');
 			
 
 			$('#play').on('click', function(){
@@ -267,8 +247,27 @@
 			$('#verTensionSuperficial').on('mouseup', function(){
 				guiRed.modo="ACTIVACION";
 			});
+			
 			$('#resetRed').on('click', function(){
-				resetRed();
+				for(iNeurona in red.neuronas){
+					var oNeurona = red.neuronas[iNeurona];
+					oNeurona.tensionSuperficial = 0;
+					oNeurona.axon.valor = 0;
+					for(iDendrita in oNeurona.dendritas){
+						var oDendrita = oNeurona.dendritas[iDendrita];
+						
+						if(Object.keys(oDendrita.sinapsis).length > 0){
+							var suma = 0;
+							for(iSinapsis in oDendrita.sinapsis){
+								var oSinapsis = oDendrita.sinapsis[iSinapsis];
+								oSinapsis.peso = Math.random();
+							}
+						}
+						
+					};
+				}
+				var testIndex = Math.round(Math.random() * red.size.x);
+				test.estado.current.neuronaCoord = {x: testIndex, y: red.size.y - 1};
 			});
 			
 			
@@ -290,80 +289,50 @@
 				
 				newLi.find('input.sly_input').attr('id', nameSly);
 				
-				//$(item).html(newLi.html());
 				$(item).replaceWith(newLi)
 			})
 			
 			
 			
-			var configSlyCoef = function(nameSly, proto){
-				var objSly = $('#'+ nameSly);
+			var setControlCoeficientes = function(){
+				var configSlyCoef = function(nameSly, proto){
+					var objSly = $('#'+ nameSly);
+					
+					objSly.change(function(){
+						var value = ($(this).val() / 255);
+						
+						proto[nameSly] = value.toFixed(3);;
+						
+						$(this).parent().find('div.sly_ref').text(nameSly + ": " + proto[nameSly]);
+					});
+					objSly.val(proto[nameSly] * 255);
+					objSly.change();
+				};
 				
-				objSly.change(function(){
-					var value = ($(this).val() / 255);
-					
-					proto[nameSly] = value;
-					
-					$(this).parent().find('div.sly_ref').text(nameSly + ": " + proto[nameSly]);
-				});
-				objSly.val(proto[nameSly] * 255);
-				objSly.change();
+				
+				configSlyCoef('COEF_UMBRAL_SINAPSIS_PESO', Red.prototype);
+				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
+				configSlyCoef('COEF_UMBRAL_SPIKE_MIN_TENSION', Neurona.prototype);
+				configSlyCoef('COEF_PID', Neurona.prototype);
+				configSlyCoef('COEF_TENSION_DECAIMIENTO', Neurona.prototype);
+				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
+				configSlyCoef('COEF_DENDRITA_DECAIMIENTO', Dendrita.prototype);
+				configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
+			
 			};
 			
 			
-			configSlyCoef('COEF_UMBRAL_SINAPSIS_PESO', Red.prototype);
-			configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
-			configSlyCoef('COEF_UMBRAL_SPIKE_MIN_TENSION', Neurona.prototype);
-			configSlyCoef('COEF_PID', Neurona.prototype);
-			configSlyCoef('COEF_TENSION_DECAIMIENTO', Neurona.prototype);
-			configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
-			configSlyCoef('COEF_DENDRITA_DECAIMIENTO', Dendrita.prototype);
-			configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
 			
-			
-			Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
+			setControlCoeficientes();
 			
 			
 			
-			
-			
-			
-			
-			var setWorld = function(){
+			var setRedContext = function(){
 				
 				guiRed = new GuiRed({
 					red: red,
 					x: 1,
 					y: 1
-				});
-				
-				red.onProcesar(function(){
-					
-					guiRed.refresh();
-					
-					//WATCH
-					var keyNeurona = red.id + "x20y5"
-					try{
-						var texto = "";
-						texto += "x20y5";
-						texto += " - dendrita 0 " + "</BR>";
-						texto += " - " + red.neuronas[keyNeurona].dendritas[0].valor + "</BR>";
-						texto += " - tensionSuperficial " + "</BR>";
-						texto += " - " + red.neuronas[keyNeurona].tensionSuperficial + "</BR>";
-						
-						texto += " - COEF_SINAPSIS_ENTRENAMIENTO" + "</BR>";
-						texto += " - " + Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO + "</BR>";
-						
-						
-					}catch(e){
-						//debugger;
-					}
-					guiRed.mapaNeuronaCelda[keyNeurona].attr({
-						stroke: "#005500"
-					});
-					
-					$('#control_texto').html(texto);
-					
 				});
 				
 				
@@ -385,27 +354,36 @@
 					y1: 0
 				};
 				
+				
+				
+				
 				test = new Test({
 					guiRed: guiRed,
 					red: red,
 					boxEntrada: boxEntrada,
 					boxSalida: boxSalida,
-					noise: false,
-					step: Test.prototype.secada
+					noise: false
 				});
-					
+				
+				
+				//TODO: cargo y pongo play al test del mundillo
+				//TODO: configurar el auto-run, independiente de la red.procesar, ambos asincrónicos.
+				/*
+				test.world.playInterval = setInterval(function() {
+					test.world.step();
+				},10);
+				*/
+				
+				red.onProcesar(function(){
+					guiRed.refresh();
+				});
+				
 			};
-			
-			
-			
-			
-			
 			
 			
 			$('#newRed').on('click', function(){
 				//crear red
 				red = new Red({
-					//size: {x:128,y:8}
 					size: {x:32,y:32},
 					neuronas: {}
 				});
@@ -443,7 +421,7 @@
 				});
 				
 				/*
-				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTML de entrada feedfoward, éstas provocan la activación directa)
+				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTM de entrada feedfoward, éstas provocan la activación directa)
 				
 				Constructor.insertarAxones({
 					modo: 'full_random_fixed_input',
@@ -502,7 +480,7 @@
 				console.log('red created...');
 				
 				
-				setWorld();
+				setRedContext();
 				
 				
 			});
@@ -539,11 +517,18 @@
 					
 					console.log('red loaded...');
 					
-					setWorld();
+					setRedContext();
 					
+					setControlCoeficientes();
 					
 				});
 			});
+			
+			
+			
+			console.log('*****************************************************');
+			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
+			console.log('*****************************************************');
 			
 
 		});

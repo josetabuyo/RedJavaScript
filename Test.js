@@ -99,22 +99,6 @@ Test.prototype = {
 	foco: null,
 	offset: 0,
 	
-	keyPressDerecha: function(){
-		this.offset++;
-		
-		if(this.offset >= this.red.size.x){
-			this.offset = 0;
-		}
-		
-	},
-	keyPressIzquierda: function(){
-		this.offset--;
-		
-		if(this.offset < 0){
-			this.offset = this.red.size.x - 1;
-		}
-	},
-	
 	printEntrada: function(){
 		var test = this;
 		
@@ -175,12 +159,12 @@ Test.prototype = {
 		
 		//tomo el centro de masa (x,y) de la salida 
 		var sumaTension = 0.0;
-
+		
 		var sumaProducto = {
 			x: 0.0,
 			y: 0.0
 		};
-
+		
 		for(var i = test.boxSalida.x0; i <= test.boxSalida.x1; i++){
 			for(var j = test.boxSalida.y0; j <= test.boxSalida.y1; j++){
 				
@@ -221,7 +205,7 @@ Test.prototype = {
 		
 	},
 	
-	secada: function(){
+	step_secada: function(){
 		console.log('testeo con step secada');
 		var test = this;
 		
@@ -252,21 +236,266 @@ Test.prototype = {
 		
 	},
 	
+	world: {
+		context: {
+			pos: {x:0, y:0},
+			automata: null,
+			motor: {
+				left: 0,
+				right: 0,
+				up: 0,
+				down: 0
+			}
+		},
+		printEntrada: function(){
+			// TODO: para debuggear mockeo los ojos usando el motor
+			
+			var motor = test.world.context.motor;
+			
+			
+			for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
+				for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
+					var valor = 0;
+					
+					if(test.noise){
+						valor = Math.random() * test.NOISE_LEVEL;
+					}else{
+						valor = 0;
+					}
+					
+					var keyNeurona = test.guiRed.keyByCoord(i, j);
+					
+					test.red.neuronas[keyNeurona].activarExternal(valor);
+					
+				}
+			}
+			
+			var keyNeurona;
+			var valor;
+			var indexInput = -1; //Para que arranque en 0 la primera
+			
+			//LEFT
+			valor = motor.left;
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			
+			
+			
+			//RIGHT
+			valor = motor.right;
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			
+			//UP
+			valor = motor.up;
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			
+			
+			//DOWN
+			valor = motor.down;
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			test.red.neuronas[keyNeurona].activarExternal(valor);
+			
+		},
+		step: function(){
+			console.log('testeo world step');
+			
+			//mover los elementos del mundito: comida, enemigos, etc
+			
+			
+			// imprimir entrada en la red
+			// TODO: DEBUG: debo leer del mundito i escribir en las entrada como lo hace print
+			test.world.printEntrada();
+			//
+			
+			
+			test.red.procesar();
+			
+			// obtener salidas
+			
+			// actualizar posición:
+			
+			var motor = test.world.context.motor;
+			
+			var vel = {
+				x: motor.right - motor.left,
+				y: motor.down - motor.up
+			};
+			
+			var paso = 10;
+			
+			var pos = test.world.context.pos;
+			var automata = test.world.context.automata;
+			
+			pos = {
+				x: pos.x + (vel.x * paso),
+				y: pos.y + (vel.y * paso)
+			};
+			
+			test.world.context.pos = pos;
+			
+			/*
+			automata.attr('cx', +pos.x);
+			automata.attr('cy', +pos.y);
+			*/
+			
+			
+			automata.transform( 't' + pos.x + ',' + pos.y);
+			
+			test.world.context.automata = automata;
+			
+		},
+		
+		load: function(){
+			var world = this;
+			
+			var snapWorld = Snap("#svgWorld");
+			
+			var fondo = snapWorld.group(
+				snapWorld.rect(0,0, $("#svgWorld").width(), $("#svgWorld").height())
+			);
+			fondo.attr({
+				fill: "#FFFF88"
+			});
+			
+			
+			
+			
+			
+			var pos = world.context.pos;
+			
+			var automata = snapWorld.group(
+				snapWorld.rect(pos.x,pos.y, 30, 30)
+			);
+			automata.attr({
+				fill: "#888888"
+			});
+			
+			world.context.automata = automata;
+			
+			$('body').on('keydown', function(e){
+				var motor = world.context.motor;
+	
+				switch (e.which) {
+					case 37:
+						motor.left = 1;
+						break;
+					case 38:
+						motor.up = 1;
+						break;
+					case 39:
+						motor.right = 1;
+						break;
+					case 40:
+						motor.down = 1;
+						break;
+				};
+				
+				e.preventDefault(); 
+			});
+			
+			
+			$('body').on('keyup', function(e){
+				var motor = world.context.motor;
+				
+				switch (e.which) {
+					case 37:
+						motor.left = 0;
+						break;
+					case 38:
+						motor.up = 0;
+						break;
+					case 39:
+						motor.right = 0;
+						break;
+					case 40:
+						motor.down = 0;
+						break;
+				};
+				
+				e.preventDefault(); 
+			});
+			
+		}
+	},
+	
+	step:function(){
+		var test = this;
+		
+		test.world.step();
+		
+	},
 	play: function(){
 		var test = this;
 		
 		if(!test.running){
-			test.testInterval = setInterval(function() {
-				
+
+			test.testInterval = setInterval(function (){
 				test.step();
-				
 			}, 0);
 			
 			test.running = true;
-			
-			
 		}
+		
 	},
+	
 	stop: function(){
 		clearInterval(this.testInterval);
 		test.running = false;
@@ -274,19 +503,12 @@ Test.prototype = {
 	start: function (){
 		var test =  this;
 		
-		if(!test.step){
-			test.step = test.desplazamientoConstante;
-		}
 		
-		$(document).keydown(function(event) {
-			if(event.which == 37){
-				test.keyPressIzquierda();
-			
-			}else if(event.which == 39){
-				test.keyPressDerecha();
-			}
-		});
-		test.graficoPatron();
+		test.world.load();
+		
+		
+		//TODO: DEBUG: no estaría en el test world completo
+		//test.graficoPatron();
 		
 	},
 	graficoPatron: function (){
