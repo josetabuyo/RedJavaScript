@@ -147,6 +147,27 @@ var Constructor = {
 		return red;
 		
 	},
+	keyByCoord: function(x, y){
+		var constructor = this;
+		
+		var keyNeurona="";
+		
+		keyNeurona += constructor.red.id;
+		keyNeurona += "x";
+		keyNeurona += x ;
+		keyNeurona += "y";
+		keyNeurona += y ;
+		
+		return keyNeurona;
+		
+	},
+	keyByIndex: function(index){
+		var constructor = this;
+		
+		return keyNeurona = Object.keys(constructor.red.neuronas)[index];
+		
+	},
+	
 	
 	makeEntradaNeurona: function(neurona){
 		neurona.tipo = "ENTRADA";

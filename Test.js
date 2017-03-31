@@ -1,7 +1,6 @@
 /************** :TEST: ************/
 var Test = function(opt){
 	$.extend(this, {
-		guiRed: null,
 		entrada: null,
 		salida: null,
 		noise: true
@@ -52,7 +51,7 @@ Test.prototype = {
 					valor = 0;
 				}
 				
-				var keyNeurona = test.guiRed.keyByCoord(i, j);
+				var keyNeurona = Constructor.keyByCoord(i, j);
 				
 				test.red.neuronas[keyNeurona].activarExternal(valor);
 				
@@ -75,10 +74,10 @@ Test.prototype = {
 			
 			var index = test.patron.entrada.length - 1 - iEntrada;
 			
-			var keyNeuronaEntrada = test.guiRed.keyByCoord(x, y);
+			var keyNeuronaEntrada = Constructor.keyByCoord(x, y);
 			test.red.neuronas[keyNeuronaEntrada].activarExternal(test.patron.entrada[index]);
 			
-			var keyNeuronaSalida = test.guiRed.keyByCoord(x, 0);
+			var keyNeuronaSalida = Constructor.keyByCoord(x, 0);
 			test.red.neuronas[keyNeuronaSalida].activarExternal(test.patron.salida[index]);
 			
 		}
@@ -112,7 +111,7 @@ Test.prototype = {
 					valor = 0;
 				}
 				
-				var keyNeurona = test.guiRed.keyByCoord(i, j);
+				var keyNeurona = Constructor.keyByCoord(i, j);
 				
 				test.red.neuronas[keyNeurona].activarExternal(valor);
 				
@@ -142,7 +141,7 @@ Test.prototype = {
 
 			var index = test.patron.entrada.length - 1 - iEntrada;
 			try{
-				var keyNeurona = test.guiRed.keyByCoord(x, y);
+				var keyNeurona = Constructor.keyByCoord(x, y);
 				var valor = test.patron.entrada[index];
 				
 				
@@ -238,8 +237,10 @@ Test.prototype = {
 	
 	world: {
 		context: {
-			pos: {x:0, y:0},
+			
 			automata: null,
+			comida: null,
+			
 			motor: {
 				left: 0,
 				right: 0,
@@ -248,9 +249,6 @@ Test.prototype = {
 			}
 		},
 		printEntrada: function(){
-			// TODO: para debuggear mockeo los ojos usando el motor
-			
-			var motor = test.world.context.motor;
 			
 			
 			for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
@@ -263,12 +261,89 @@ Test.prototype = {
 						valor = 0;
 					}
 					
-					var keyNeurona = test.guiRed.keyByCoord(i, j);
+					var keyNeurona = Constructor.keyByCoord(i, j);
 					
 					test.red.neuronas[keyNeurona].activarExternal(valor);
 					
 				}
 			}
+			
+			
+			
+			
+			
+			
+			var comida = test.world.context.comida;
+			var bb = comida.getBBox();
+			var rad = (bb.width / 2)
+			
+			
+			var posComida = {
+				x: (bb.x + rad),
+				y: (bb.y + rad)
+			};
+			
+			var automata = test.world.context.automata;
+			var bb = automata.getBBox();
+			
+			
+			var posAutomata = {
+				x: (bb.x + rad),
+				y: (bb.y + rad)
+			};
+			
+			var vec = {
+				x: (posComida.x - posAutomata.x),
+				y: (posComida.y  - posAutomata.y)
+			};
+			
+			
+			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+			
+			
+			
+			
+			var anguloOffset = Math.atan2(rad, distancia);
+			
+			
+			var anguloCentro = Math.atan2(vec.x, vec.y);
+			
+			var anguloMax = anguloCentro + anguloOffset;
+			var anguloMin = anguloCentro - anguloOffset;
+			
+			var pixelMax = Math.round((test.red.size.x / (2*Math.PI)) * anguloMax);
+			var pixelMin = Math.round((test.red.size.x / (2*Math.PI)) * anguloMin);
+			
+			for(var i = pixelMin; i <= pixelMax; i++){
+				var index = i;
+				
+				if((index < test.red.box.x0)) {
+					index+= test.red.size.x;
+				}else if((index > test.red.box.x1)) {
+					index-= test.red.size.x;
+				}
+				
+				try{
+					keyNeurona = Constructor.keyByCoord(index, test.red.box.y1);
+					test.red.neuronas[keyNeurona].activarExternal(1);
+				}catch(e){
+					debugger;
+				}
+					
+			}
+			
+			
+			
+			// TODO: para debuggear mockeo los ojos usando el motor
+			/*
+			var motor = test.world.context.motor;
+			
+			
+			
+			
+			
+			
+			
 			
 			var keyNeurona;
 			var valor;
@@ -276,133 +351,84 @@ Test.prototype = {
 			
 			//LEFT
 			valor = motor.left;
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			
 			
 			
 			//RIGHT
 			valor = motor.right;
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			
 			//UP
 			valor = motor.up;
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			
 			
 			//DOWN
 			valor = motor.down;
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = test.guiRed.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			
-		},
-		step: function(){
-			console.log('testeo world step');
-			
-			//mover los elementos del mundito: comida, enemigos, etc
-			
-			
-			// imprimir entrada en la red
-			// TODO: DEBUG: debo leer del mundito i escribir en las entrada como lo hace print
-			test.world.printEntrada();
-			//
-			
-			
-			test.red.procesar();
-			
-			// obtener salidas
-			
-			// actualizar posición:
-			
-			var motor = test.world.context.motor;
-			
-			var vel = {
-				x: motor.right - motor.left,
-				y: motor.down - motor.up
-			};
-			
-			var paso = 10;
-			
-			var pos = test.world.context.pos;
-			var automata = test.world.context.automata;
-			
-			pos = {
-				x: pos.x + (vel.x * paso),
-				y: pos.y + (vel.y * paso)
-			};
-			
-			test.world.context.pos = pos;
-			
-			/*
-			automata.attr('cx', +pos.x);
-			automata.attr('cy', +pos.y);
 			*/
-			
-			
-			automata.transform( 't' + pos.x + ',' + pos.y);
-			
-			test.world.context.automata = automata;
-			
 		},
-		
 		load: function(){
 			var world = this;
 			
@@ -418,37 +444,52 @@ Test.prototype = {
 			
 			
 			
-			
-			var pos = world.context.pos;
-			
 			var automata = snapWorld.group(
-				snapWorld.rect(pos.x,pos.y, 30, 30)
+				snapWorld.circle(0, 0, 15)
 			);
 			automata.attr({
-				fill: "#888888"
+				fill: "#FFA420"
 			});
+			automata.transform('T100,100');
 			
 			world.context.automata = automata;
 			
+			
+			
+			var comida = snapWorld.group(
+				snapWorld.circle(0, 0, 15)
+			);
+			comida.attr({
+				fill: "#668866"
+			});
+			comida.transform('T200,200');
+			
+			world.context.comida = comida;
+			
+			
 			$('body').on('keydown', function(e){
 				var motor = world.context.motor;
-	
+				
 				switch (e.which) {
 					case 37:
 						motor.left = 1;
-						break;
+						e.preventDefault(); 
+				break;
 					case 38:
 						motor.up = 1;
+						e.preventDefault(); 
 						break;
 					case 39:
 						motor.right = 1;
+						e.preventDefault(); 
 						break;
 					case 40:
 						motor.down = 1;
+						e.preventDefault(); 
 						break;
 				};
 				
-				e.preventDefault(); 
+				
 			});
 			
 			
@@ -470,8 +511,69 @@ Test.prototype = {
 						break;
 				};
 				
-				e.preventDefault(); 
 			});
+			
+		},
+		step: function(){
+			var paso = 8;
+			
+			console.log('testeo world step');
+			
+			//mover los elementos del mundito: comida, enemigos, etc
+			var comida = test.world.context.comida;
+			
+			var vel = {
+				x: (Math.random() * 2) - 1,
+				y: (Math.random() * 2) - 1
+			};
+			
+			var bb = comida.getBBox();
+			
+			var pos = {
+				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			};
+			
+			comida.transform( 'T' + pos.x + ',' + pos.y);
+			
+			
+			
+			
+			
+			
+			// imprimir entrada en la red
+			// TODO: DEBUG: debo leer del mundito i escribir en las entrada como lo hace print
+			test.world.printEntrada();
+			//
+			
+			
+			test.red.procesar();
+			
+			// obtener salidas
+			
+			// actualizar posición:
+			
+			var automata = test.world.context.automata;
+			
+			
+			
+			var motor = test.world.context.motor;
+			
+			var vel = {
+				x: motor.right - motor.left,
+				y: motor.down - motor.up
+			};
+			
+			var bb = automata.getBBox();
+			
+			var pos = {
+				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			};
+			
+			
+			automata.transform( 'T' + pos.x + ',' + pos.y);
+			
 			
 		}
 	},
@@ -512,7 +614,9 @@ Test.prototype = {
 		
 	},
 	graficoPatron: function (){
-			
+		
+		var sizeCelda = 6;
+		
 		var test = this;
 		
 		var grafico = {
@@ -527,11 +631,11 @@ Test.prototype = {
 		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
 			
 			var pos = {
-				x: (grafico.x + iEntrada) * GuiRed.prototype.paso.x,
-				y: (grafico.y + 0) * GuiRed.prototype.paso.y
+				x: (grafico.x + iEntrada) * sizeCelda,
+				y: (grafico.y + 0) * sizeCelda
 			};
 			
-			var celda = paper.rect(pos.x, pos.y, GuiRed.prototype.paso.x, GuiRed.prototype.paso.y);
+			var celda = paper.rect(pos.x, pos.y, sizeCelda, sizeCelda);
 			var byteColor = Math.floor(test.patron.entrada[iEntrada] * 255);
 			
 			celda.attr({
@@ -546,7 +650,7 @@ Test.prototype = {
 			celda.click(function(e){
 				
 				
-				var iEntrada = (Math.floor(this.node.x.baseVal.value / GuiRed.prototype.paso.x ) - grafico.x);
+				var iEntrada = (Math.floor(this.node.x.baseVal.value / sizeCelda ) - grafico.x);
 				
 				
 				if(test.patron.entrada[iEntrada] == 1){

@@ -219,7 +219,7 @@
 		
 		$(function(){
 			
-			Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
+			
 			
 			
 			$('body').on('contextmenu', function(e){
@@ -358,7 +358,6 @@
 				
 				
 				test = new Test({
-					guiRed: guiRed,
 					red: red,
 					boxEntrada: boxEntrada,
 					boxSalida: boxSalida,
@@ -440,7 +439,7 @@
 				//Prueba con entrada relativa, para que fluya
 				Constructor.insertarAxones({
 					modo: 'relativo',
-					dendritas_pesos: [1],
+					dendritas_pesos: [-0.2],
 					boxTarget: {
 						x0: red.box.x0,
 						y0: red.box.y0,
@@ -451,7 +450,24 @@
 						x0 	: -4,
 						y0 	: 2,
 						x1 	: 4,
-						y1 	: 3
+						y1 	: 2
+					}
+				});
+				
+				Constructor.insertarAxones({
+					modo: 'relativo',
+					dendritas_pesos: [1.6],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -4,
+						y0 	: 3,
+						x1 	: 4,
+						y1 	: 4
 					}
 				});
 				
@@ -529,8 +545,20 @@
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
 			console.log('*****************************************************');
+			console.log('');
+			console.log('*Probá moviendo las arrows keys a ver que pasa..');
+			console.log('');
+			$('#newRed').click();
+			$('#play').click();
 			
-
+			setTimeout(function(){
+				Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
+				console.log('Conectado a servicio de vortex - FileBackend.');
+			}, 1500);
+			
+			
+			
+			
 		});
 	</script>
 </html>

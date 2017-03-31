@@ -33,27 +33,7 @@ GuiRed.prototype = {
 		var x = (Math.floor(pixelPosX / grafico.paso.x ) - grafico.x);
 		var y = (Math.floor(pixelPosY / grafico.paso.y ) - grafico.y);
 		
-		return grafico.keyByCoord(x, y);
-	},
-	keyByCoord: function(x, y){
-		var grafico = this;
-		
-		var keyNeurona="";
-		
-		keyNeurona += grafico.red.id;
-		keyNeurona += "x";
-		keyNeurona += x ;
-		keyNeurona += "y";
-		keyNeurona += y ;
-		
-		return keyNeurona;
-		
-	},
-	keyByIndex: function(index){
-		var grafico = this;
-		
-		return keyNeurona = Object.keys(grafico.red.neuronas)[index];
-		
+		return Constructor.keyByCoord(x, y);
 	},
 	dendritasWatchByPixelPos: function(pixelPosX, pixelPosY){
 		var grafico = this;
