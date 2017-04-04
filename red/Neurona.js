@@ -18,7 +18,6 @@ Neurona.prototype = {
 	COEF_UMBRAL_SPIKE: 0.024,
 	COEF_UMBRAL_SPIKE_MIN_TENSION: 0.2,
 	COEF_TENSION_DECAIMIENTO: 0.200,
-	COEF_PID: 0.5,
 	start: function(){
 		var neurona = this;
 		
@@ -47,7 +46,6 @@ Neurona.prototype = {
 			neurona.tensionSuperficial = tensionSuperficial;
 		}
 		
-		neurona.axon.activar();
 	},
 	procesarDendritas: function(){
 		var neurona = this;
@@ -72,27 +70,18 @@ Neurona.prototype = {
 	activarExternal: function(valor){
 		var neurona = this;
 		
-		neurona.red.bufferNeuronasProcess[neurona.id] = neurona;
 		neurona.setTension(valor);
+		neurona.axon.activar();
 		
 	},
-				
 	procesar: function(){
 		var neurona = this;
 		
-		//neurona.setTension(neurona.procesarDendritas());
-		
-		/* DEBUG:
-		* intentaré hacerle una pequeña 
-		* derivada en la sumatoria para lograr así un filtro pasa altos,
-		* para que no se quede siempre en la misma, que cambie!!!!
-		*/
 		var valorDendritas = neurona.procesarDendritas();
 		
-		var tensionAnterior = neurona.tensionSuperficial;
-		
-		//neurona.setTension( (1 - neurona.COEF_PID) * valorDendritas + neurona.COEF_PID * (valorDendritas - tensionAnterior) );
 		neurona.setTension(valorDendritas);
+		neurona.axon.activar();
+		
 		
 		if(neurona.axon.valor>0){
 			

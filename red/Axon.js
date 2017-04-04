@@ -30,14 +30,6 @@ Axon.prototype = {
 			axon.valor = 0;
 		}
 		
-		for(clave in axon.sinapsis){
-			var neuronaVecina = axon.sinapsis[clave].dendrita.neurona;
-			try{
-				neuronaVecina.red.bufferNeuronasProcess[neuronaVecina.id] = neuronaVecina;
-			}catch(e){
-				debugger;
-			}
-		}
 	}
 	
 };

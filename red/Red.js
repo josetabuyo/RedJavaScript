@@ -3,8 +3,7 @@ var Red = function(opt){
 	$.extend(this, {
 		size: {x:0,y:0},
 		id: null,
-		neuronas: {},
-		bufferNeuronasProcess: {}
+		neuronas: {}
 	}, opt);
 	
 	
@@ -38,7 +37,7 @@ Red.prototype = {
 			}
 		}
 		
-		/*Para mantener interzaf cómoda y común*/
+		/*Para mantener interfaz cómoda y común*/
 		red.box = {
 			x0: 0,
 			x1: red.size.x - 1,
@@ -51,12 +50,8 @@ Red.prototype = {
 		var red = this;
 		
 		this.playInterval = setInterval(function() {
-			
-			if(Object.keys(red.bufferNeuronasProcess).length > 0){
-				red.procesar();
-			}
-			
-		}, 10);
+			red.procesar();
+		}, 0);
 
 	},
 	stop: function(){
@@ -66,22 +61,9 @@ Red.prototype = {
 		
 		var red = this;
 		
-		var bufferAux = {};
-		
-			for(key in red.bufferNeuronasProcess){
-				bufferAux[key] = red.bufferNeuronasProcess[key];
-			}
-			
-			red.bufferNeuronasProcess = {};
-			
-			for(key in bufferAux){
-				try{
-					bufferAux[key].procesar();
-				}catch(e){
-					//debugger;
-					//es lo más barato
-				}
-			}
+		for(key in red.neuronas){
+			red.neuronas[key].procesar();
+		}
 		
 		red.onProcesar();
 	

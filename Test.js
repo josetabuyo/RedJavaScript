@@ -450,7 +450,7 @@ Test.prototype = {
 			automata.attr({
 				fill: "#FFA420"
 			});
-			automata.transform('T100,100');
+			automata.transform('T200,150');
 			
 			world.context.automata = automata;
 			
@@ -462,7 +462,7 @@ Test.prototype = {
 			comida.attr({
 				fill: "#668866"
 			});
-			comida.transform('T200,200');
+			comida.transform('T90,90');
 			
 			world.context.comida = comida;
 			
