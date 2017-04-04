@@ -8,8 +8,8 @@ var Constructor = {
 			id: red.id,
 			
 			COEF_UMBRAL_SINAPSIS_PESO		: Red.prototype.COEF_UMBRAL_SINAPSIS_PESO,
+			COEF_AXON_ANCHO_PULSO			: Red.prototype.COEF_AXON_ANCHO_PULSO,
 			COEF_UMBRAL_SPIKE				: Neurona.prototype.COEF_UMBRAL_SPIKE,
-			COEF_UMBRAL_SPIKE_MIN_TENSION	: Neurona.prototype.COEF_UMBRAL_SPIKE_MIN_TENSION,
 			COEF_TENSION_DECAIMIENTO		: Neurona.prototype.COEF_TENSION_DECAIMIENTO,
 			COEF_DENDRITA_DECAIMIENTO		: Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO,
 			COEF_SINAPSIS_ENTRENAMIENTO		: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
@@ -67,8 +67,8 @@ var Constructor = {
 		
 		
 		Red.prototype.COEF_UMBRAL_SINAPSIS_PESO 		= _red.COEF_UMBRAL_SINAPSIS_PESO		;
+		Axon.COEF_AXON_ANCHO_PULSO						= _red.COEF_AXON_ANCHO_PULSO			;
 		Neurona.prototype.COEF_UMBRAL_SPIKE				= _red.COEF_UMBRAL_SPIKE				;
-		Neurona.prototype.COEF_UMBRAL_SPIKE_MIN_TENSION	= _red.COEF_UMBRAL_SPIKE_MIN_TENSION	;
 		Neurona.prototype.COEF_TENSION_DECAIMIENTO		= _red.COEF_TENSION_DECAIMIENTO			;
 		Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO	= _red.COEF_DENDRITA_DECAIMIENTO		;
 		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO	= _red.COEF_SINAPSIS_ENTRENAMIENTO		;
@@ -170,12 +170,10 @@ var Constructor = {
 	makeEntradaNeurona: function(neurona){
 		neurona.tipo = "ENTRADA";
 		neurona.dendritas = [];
-		neurona.procesar = function(){
-			var neurona = this;
-			
-			neurona.setTension(neurona.tensionSuperficial);
-			neurona.axon.activar();
-			
+		neurona.procesar = function(){};
+		
+		neurona.axon.activar = function(){
+			neurona.axon.valor = neurona.tensionSuperficial;
 		};
 	},
 	makeEntrada: function(box){

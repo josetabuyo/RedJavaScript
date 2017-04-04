@@ -300,7 +300,7 @@ Test.prototype = {
 			
 			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
 			
-			
+			if(distancia > rad * 15) return; /// Estaría muy lejos, no lo vería
 			
 			
 			var anguloOffset = Math.atan2(rad, distancia);
@@ -329,20 +329,16 @@ Test.prototype = {
 				}catch(e){
 					debugger;
 				}
-					
 			}
 			
 			
 			
+			
+			
+		},
+		debugPrintEntrada: function(){
 			// TODO: para debuggear mockeo los ojos usando el motor
-			/*
 			var motor = test.world.context.motor;
-			
-			
-			
-			
-			
-			
 			
 			
 			var keyNeurona;
@@ -427,7 +423,7 @@ Test.prototype = {
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
-			*/
+			
 		},
 		load: function(){
 			var world = this;
@@ -534,25 +530,28 @@ Test.prototype = {
 				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
 			};
 			
+			if(pos.x < 0) pos.x = 0;
+			if(pos.y < 0) pos.y = 0;
+			if(pos.x > $("#svgWorld").width()) pos.x = $("#svgWorld").width();
+			if(pos.y > $("#svgWorld").height()) pos.y = $("#svgWorld").height();
+			
+			
 			comida.transform( 'T' + pos.x + ',' + pos.y);
 			
 			
 			
-			
-			
-			
-			// imprimir entrada en la red
-			// TODO: DEBUG: debo leer del mundito i escribir en las entrada como lo hace print
 			test.world.printEntrada();
-			//
+			
+			
 			
 			
 			test.red.procesar();
 			
-			// obtener salidas
+			//TODO: obtener salidas, actualizar objeto motor
+			
+			
 			
 			// actualizar posición:
-			
 			var automata = test.world.context.automata;
 			
 			

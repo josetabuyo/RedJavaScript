@@ -5,7 +5,7 @@ var GuiRed = function(opt){
 	$.extend(this, {
 		red: null,
 		id: null,
-		modo:"ACTIVACION",
+		modo:"DEPOLARIZACION",
 		x: 0,
 		y: 0,
 		mapaNeuronaCelda: {}

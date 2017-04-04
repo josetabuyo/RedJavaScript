@@ -15,9 +15,8 @@ var Neurona = function(opt){
 };
 
 Neurona.prototype = {
-	COEF_UMBRAL_SPIKE: 0.024,
-	COEF_UMBRAL_SPIKE_MIN_TENSION: 0.2,
-	COEF_TENSION_DECAIMIENTO: 0.200,
+	COEF_UMBRAL_SPIKE: 0.005,
+	COEF_TENSION_DECAIMIENTO: 0.451,
 	start: function(){
 		var neurona = this;
 		
@@ -82,7 +81,7 @@ Neurona.prototype = {
 		neurona.setTension(valorDendritas);
 		neurona.axon.activar();
 		
-		
+		/*
 		if(neurona.axon.valor>0){
 			
 			for(iDendrita in neurona.dendritas){
@@ -91,6 +90,6 @@ Neurona.prototype = {
 			};
 			
 		}
-		
+		*/
 	}
 };

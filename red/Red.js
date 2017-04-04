@@ -16,7 +16,7 @@ var Red = function(opt){
 
 
 Red.prototype = {
-	COEF_UMBRAL_SINAPSIS_PESO: 0.2,
+	COEF_UMBRAL_SINAPSIS_PESO: 0.200,
 	start: function(){
 		var red = this;
 		

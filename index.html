@@ -46,47 +46,42 @@
 				overflow: scroll;
 			}
 			
-			.boton{
+			
+			#botonera{
 				position: absolute;
-				top: 5px;
-				width: 60px;
-				height: 20px;
-				border: solid 1px;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 30px;
+				border-collapse:separate;
+				border-spacing:5px;
 			}
-
-			#play{
-				left: 20px;
+			#botonera .boton{
+				border: solid 1px;
+				cursor: pointer;
+				user-select: none;
+				display: table-cell;
+				padding: 0px 5px 0px 5px;
+				text-align: center;
+				font-family: "Arial Black", Gadget, sans-serif;
+				background-color: #AAAAAA;
+			}
+			
+			#botonera #play{
+				width: 60px;
+			}
+			#botonera #play.play{
 				background-color: #66AA66;
 			}
-			#stop{
-				left: 90px;
+			#botonera #play.pause{
 				background-color: #AA6666;
 			}
-			#step{
-				left: 160px;
-				background-color: #AAAAAA;
-			}
 			#verTensionSuperficial{
-				left: 230px;
-				background-color: #AAAAAA;
+				width: 120px;
 			}
-			#resetRed{
-				left: 300px;
-				background-color: #AAAAAA;
+			#help{
+				color: #A9FFFE;
 			}
-			#newRed{
-				left: 370px;
-				background-color: #AAAAAA;
-			}
-			#loadRed{
-				left: 440px;
-				background-color: #AAAAAA;
-			}
-			#saveRed{
-				left: 510px;
-				background-color: #AAAAAA;
-			}
-
 			
 			#plantillas{
 				display: none;
@@ -122,31 +117,31 @@
 	</head>
 	
 	<body>
-		<div id="play" class="boton">
-			play
-		</div>
-		<div id="stop" class="boton">
-			stop
-		</div>
-		
-		<div id="step" class="boton">
-			step
-		</div>
-		
-		<div id="verTensionSuperficial" class="boton">
-			tension
-		</div>
-		<div id="resetRed" class="boton">
-			resetRed
-		</div>
-		<div id="newRed" class="boton">
-			new red
-		</div>
-		<div id="loadRed" class="boton">
-			load red
-		</div>
-		<div id="saveRed" class="boton">
-			save red
+		<div id="botonera">
+			<div id="play" class="boton pause" title="Play o Pause al test continuo">
+				Pause
+			</div>
+			<div id="step" class="boton" title="Ejecuta solo un test">
+				Step
+			</div>
+			
+			<div id="verTensionSuperficial" class="boton" title="Visualiza la matriz de Tensiones o de Activaciones">
+				Tensiones
+			</div>
+			
+			<div id="newRed" class="boton">
+				NEW
+			</div>
+			<div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+				LOAD
+			</div>
+			<div id="saveRed" class="boton" title="Guarda el estado de la red en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+				SAVE
+			</div>
+			<div id="help" class="boton">
+				HELP
+			</div>
+			
 		</div>
 		
 		<svg id="svgRed" >
@@ -161,11 +156,12 @@
 			
 			<ul id="coeficientes">
 				<li>COEF_UMBRAL_SPIKE</li>
-				<li>COEF_UMBRAL_SPIKE_MIN_TENSION</li>
+				<li>COEF_AXON_ANCHO_PULSO</li>
 				<li>COEF_TENSION_DECAIMIENTO</li>
 				<li>COEF_DENDRITA_DECAIMIENTO</li>
 				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
 				<li>COEF_UMBRAL_SINAPSIS_PESO</li>
+				
 			<ul>
 			
 		</div>
@@ -229,52 +225,39 @@
 			
 
 			$('#play').on('click', function(){
-				test.play();
+				var btn_play = $('#play');
+				btn_play.removeClass('pause');
+				btn_play.removeClass('play');
+					
+				
+				if(!test.running){
+					test.play();
+					btn_play.addClass('pause');
+					btn_play.text('Pause');
+				}else{
+					test.stop();
+					btn_play.addClass('play');
+					btn_play.text('Play');
+				}
 			});
-			$('#stop').on('click', function(){
-				test.stop();
-			});
+			
 			
 			$('#step').on('click', function(){
 				test.step();
 			});
 			
-			
-			$('#verTensionSuperficial').on('mousedown', function(){
-				guiRed.modo="DEPOLARIZACION";
-			});
-			$('#verTensionSuperficial').on('mouseup', function(){
-				guiRed.modo="ACTIVACION";
-			});
-			
-			$('#resetRed').on('click', function(){
-				for(iNeurona in red.neuronas){
-					var oNeurona = red.neuronas[iNeurona];
-					oNeurona.tensionSuperficial = 0;
-					oNeurona.axon.valor = 0;
-					for(iDendrita in oNeurona.dendritas){
-						var oDendrita = oNeurona.dendritas[iDendrita];
-						
-						if(Object.keys(oDendrita.sinapsis).length > 0){
-							var suma = 0;
-							for(iSinapsis in oDendrita.sinapsis){
-								var oSinapsis = oDendrita.sinapsis[iSinapsis];
-								oSinapsis.peso = Math.random();
-							}
-						}
-						
-					};
+			$('#verTensionSuperficial').on('click', function(){
+				
+				if(guiRed.modo=="DEPOLARIZACION"){
+					guiRed.modo="ACTIVACION";
+					$('#verTensionSuperficial').text('Activaciones');
+					
+				}else if(guiRed.modo=="ACTIVACION"){
+					guiRed.modo="DEPOLARIZACION"
+					$('#verTensionSuperficial').text('Tensiones');
+					
 				}
-				var testIndex = Math.round(Math.random() * red.size.x);
-				test.estado.current.neuronaCoord = {x: testIndex, y: red.size.y - 1};
 			});
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			$('ul#coeficientes>li').each(function(index, item){
@@ -294,35 +277,34 @@
 			
 			
 			var setControlCoeficientes = function(){
-				var configSlyCoef = function(nameSly, proto){
+				var configSlyCoef = function(nameSly, proto, escala){
 					var objSly = $('#'+ nameSly);
+					
+					if(!escala)escala=1;
 					
 					objSly.change(function(){
 						var value = ($(this).val() / 255);
+						value = value / escala;
 						
-						proto[nameSly] = value.toFixed(3);;
+						proto[nameSly] = value.toFixed(3);
 						
 						$(this).parent().find('div.sly_ref').text(nameSly + ": " + proto[nameSly]);
 					});
-					objSly.val(proto[nameSly] * 255);
+					objSly.val(proto[nameSly] * escala * 255);
 					objSly.change();
 				};
 				
 				
+				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype, 25);
 				configSlyCoef('COEF_UMBRAL_SINAPSIS_PESO', Red.prototype);
-				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
-				configSlyCoef('COEF_UMBRAL_SPIKE_MIN_TENSION', Neurona.prototype);
+				configSlyCoef('COEF_AXON_ANCHO_PULSO', Axon.prototype, 0.05);
 				configSlyCoef('COEF_TENSION_DECAIMIENTO', Neurona.prototype);
-				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype);
 				configSlyCoef('COEF_DENDRITA_DECAIMIENTO', Dendrita.prototype);
 				configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
 			
 			};
 			
-			
-			
 			setControlCoeficientes();
-			
 			
 			
 			var setRedContext = function(){
@@ -332,6 +314,12 @@
 					x: 1,
 					y: 1
 				});
+				
+				if(guiRed.modo=="DEPOLARIZACION"){
+					$('#verTensionSuperficial').text('Tensiones');
+				}else if(guiRed.modo=="ACTIVACION"){
+					$('#verTensionSuperficial').text('Activaciones');
+				}
 				
 				
 				//DEBUG: boxEntrada y boxSalida
@@ -435,7 +423,7 @@
 				*/
 				
 				//Prueba con entrada relativa, para que fluya
-				Constructor.insertarAxones({
+				/*Constructor.insertarAxones({
 					modo: 'relativo',
 					dendritas_pesos: [-0.2],
 					boxTarget: {
@@ -469,7 +457,7 @@
 					}
 				});
 				
-				
+				*/
 				
 				/*
 				//entrada con campana reforzada
@@ -538,7 +526,28 @@
 				});
 			});
 			
-			
+			$('#help').on('click', function(){
+				var helpText = "";
+				
+				helpText+=  '**********************************************************';
+				helpText+='\nRed Neuronal en Javascript by joZbuyo';
+				helpText+='\n**********************************************************';
+				helpText+='\nEste es una red neuronal hecha en javascript.';
+				helpText+='\nCuando estás en Pausa podés apretar con el botón de la derecha sobre una neurona y ver sus sinapsis.';
+				helpText+='\n';
+				helpText+='\nLos botones tienen tooltip!.';
+				helpText+='\n';
+				helpText+='\nSi jugás con los coeficientes siempre podés actualizar la página y vuelve todo a la normalidad.';
+				helpText+='\n';
+				helpText+='\nSe recomienda usar Google Chrome y apretar F12 para ver la consola';
+				helpText+='\nDesde ahí puede inspecionarse la red tipeando "red;", por ejemplo';
+				helpText+='\n';
+				helpText+='\n';
+				
+				
+				alert(helpText);
+				
+			});
 			
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
@@ -547,13 +556,12 @@
 			console.log('*Probá moviendo las arrows keys a ver que pasa..');
 			console.log('');
 			$('#newRed').click();
-			$('#play').click();
+			test.play();
 			
 			setTimeout(function(){
 				Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
 				console.log('Conectado a servicio de vortex - FileBackend.');
 			}, 1500);
-			
 			
 			
 			
