@@ -71,11 +71,11 @@ En cuanto a la interfaz:
 
 Consejos para usar la interfaz: 
 
-Cuando estás en Pause podés apretar con el botón de la derecha sobre una neurona y ver sus sinapsis.
-Los botones tienen tooltip, leelos!.
-Si jugás con los coeficientes siempre podés actualizar la página y vuelve todo a la normalidad.
-Se recomienda usar Google Chrome y apretar F12 para ver la consola.
-Desde ahí puede inspeccionarse la red tipeando "red;", por ejemplo.
+- Cuando estás en Pause podés apretar con el botón de la derecha sobre una neurona y ver sus sinapsis.
+- Los botones tienen tooltip, leelos!.
+- Si jugás con los coeficientes siempre podés actualizar la página y vuelve todo a la normalidad.
+- Se recomienda usar Google Chrome y apretar F12 para ver la consola.
+  Desde ahí puede inspeccionarse la red tipeando "red;", por ejemplo.
 
 
 Saludos!

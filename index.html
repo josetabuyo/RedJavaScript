@@ -351,14 +351,6 @@
 				});
 				
 				
-				//TODO: cargo y pongo play al test del mundillo
-				//TODO: configurar el auto-run, independiente de la red.procesar, ambos asincrónicos.
-				/*
-				test.world.playInterval = setInterval(function() {
-					test.world.step();
-				},10);
-				*/
-				
 				red.onProcesar(function(){
 					guiRed.refresh();
 				});
@@ -405,9 +397,6 @@
 					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
 				});
 				
-				/*
-				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTM de entrada feedfoward, éstas provocan la activación directa)
-				
 				Constructor.insertarAxones({
 					modo: 'full_random_fixed_input',
 					dendritas_pesos: [1.5],
@@ -420,6 +409,10 @@
 						y1: red.box.y1-1
 					}
 				});
+				
+				/*
+				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTM de entrada feedfoward, éstas provocan la activación directa)
+				
 				*/
 				
 				//Prueba con entrada relativa, para que fluya
@@ -491,16 +484,23 @@
 				
 				var _red = Constructor.getRedData();
 				
+				var _redString = JSON.stringify(_red);
 				
 				Vx.send({
 					tipoDeMensaje: 'escribirArchivo',
 					path:'red.json',
-					data: JSON.stringify(_red)
+					data: _redString
 					
 				}, function(mensaje){
 					console.log('red saved...');
 					console.log(mensaje);
 				});
+				
+				
+				window.clipboardData.setData("Text", _redString);
+				alert("A parte de mandar la red a el nodo vortex FilaBackend\nTmbién se copió al porta pepeles.\nPodés pegarla en un archivo y guardarla!");
+				
+				
 			});
 			
 			
@@ -527,26 +527,9 @@
 			});
 			
 			$('#help').on('click', function(){
-				var helpText = "";
 				
-				helpText+=  '**********************************************************';
-				helpText+='\nRed Neuronal en Javascript by joZbuyo';
-				helpText+='\n**********************************************************';
-				helpText+='\nEste es una red neuronal hecha en javascript.';
-				helpText+='\nCuando estás en Pausa podés apretar con el botón de la derecha sobre una neurona y ver sus sinapsis.';
-				helpText+='\n';
-				helpText+='\nLos botones tienen tooltip!.';
-				helpText+='\n';
-				helpText+='\nSi jugás con los coeficientes siempre podés actualizar la página y vuelve todo a la normalidad.';
-				helpText+='\n';
-				helpText+='\nSe recomienda usar Google Chrome y apretar F12 para ver la consola';
-				helpText+='\nDesde ahí puede inspecionarse la red tipeando "red;", por ejemplo';
-				helpText+='\n';
-				helpText+='\n';
-				
-				
-				alert(helpText);
-				
+				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
+
 			});
 			
 			console.log('*****************************************************');
