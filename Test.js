@@ -6,11 +6,6 @@ var Test = function(opt){
 		noise: true
 	}, opt);
 	
-	if(!this.id){
-		this.id = Math.random();
-	}
-	
-	
 	
 	this.start();
 };
@@ -101,6 +96,11 @@ Test.prototype = {
 	printEntrada: function(){
 		var test = this;
 		
+		
+		
+		
+		
+		
 		for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
 			for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
 				var valor = 0;
@@ -167,7 +167,7 @@ Test.prototype = {
 		for(var i = test.boxSalida.x0; i <= test.boxSalida.x1; i++){
 			for(var j = test.boxSalida.y0; j <= test.boxSalida.y1; j++){
 				
-				var keyNeurona = test.red.id + "x" + i + "y" + j;
+				var keyNeurona = "x" + i + "y" + j;
 				var neurona = test.red.neuronas[keyNeurona];
 				
 				sumaTension += neurona.tensionSuperficial;
@@ -205,7 +205,6 @@ Test.prototype = {
 	},
 	
 	step_secada: function(){
-		console.log('testeo con step secada');
 		var test = this;
 		
 		test.printEntrada();
@@ -226,7 +225,6 @@ Test.prototype = {
 		//Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO = (-dolor) * 0.1;
 	},
 	debugEstandar: function(){
-		console.log('testeo con step debugEstandar');
 		var test = this;
 		
 		test.printEntrada();
@@ -240,7 +238,7 @@ Test.prototype = {
 			
 			automata: null,
 			comida: null,
-			
+			flag_moverComida: false,
 			motor: {
 				left: 0,
 				right: 0,
@@ -293,8 +291,8 @@ Test.prototype = {
 			};
 			
 			var vec = {
-				x: (posComida.x - posAutomata.x),
-				y: (posComida.y  - posAutomata.y)
+				x: (posAutomata.x - posComida.x),
+				y: -(posAutomata.y - posComida.y)
 			};
 			
 			
@@ -460,7 +458,12 @@ Test.prototype = {
 			});
 			comida.transform('T90,90');
 			
+			comida.click(function(){
+				world.context.flag_moverComida = !world.context.flag_moverComida;
+			});
+			
 			world.context.comida = comida;
+			
 			
 			
 			$('body').on('keydown', function(e){
@@ -473,7 +476,7 @@ Test.prototype = {
 				break;
 					case 38:
 						motor.up = 1;
-						e.preventDefault(); 
+						e.preventDefault();
 						break;
 					case 39:
 						motor.right = 1;
@@ -513,31 +516,34 @@ Test.prototype = {
 		step: function(){
 			var paso = 8;
 			
-			console.log('testeo world step');
-			
-			//mover los elementos del mundito: comida, enemigos, etc
-			var comida = test.world.context.comida;
-			
-			var vel = {
-				x: (Math.random() * 2) - 1,
-				y: (Math.random() * 2) - 1
+			var moverComida = function(){
+				//mover los elementos del mundito: comida, enemigos, etc
+				var comida = test.world.context.comida;
+				
+				var vel = {
+					x: (Math.random() * 2) - 1,
+					y: (Math.random() * 2) - 1
+				};
+				
+				var bb = comida.getBBox();
+				
+				var pos = {
+					x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+					y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+				};
+				
+				if(pos.x < 0) pos.x = 0;
+				if(pos.y < 0) pos.y = 0;
+				if(pos.x > $("#svgWorld").width()) pos.x = $("#svgWorld").width();
+				if(pos.y > $("#svgWorld").height()) pos.y = $("#svgWorld").height();
+				
+				
+				comida.transform( 'T' + pos.x + ',' + pos.y);
 			};
 			
-			var bb = comida.getBBox();
-			
-			var pos = {
-				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
-			};
-			
-			if(pos.x < 0) pos.x = 0;
-			if(pos.y < 0) pos.y = 0;
-			if(pos.x > $("#svgWorld").width()) pos.x = $("#svgWorld").width();
-			if(pos.y > $("#svgWorld").height()) pos.y = $("#svgWorld").height();
-			
-			
-			comida.transform( 'T' + pos.x + ',' + pos.y);
-			
+			if(test.world.context.flag_moverComida){
+				moverComida();
+			}
 			
 			
 			test.world.printEntrada();
@@ -576,12 +582,22 @@ Test.prototype = {
 			
 		}
 	},
-	
+	onStep_vEventos: [],
+	onStep: function(param){
+		if(typeof param == "function"){
+			this.onStep_vEventos.push(param);
+		}else{
+			$.each(this.onStep_vEventos, function(index, value){
+				value(param);
+			});
+		}
+	},
 	step:function(){
 		var test = this;
 		
 		test.world.step();
-		
+		//console.log('testeo world step');
+		test.onStep();
 	},
 	play: function(){
 		var test = this;
@@ -591,7 +607,6 @@ Test.prototype = {
 			test.testInterval = setInterval(function (){
 				test.step();
 			}, 0);
-			
 			test.running = true;
 		}
 		

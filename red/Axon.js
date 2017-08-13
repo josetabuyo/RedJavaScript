@@ -8,15 +8,12 @@ var Axon = function(opt){
 		sinapsis:{}
 	},opt);
 	
-	//if(!this.id){
-	//	this.id = Math.random();
-	//}
-	
 	this.start();
 	
 };
 Axon.prototype = {
 	COEF_AXON_ANCHO_PULSO: 6,
+	COEF_AXON_UMBRAL_SPIKE: 0.005,
 	contAnchoPulsoHI: 0,
 	contAnchoPulsoLO: 0,
 	start: function (){
@@ -30,8 +27,8 @@ Axon.prototype = {
 		
 		if(axon.valor == 0 ){
 			if(axon.contAnchoPulsoLO == 0){
-				if(axon.neurona.tensionSuperficial > axon.neurona.COEF_UMBRAL_SPIKE){
-					axon.valor = 1;
+				if(axon.neurona.tensionSuperficial > axon.COEF_AXON_UMBRAL_SPIKE){
+					axon.arriba();
 					axon.contAnchoPulsoHI = Math.round(axon.COEF_AXON_ANCHO_PULSO);
 				}
 			}else{
@@ -41,12 +38,23 @@ Axon.prototype = {
 			axon.contAnchoPulsoHI--;
 			
 			if(axon.contAnchoPulsoHI == 0){
-				axon.valor = 0;
+				axon.abajo();
 				axon.contAnchoPulsoLO = Math.round(axon.COEF_AXON_ANCHO_PULSO);
 			}
 				
 		}
 		
+	},
+	arriba: function(){
+		var axon = this;
+		
+		axon.valor = 1;
+		axon.neurona.entrenar(1);
+	},
+	abajo: function(){
+		var axon = this;
+		
+		axon.valor = 0;
+		axon.neurona.entrenar(-1);
 	}
-	
 };

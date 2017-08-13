@@ -14,27 +14,31 @@ var Sinapsis = function(opt){
 
 Sinapsis.prototype = {
 	COEF_SINAPSIS_ENTRENAMIENTO: 0,
+	COEF_SINAPSIS_UMBRAL_PESO: 0.200,
 	start: function(){
 		var sinapsis = this;
 		if(!sinapsis.peso){
 			sinapsis.peso = Math.random();
-			if(sinapsis.peso < sinapsis.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
+			if(this.peso < sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
 				sinapsis.kill();
 			}
 		}
 		
 	},
 	entrenar: function(valorEntrenamiento){
-		var sinapsis = this;
 		
-		valorEntrenamiento = (valorEntrenamiento - 0.5);
+
+		this.peso += (this.neurona_AxonEntrante.axon.valor - this.peso) * valorEntrenamiento * this.COEF_SINAPSIS_ENTRENAMIENTO;
+
 		
-		sinapsis.peso += (sinapsis.neurona_AxonEntrante.axon.valor - sinapsis.peso) * valorEntrenamiento * sinapsis.COEF_SINAPSIS_ENTRENAMIENTO;
-		if(sinapsis.peso < sinapsis.dendrita.neurona.red.COEF_UMBRAL_SINAPSIS_PESO){
-			sinapsis.kill();
+		if(this.peso < this.COEF_SINAPSIS_UMBRAL_PESO){
+			this.kill();
+			return;
 		}
+		
 	},
 	procesar: function(){
+		
 		return this.valor = this.neurona_AxonEntrante.axon.valor * this.peso;
 	},
 	kill: function(){

@@ -26,6 +26,49 @@
 				overflow: scroll;
 			}
 			
+			
+			
+			#dendritasModel_Container{
+				position: absolute;
+				left: 20%;
+				top: 40px;
+				width: 20%;
+				height: 90%;
+				border: solid 1px;
+				overflow: hidden;
+			}
+			#dendritasModel_toolbar{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 24px;
+			}
+			#dendritasModel_celdas{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				overflow: scroll;
+			}
+			#dendritasModel_dendritas{
+				position: absolute;
+				left: 0px;
+				top: 24px;
+				width: 24px;
+			};
+			
+
+			#dendritasModel_svg{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100px;
+				height: 100px;
+			}
+			
+			
 			#control{
 				position: absolute;
 				right: 0px;
@@ -47,6 +90,9 @@
 			}
 			
 			
+			
+			
+			
 			#botonera{
 				position: absolute;
 				top: 0px;
@@ -56,7 +102,7 @@
 				border-collapse:separate;
 				border-spacing:5px;
 			}
-			#botonera .boton{
+			.boton{
 				border: solid 1px;
 				cursor: pointer;
 				user-select: none;
@@ -112,6 +158,8 @@
 				width: 90%;
 			}
 			
+			
+			
 		</style>
 		
 	</head>
@@ -128,7 +176,9 @@
 			<div id="verTensionSuperficial" class="boton" title="Visualiza la matriz de Tensiones o de Activaciones">
 				Tensiones
 			</div>
-			
+			<div id="dendritasModel" class="boton" title="Despliega un panel para modelos de dendritas">
+				DendritasModel
+			</div>
 			<div id="newRed" class="boton">
 				NEW
 			</div>
@@ -144,10 +194,32 @@
 			
 		</div>
 		
-		<svg id="svgRed" >
-		  <!-- rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" / -->
+		<svg id="svgRed">
 		</svg>
 		
+		<div id="dendritasModel_Container">
+			
+			<div id="dendritasModel_celdas">
+				<svg id="dendritasModel_svg">
+				</svg>
+			</div>
+			<div id="dendritasModel_toolbar">
+				<div id="drawMode" class="boton" title="Modo de dibujo">
+					D
+				</div>
+				<div id="addDendrita" class="boton" title="Agrega una dendrita">
+					+
+				</div>
+				<div id="saveModel" class="boton" title="Save">
+					S
+				</div>
+			</div>
+			<div id="dendritasModel_dendritas">
+					
+			</div>
+
+
+		</div>
 		
 		<svg id="svgWorld" >
 		</svg>
@@ -155,12 +227,10 @@
 		<div id="control">
 			
 			<ul id="coeficientes">
-				<li>COEF_UMBRAL_SPIKE</li>
+				<li>COEF_AXON_UMBRAL_SPIKE</li>
 				<li>COEF_AXON_ANCHO_PULSO</li>
-				<li>COEF_TENSION_DECAIMIENTO</li>
-				<li>COEF_DENDRITA_DECAIMIENTO</li>
 				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
-				<li>COEF_UMBRAL_SINAPSIS_PESO</li>
+				<li>COEF_SINAPSIS_UMBRAL_PESO</li>
 				
 			<ul>
 			
@@ -193,6 +263,7 @@
 	
 	
 	<script src="GuiRed.js"></script>
+	<script src="GuiMatriz.js"></script>
 	<script src="Test.js"></script>
 	
 	
@@ -216,12 +287,10 @@
 			
 			
 			
-			
 			$('body').on('contextmenu', function(e){
-				e.stopPropagation();
-				return false;
+				//e.stopPropagation();
+				//return false;
 			});
-			
 			
 
 			$('#play').on('click', function(){
@@ -295,12 +364,10 @@
 				};
 				
 				
-				configSlyCoef('COEF_UMBRAL_SPIKE', Neurona.prototype, 25);
-				configSlyCoef('COEF_UMBRAL_SINAPSIS_PESO', Red.prototype);
+				configSlyCoef('COEF_AXON_UMBRAL_SPIKE', Axon.prototype, 10);
 				configSlyCoef('COEF_AXON_ANCHO_PULSO', Axon.prototype, 0.05);
-				configSlyCoef('COEF_TENSION_DECAIMIENTO', Neurona.prototype);
-				configSlyCoef('COEF_DENDRITA_DECAIMIENTO', Dendrita.prototype);
 				configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
+				configSlyCoef('COEF_SINAPSIS_UMBRAL_PESO', Sinapsis.prototype);
 			
 			};
 			
@@ -309,11 +376,13 @@
 			
 			var setRedContext = function(){
 				
+				
 				guiRed = new GuiRed({
 					red: red,
 					x: 1,
 					y: 1
 				});
+				
 				
 				if(guiRed.modo=="DEPOLARIZACION"){
 					$('#verTensionSuperficial').text('Tensiones');
@@ -340,9 +409,6 @@
 					y1: 0
 				};
 				
-				
-				
-				
 				test = new Test({
 					red: red,
 					boxEntrada: boxEntrada,
@@ -351,7 +417,7 @@
 				});
 				
 				
-				red.onProcesar(function(){
+				test.onStep(function(){
 					guiRed.refresh();
 				});
 				
@@ -386,6 +452,32 @@
 				};
 				Constructor.makeSalida(boxSalida);
 				
+				
+				
+				
+				Constructor.insertarAxones({
+					modo: 'coronas_dendriticas',
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					coronas: [
+						{peso: 1		, densidad: 1,		radioDesde: 0	, radioHasta: 0	, cantDendritas: 1},
+						{peso: 0.3		, densidad: 1,		radioDesde: 1	, radioHasta: 1	, cantDendritas: 1},
+						{peso: 0},
+						{peso: -1.5		, densidad: 1,		radioDesde: 3	, radioHasta: 3	, cantDendritas: 1},
+						{peso: 0.2		, densidad: 0.2,	radioDesde: 4	, radioHasta: 6	, cantDendritas: 1}
+					]
+				});
+				
+			
+				
+				
+				
+				/*
+				
 				Constructor.insertarAxones({
 					modo: 'dendritas_radiales_pesadas',
 					boxTarget: {
@@ -394,24 +486,10 @@
 						x1: red.box.x1,
 						y1: red.box.y1-1
 					},
-					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2]
+					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+					
+					
 				});
-				
-				Constructor.insertarAxones({
-					modo: 'full_random_fixed_input',
-					dendritas_pesos: [1.5],
-					densidadConexionado: 0.7,
-					boxEntrada: boxEntrada,
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y0,
-						x1: red.box.x1,
-						y1: red.box.y1-1
-					}
-				});
-				
-				/*
-				//Conexion a la Entrada Feed Foward! (entendí el concepto de HTM de entrada feedfoward, éstas provocan la activación directa)
 				
 				*/
 				
@@ -486,20 +564,180 @@
 				
 				var _redString = JSON.stringify(_red);
 				
+				
+				console.log('saving..........');
+				
+				
+				
+				
+				/*
 				Vx.send({
 					tipoDeMensaje: 'escribirArchivo',
 					path:'red.json',
-					data: _redString
-					
+					data: "prueba escritura en archivo remoto desde HTML papaaaaaaaaaa!!" //DEBUG: //_redString
 				}, function(mensaje){
-					console.log('red saved...');
+					console.log('red saved');
 					console.log(mensaje);
 				});
+				*/
 				
 				
-				window.clipboardData.setData("Text", _redString);
+				
+				
+				//constantes 
+				var toleranciaDemora = 1.2;
+				var sizeVentanaProm = 5;
+				var sizePedazo = 1024;
+				var tasaSize = 1.5;
+				
+				
+				//tomar marcar de tiempo
+				var timeStamp = (+ new Date);
+				var promDeltaTime = null;
+				var deltaTime;
+				
+				
+				var loopSend = function(){
+					
+					
+					if(sizePedazo > _redString.length){sizePedazo = _redString.length};
+					
+					//sacar primer pedazo
+					var pedazo = _redString.slice(0, sizePedazo);
+					
+					
+					console.log('se envía pedazo, sizePedazo');
+					console.log(sizePedazo);
+					
+					//send pedazo
+					Vx.send({
+						tipoDeMensaje: 'escribirArchivo',
+						path:'red.json',
+						data: pedazo
+					}, function(mensaje){
+						
+						console.log('mensaje de respuesta a envío de pedazo de archivo');
+						console.log(mensaje);
+						
+						
+						
+						//tomar marca de tiempo
+						//comparar con promedio de tiempo
+						deltaTime = (+ new Date) -  timeStamp;
+						
+						if(!promDeltaTime){
+							promDeltaTime = deltaTime;
+						}else{
+							promDeltaTime = (((sizeVentanaProm - 1)/sizeVentanaProm) * promDeltaTime) + (((1)/sizeVentanaProm) * deltaTime)
+						}
+						
+						console.log('promDeltaTime');
+						console.log(promDeltaTime);
+						
+						
+						//actualizo gran string
+						_redString = _redString.slice(sizePedazo, _redString.length);
+						
+						
+						//si se hace muy lento, agrando el tamaño de pedazo
+						//si se hace muy rápido, achivo el tamaño de pedazo
+						if(deltaTime > promDeltaTime * toleranciaDemora ){
+							sizePedazo = sizePedazo * tasaSize;
+						}else if(deltaTime < promDeltaTime / toleranciaDemora ){
+							sizePedazo = sizePedazo / tasaSize;
+						}else
+						
+						
+						
+						
+						if(_redString.length > 0){
+							loopSend();
+						}
+						
+						
+					});
+					
+					
+					
+				}
+
+				
+				
+				loopSend();
+				
+				
+				
+				
+				
+				
+				/***   como si fuera sincrónico ****/
+				/*
+				while(_redString.length > 0){
+				
+					if(sizePedazo > _redString.length){sizePedazo = _redString.length};
+					
+					//sacar primer pedazo
+					var pedazo = _redString.slice(0, sizePedazo);
+					
+					//actualizo gran string
+					_redString = _redString.slice(sizePedazo, _redString.length);
+					
+					//send pedazo
+					Vx.send({
+						tipoDeMensaje: 'escribirArchivo',
+						path:'red.json',
+						data: pedazo
+					}, function(mensaje){
+						
+						
+						
+						
+						
+						
+						
+						console.log('red saved');
+						console.log(mensaje);
+					});
+					
+					
+					//tomar marca de tiempo
+					//comparar con promedio de tiempo
+					deltaTime = timeStamp - (+ new Date);
+					
+					if(!promDeltaTime){
+						promDeltaTime = deltaTime;
+					}else{
+						promDeltaTime = (((sizeVentanaProm - 1)/sizeVentanaProm) * promDeltaTime) + (((1)/sizeVentanaProm) * deltaTime)
+					}
+					
+					
+					//si se hace muy lento, agrando el tamaño de pedazo
+					//si se hace muy rápido, achivo el tamaño de pedazo
+					if(deltaTime > promDeltaTime * toleranciaDemora ){
+						sizePedazo = sizePedazo * tasaSize;
+					}else if(deltaTime < promDeltaTime / toleranciaDemora ){
+						sizePedazo = sizePedazo / tasaSize;
+					}
+				}
+				
+				*/
+				
+				
+				/*
+				var copyFrom = $('<textarea/>');
+				copyFrom.css({
+					position: "absolute",
+					left: "-1000px",
+					top: "-1000px",
+				});
+				copyFrom.text(_redString);
+				$('body').append(copyFrom);
+				copyFrom.select();
+				document.execCommand('copy');
+				copyFrom.remove();
+				
 				alert("A parte de mandar la red a el nodo vortex FilaBackend\nTmbién se copió al porta pepeles.\nPodés pegarla en un archivo y guardarla!");
-				
+				*/
 				
 			});
 			
@@ -507,17 +745,20 @@
 			
 			$('#loadRed').on('click', function(){
 				
+				console.log('loading..........');
 				Vx.send({
 					tipoDeMensaje: 'leerArchivo',
 					path:'red.json'
 					
 				}, function(mensaje){
-					
+				
+					console.log(mensaje);
+					console.log('red loaded');
+				
 					var _red = JSON.parse(mensaje.data);
 					
 					red = Constructor.setRedData(_red);
 					
-					console.log('red loaded...');
 					
 					setRedContext();
 					
@@ -532,20 +773,100 @@
 
 			});
 			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//TODO: COMMIG SOON: NEXT:
+			//
+			//hacer la edicion de las neuronas de la red en base a la GuiMatriz: es más facil.
+			//hacer la toolbar para dibujar el asistente de conexionado y editor de modelo de dendritas con la nueva GuiMatriz
+			
+			
+			
+			
+			
+			//TODO: DEBUG: sacar el "var"
+			/*var*/ gui = new GuiMatriz({
+				idSvg: 'dendritasModel_svg',
+				drawObj: 'rectangulo',
+				onAddMap: function(parent, capa){
+					var chooseDendrita = $("<div>"+capa+"</div>");
+					chooseDendrita.on('click', function(){
+						parent.selMap(capa);
+					});
+					$('#dendritasModel_dendritas').append(chooseDendrita);
+				}
+			});
+			
+			$('#dendritasModel_toolbar>#drawMode').on('click', function(){
+				gui.setDrawModeNext();
+			});
+			
+			$('#dendritasModel_toolbar>#addDendrita').on('click', function(){
+				gui.addMap();
+			});
+			
+			
+			
+			
+			$('#dendritasModel_Container').hide();
+			$('#dendritasModel').on('click', function(){
+				
+				if($('#dendritasModel_Container').css('display') == 'none' ){
+					$('#dendritasModel_Container').show();
+					
+				}else{
+					$('#dendritasModel_Container').hide();
+				}
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
 			console.log('*****************************************************');
 			console.log('');
 			console.log('*Probá moviendo las arrows keys a ver que pasa..');
+			console.log('*Probá escribiendo "red;" en la consola también, si querés');
+			console.log('');
+			console.log('HELP:');
+			console.log('https://github.com/josetabuyo/RedJavaScript/blob/master/README.md');
 			console.log('');
 			$('#newRed').click();
 			test.play();
 			
+			/*
 			setTimeout(function(){
 				Vx.conectarCon(new NodoConectorSocket('http://localhost:3000'));
-				console.log('Conectado a servicio de vortex - FileBackend.');
+				//Vx.conectarCon(new NodoConectorSocket('https://router-vortex.herokuapp.com'));
+				console.log('Conectado a servicio de vortex - FileBackend - en Heroku.');
 			}, 1500);
-			
+			*/
 			
 			
 		});

@@ -6,26 +6,24 @@ var Red = function(opt){
 		neuronas: {}
 	}, opt);
 	
-	
-	if(!this.id){
-		this.id = Math.random();
-	}
-	
 	this.start();
 };
 
 
 Red.prototype = {
-	COEF_UMBRAL_SINAPSIS_PESO: 0.200,
 	start: function(){
 		var red = this;
+		
+		
+		
+		var vectorNeronas = [];
 		
 		if(Object.keys(red.neuronas).length == 0){
 			
 			for(var i = 0; i < red.size.x; i++){
 				for(var j = 0; j < red.size.y; j++){
 					
-					var keyNeurona = red.id + "x"+i+"y"+j;
+					var keyNeurona = "x"+i+"y"+j;
 					
 					var neurona = new Neurona({
 						red: red,
@@ -33,9 +31,31 @@ Red.prototype = {
 					});
 					
 					red.neuronas[keyNeurona] = neurona;
+					vectorNeronas.push(neurona);
+					
 				}
 			}
 		}
+		
+		
+		
+		/*
+		Se crean mapas de ordenamiento azaroso para luego ejecutar al azar entre los distintos mapas
+		Gano ejecutar una sola vez la funcion Math.random() por cada paso de la red entera. QuickWin!
+		*/
+		var compareRandom = function(a, b) {
+		  return Math.random() - 0.5;
+		};
+		
+		red.mapaOrdenamiento = [];
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		red.mapaOrdenamiento.push(vectorNeronas.sort(compareRandom));
+		
+		
 		
 		/*Para mantener interfaz cómoda y común*/
 		red.box = {
@@ -44,38 +64,17 @@ Red.prototype = {
 			y0: 0,
 			y1: red.size.y - 1
 		};
-	},
-	
-	play: function(){
-		var red = this;
 		
-		this.playInterval = setInterval(function() {
-			red.procesar();
-		}, 0);
 
-	},
-	stop: function(){
-		clearInterval(this.playInterval);
 	},
 	procesar: function(){
 		
 		var red = this;
 		
-		for(key in red.neuronas){
-			red.neuronas[key].procesar();
-		}
+		var randomMapa = Math.floor((Math.random() * red.mapaOrdenamiento.length));
 		
-		red.onProcesar();
-	
-	},
-	onProcesar_vEventos: [],
-	onProcesar: function(param){
-		if(typeof param == "function"){
-			this.onProcesar_vEventos.push(param);
-		}else{
-			$.each(this.onProcesar_vEventos, function(index, value){
-				value(param);
-			});
+		for(iNeurona in red.mapaOrdenamiento[randomMapa]){
+			red.mapaOrdenamiento[randomMapa][iNeurona].procesar();
 		}
 	}
 }

@@ -13,12 +13,6 @@ var GuiRed = function(opt){
 	}, opt);
 	
 	
-	if(!this.id){
-		
-		this.id = opt.red.id;
-	}
-	
-	
 	this.start();
 };
 
@@ -35,34 +29,12 @@ GuiRed.prototype = {
 		
 		return Constructor.keyByCoord(x, y);
 	},
-	dendritasWatchByPixelPos: function(pixelPosX, pixelPosY){
-		var grafico = this;
-		
-		
-		var x = (Math.floor(pixelPosX / grafico.paso.x ) - grafico.x);
-		var y = (Math.floor(pixelPosY / grafico.paso.y ) - grafico.y);
-		
-		grafico.dendritasWatchByCoord(x, y);
-		
-	},
-	dendritasWatchByCoord: function(x, y){
-		var grafico = this;
-		
-		var keyNeurona="";
-		
-		keyNeurona += grafico.red.id;
-		keyNeurona += "x";
-		keyNeurona += x ;
-		keyNeurona += "y";
-		keyNeurona += y ;
-
-		grafico.dendritasWatchByKey(keyNeurona);
-
-
-	},
 	dendritasWatchByKey:function(keyNeurona){
 		var grafico = this;
-		var dendritas = grafico.red.neuronas[keyNeurona].dendritas;
+		var neurona = grafico.red.neuronas[keyNeurona];
+		var dendritas = neurona.dendritas;
+		
+		
 		
 		for(keyDendrita in dendritas){
 			var dendrita = dendritas[keyDendrita];
@@ -71,27 +43,40 @@ GuiRed.prototype = {
 				
 				var sinapsis = dendrita.sinapsis[keySinapsis];
 				var pesoEfectivo = sinapsis.peso * dendrita.peso;
+				
+				var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
+				
+				var _attr = {};
 				if(pesoEfectivo>0){
 					var color = Math.floor(pesoEfectivo * 200) + 55;
-					grafico.mapaNeuronaCelda[sinapsis.id].attr({
-						fill: "rgb(55, "+color+", 55)",
-						stroke: "#005500"
-					});
+					
+					_attr.fill = "rgb(55, "+color+", 55)";
+					
 				}else{
 					var color = Math.floor(Math.abs(pesoEfectivo) * 200) + 55;
-					grafico.mapaNeuronaCelda[sinapsis.id].attr({
-						fill: "rgb("+color+", 55, "+color+")",
-						stroke: "#550055"
-					});
+					
+					_attr.fill = "rgb("+color+", 55, "+color+")";
+				
 				}
+				
+				if(neurona_AxonEntrante.axon.valor == 1){
+					_attr.stroke =  "#FFFFFF";
+				}else{
+					_attr.stroke =  "#000000";
+				}
+				
+				grafico.mapaNeuronaCelda[sinapsis.id].attr(_attr);
+				
 			}
 		}
+		
+		grafico.mapaNeuronaCelda[neurona.id].attr({
+			stroke: "#FF0000"
+		});
+		
+		
 	},
-	watch:{
-		dendritas: {
-			key: null
-		}
-	},
+	watchNeurona: null,
 	
 	start: function (){
 		var grafico = this;
@@ -107,7 +92,7 @@ GuiRed.prototype = {
 				};
 				var celda = paper.rect(pos.x, pos.y, grafico.paso.x, grafico.paso.y);
 				grupoCeldas.add(celda);
-				var keyNeurona = grafico.red.id + "x"+i+"y"+j;
+				var keyNeurona = "x"+i+"y"+j;
 				grafico.mapaNeuronaCelda[keyNeurona] = celda;
 				
 				celda.mousedown(function(e){
@@ -115,13 +100,18 @@ GuiRed.prototype = {
 					var keyNeurona = grafico.keyByPixelPos(this.node.x.baseVal.value, this.node.y.baseVal.value);
 					
 					if (e.button === 2) {
-						grafico.dendritasWatchByKey(keyNeurona);
+						
+						if(!grafico.watchNeurona){
+							grafico.watchNeurona = keyNeurona;
+							grafico.refresh();
+						}else{
+							grafico.watchNeurona = null;
+						}
+						
 						console.log(grafico.red.neuronas[keyNeurona]);
 						
 					}else{
 						grafico.red.neuronas[keyNeurona].activarExternal(1);
-						
-						
 					}
 				});
 				
@@ -145,7 +135,7 @@ GuiRed.prototype = {
 		
 		for(var i = 0; i < grafico.red.size.x; i++){
 			for(var j = 0; j < grafico.red.size.y; j++){
-				var keyNeurona = grafico.red.id + "x"+i+"y"+j;
+				var keyNeurona = "x"+i+"y"+j;
 				var celda = grafico.mapaNeuronaCelda[keyNeurona];
 				var neurona = grafico.red.neuronas[keyNeurona];
 				var axon = neurona.axon;
@@ -193,14 +183,13 @@ GuiRed.prototype = {
 						stroke: "#550055"
 					});
 				}
-				
-				
-				
-				
 			}
 		}
 		
 		
+		if(grafico.watchNeurona){
+			grafico.dendritasWatchByKey(grafico.watchNeurona);
+		}
 		
 	}
 };

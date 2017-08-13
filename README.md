@@ -21,17 +21,13 @@ Al basarme en la biología los objetos fundamentales que hay son los siguientes:
 
  Con los siguientes coeficientes reguladores de la actividad:
 
- - COEF_UMBRAL_SPIKE:
+ - COEF_AXON_UMBRAL_SPIKE:
     Determina cuando se produce el "spike" en el axón en función de la tensión superficial de la neurona.
  - COEF_AXON_ANCHO_PULSO:
     Determina cuanto tiempo (medido en pasos de la red) dura el axón en 1 y cuanto en 0.
- - COEF_TENSION_DECAIMIENTO:
-    Determina el coeficiente decaimiento de la tensión superficial de la neurona.
- - COEF_DENDRITA_DECAIMIENTO:
-	Determina el decaimiento de la tensión de la dendrita.
  - COEF_SINAPSIS_ENTRENAMIENTO:
 	Determina el coeficiente de entrenamiento.
- - COEF_UMBRAL_SINAPSIS_PESO:
+ - COEF_SINAPSIS_UMBRAL_PESO:
 	Determina el valor mínimo del peso de una sinapsis para que exista.
  
 

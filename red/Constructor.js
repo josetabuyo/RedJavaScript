@@ -5,14 +5,11 @@ var Constructor = {
 		var _red = {
 			size: red.size,
 			box: red.box,
-			id: red.id,
 			
-			COEF_UMBRAL_SINAPSIS_PESO		: Red.prototype.COEF_UMBRAL_SINAPSIS_PESO,
-			COEF_AXON_ANCHO_PULSO			: Red.prototype.COEF_AXON_ANCHO_PULSO,
-			COEF_UMBRAL_SPIKE				: Neurona.prototype.COEF_UMBRAL_SPIKE,
-			COEF_TENSION_DECAIMIENTO		: Neurona.prototype.COEF_TENSION_DECAIMIENTO,
-			COEF_DENDRITA_DECAIMIENTO		: Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO,
+			COEF_AXON_ANCHO_PULSO			: Axon.prototype.COEF_AXON_ANCHO_PULSO,
+			COEF_AXON_UMBRAL_SPIKE				: Axon.prototype.COEF_AXON_UMBRAL_SPIKE,
 			COEF_SINAPSIS_ENTRENAMIENTO		: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
+			COEF_SINAPSIS_UMBRAL_PESO		: Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO,
 			
 			neuronas: {}
 		};
@@ -66,12 +63,10 @@ var Constructor = {
 		var red = constructor.red;
 		
 		
-		Red.prototype.COEF_UMBRAL_SINAPSIS_PESO 		= _red.COEF_UMBRAL_SINAPSIS_PESO		;
-		Axon.COEF_AXON_ANCHO_PULSO						= _red.COEF_AXON_ANCHO_PULSO			;
-		Neurona.prototype.COEF_UMBRAL_SPIKE				= _red.COEF_UMBRAL_SPIKE				;
-		Neurona.prototype.COEF_TENSION_DECAIMIENTO		= _red.COEF_TENSION_DECAIMIENTO			;
-		Dendrita.prototype.COEF_DENDRITA_DECAIMIENTO	= _red.COEF_DENDRITA_DECAIMIENTO		;
+		Axon.prototype.COEF_AXON_ANCHO_PULSO			= _red.COEF_AXON_ANCHO_PULSO			;
+		Axon.prototype.COEF_AXON_UMBRAL_SPIKE				= _red.COEF_AXON_UMBRAL_SPIKE				;
 		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO	= _red.COEF_SINAPSIS_ENTRENAMIENTO		;
+		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 	= _red.COEF_SINAPSIS_UMBRAL_PESO		;
 		
 		
 		
@@ -150,7 +145,6 @@ var Constructor = {
 		
 		var keyNeurona="";
 		
-		keyNeurona += constructor.red.id;
 		keyNeurona += "x";
 		keyNeurona += x ;
 		keyNeurona += "y";
@@ -183,7 +177,7 @@ var Constructor = {
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
 				
-				var keyNeurona = red.id + "x" + i + "y" + j;
+				var keyNeurona = "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
 				constructor.makeEntradaNeurona(neurona);
 			}
@@ -197,7 +191,7 @@ var Constructor = {
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
 				
-				var keyNeurona = red.id + "x" + i + "y" + j;
+				var keyNeurona = "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
 				neurona.tipo = "SALIDA";
 				neurona.axon.sinapsis = {};
@@ -233,7 +227,7 @@ var Constructor = {
 		for(var rx = box.x0 ; rx <= box.x1; rx++){
 			for(var ry = box.y0; ry <= box.y1; ry++){
 		//========================================
-				var keyNeurona = red.id + "x"+rx+"y"+ry;
+				var keyNeurona = "x"+rx+"y"+ry;
 				var neurona = red.neuronas[keyNeurona];
 				
 				callback(rx, ry, neurona);
@@ -263,7 +257,7 @@ var Constructor = {
 		for(var ex = Ex0; ex <= Ex1; ex++){
 			for(var ey = Ey0; ey <= Ey1; ey++){
 				
-				var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+				var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 				if(keyNeurona_AxonEntrante != neurona.id){
 					
 					var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
@@ -292,7 +286,7 @@ var Constructor = {
 			try{
 				
 				var ey = Ey0;
-				var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+				var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 				
 				var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 				
@@ -309,7 +303,7 @@ var Constructor = {
 			try{
 				var ey = Ey1;
 				
-				var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+				var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 				
 				var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 				
@@ -327,7 +321,7 @@ var Constructor = {
 			try{
 				var ex = Ex0;
 				
-				var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+				var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 				
 				var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 				
@@ -343,7 +337,7 @@ var Constructor = {
 			try{
 				var ex = Ex1;
 				
-				var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+				var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 				
 				var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 				
@@ -385,9 +379,7 @@ var Constructor = {
 					dendrita.peso = opt.dendritas_pesos[iDentrita]
 				}
 				
-				/*DEBUG:****************************/try{
 				neurona.dendritas.push(dendrita);
-				/*DEBUG:****************************/}catch(e){debugger;}
 				
 				callback(dendrita);
 				
@@ -428,12 +420,21 @@ var Constructor = {
 				for(var ey = opt.boxEntrada.y0; ey <= opt.boxEntrada.y1; ey++){
 			//========================================		
 					
-					var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+					if(opt.densidadConexionado < 1){
+						if(Math.random() > opt.densidadConexionado){
+							continue;
+						}
+					}
+					
+					
+					var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 					
 					if(keyNeurona_AxonEntrante != neurona.id){
 						
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 						var axonEntrante = neurona_AxonEntrante.axon;
+						
+						
 						
 						var sinapsis = new Sinapsis({
 							neurona_AxonEntrante: neurona_AxonEntrante,
@@ -442,23 +443,12 @@ var Constructor = {
 							id: keyNeurona_AxonEntrante
 						});
 						
-						if(opt.densidadConexionado < 1){
-							if(
-								(Math.random() > opt.densidadConexionado) &&
-								(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO)
-							){
-								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
-							}
-						}else{
-							if(
-								(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO)
-							){
-								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
-							}
+						if(
+							(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO)
+						){
+							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
+							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 						}
-						
 					}
 				}
 			}
@@ -475,7 +465,7 @@ var Constructor = {
 			for(var ry = opt.boxTarget.y0; ry <= opt.boxTarget.y1; ry++){
 		//========================================		
 				
-				var keyNeurona = red.id + "x"+rx+"y"+ry;
+				var keyNeurona = "x"+rx+"y"+ry;
 				var neuronaPadre = red.neuronas[keyNeurona];
 				
 				
@@ -488,17 +478,17 @@ var Constructor = {
 				// RECORRO LA ENTRADA: TODA por modo full
 				//========================================		
 						
-				/*TODO: DEBUG*/
+				/*TODO: DEBUG: DEPRECATED BLOCK*/
 				opt.boxEntrada.y0 = ry;
 				opt.boxEntrada.y1 = ry;
-						
-						
+				
+				
 				for(var ex = opt.boxEntrada.x0; ex <= opt.boxEntrada.x1; ex++){
 					for(var ey = opt.boxEntrada.y0; ey <= opt.boxEntrada.y1; ey++){
 				//========================================		
 						
 						
-						var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+						var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 						
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 						var axonEntrante = neurona_AxonEntrante.axon;
@@ -507,7 +497,7 @@ var Constructor = {
 							opt.peso = Math.random()
 						};
 						
-						if(opt.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
+						if(opt.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
 							
 							var sinapsis = new Sinapsis({
 								neurona_AxonEntrante: neurona_AxonEntrante,
@@ -559,9 +549,7 @@ var Constructor = {
 					dendrita.peso = opt.dendritas_pesos[iDentrita]
 				}
 				
-				/*DEBUG:****************************/try{
 				neurona.dendritas.push(dendrita);
-				/*DEBUG:****************************/}catch(e){debugger;}
 				
 				// RECORRO LA ENTRADA
 				//========================================
@@ -584,7 +572,7 @@ var Constructor = {
 					for(var ey = Ey0; ey <= Ey1; ey++){
 				//========================================		
 						
-						var keyNeurona_AxonEntrante = red.id + "x"+ex+"y"+ey;
+						var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 						
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 						
@@ -601,7 +589,7 @@ var Constructor = {
 							});
 							
 							
-							if(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
+							if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
 								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 							}
@@ -611,6 +599,136 @@ var Constructor = {
 			}
 		});
 	},
+	
+	modo_coronas_dendriticas:function(opt){
+		/*
+		EJEMPLO DE LLAMADO
+			Constructor.insertarAxones({
+				modo: 'coronas_dendriticas',
+				dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+				boxTarget: {
+					x0: red.box.x0,
+					y0: red.box.y1-2,
+					x1: red.box.x1,
+					y1: red.box.y1-1
+				},
+				boxRelativo	: {
+					x0 	: -5,
+					y0 	: -1,
+					x1 	: 5,
+					y1 	: 0
+				}
+			});
+		*/
+		
+		
+		var red = this.red;
+		var constructor = this;
+		
+		
+		
+		
+		constructor.eachNeurona(opt.boxTarget, function(rx, ry, neurona){
+			
+			//DEBUG:
+			/*
+			if((rx==16)&&(ry==16)){
+				debugger;
+			}
+			*/
+			//
+			
+			for(var iCorona = 0; iCorona < opt.coronas.length; iCorona++){
+				
+				var _corona = opt.coronas[iCorona];
+				
+				
+				//Tuneo, podría no estar, es para que no pierda tiempo
+				if(_corona.peso == 0.0){
+					continue;
+				}
+				///////
+				
+
+
+				for(var iRadioCorona = _corona.radioDesde; iRadioCorona <= _corona.radioHasta; iRadioCorona++){
+					
+					var box = {
+						x0 	: -1 * (iRadioCorona+1),
+						y0 	: -1 * (iRadioCorona+1),
+						x1 	:  1 * (iRadioCorona+1),
+						y1 	:  1 * (iRadioCorona+1)
+					};
+					
+					
+					var dendrita = null;
+					
+					var totalNeuronasEnRadioCorona = Math.pow(2, iRadioCorona + 3);
+					
+					
+					var anchoDendritas = totalNeuronasEnRadioCorona / _corona.cantDendritas;
+					
+					
+					var cantSinapsis = 0;
+					constructor.eachNeuronaEntornoCorona(rx, ry, box, function(neurona_AxonEntrante, ex, ey){
+						
+						if(_corona.densidad < 1){
+							if(Math.random() > _corona.densidad){
+								return;
+							}
+						}
+						
+						var Ex0;
+						var Ex1;
+						var Ey0;
+						var Ey1;
+						
+						if(opt.boxRelativo.x0 != null){ Ex0 = rx  + opt.boxRelativo.x0;} else { Ex0 = red.box.x0;}
+						if(opt.boxRelativo.x1 != null){ Ex1 = rx  + opt.boxRelativo.x1;} else { Ex1 = red.box.x1;}
+						if(opt.boxRelativo.y0 != null){ Ey0 = ry  + opt.boxRelativo.y0;} else { Ey0 = red.box.y0;}
+						if(opt.boxRelativo.y1 != null){ Ey1 = ry  + opt.boxRelativo.y1;} else { Ey1 = red.box.y1;}
+						
+						if(
+							(ex >= Ex0) &&
+							(ex <= Ex1) &&
+							(ey >= Ey0) &&
+							(ey <= Ey1)
+						){
+							
+							if((cantSinapsis > anchoDendritas) || (dendrita == null)){
+								
+								dendrita = new Dendrita({
+									neurona: neurona,
+									peso: _corona.peso
+								});
+								
+								neurona.dendritas.push(dendrita);
+								
+								cantSinapsis=0;
+							}
+							
+							var sinapsis = new Sinapsis({
+								neurona_AxonEntrante: neurona_AxonEntrante,
+								dendrita: dendrita,
+								//peso: 1, //DEBUG:
+								id: neurona_AxonEntrante.id
+							});
+							
+							
+							if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
+								dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
+								red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
+							}
+							
+							cantSinapsis++;
+							
+						}
+					});
+				}
+			}
+		});
+	},
+	
 	modo_dendritas_radiales_pesadas: function(opt){
 		/*
 		EJEMPLO DE LLAMADO
@@ -684,7 +802,7 @@ var Constructor = {
 						});
 						
 						
-						if(sinapsis.peso > red.COEF_UMBRAL_SINAPSIS_PESO){
+						if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
 							dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
 							red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
 						}

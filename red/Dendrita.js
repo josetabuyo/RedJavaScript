@@ -14,31 +14,14 @@ var Dendrita = function(opt){
 };
 
 Dendrita.prototype = {
-	COEF_DENDRITA_DECAIMIENTO: 0.651,
 	start: function(){
-		
-	},
-	entrenar: function(){
-		var dendrita = this;
-		var sinapsis = dendrita.sinapsis;
-		
-		
-		if(Object.keys(sinapsis).length > 0){
-			var suma = 0;
-			
-			for(key in sinapsis){
-				var sinap = sinapsis[key];
-				suma += sinap.entrenar(dendrita.valor * dendrita.neurona.axon.valor);
-			}
-			
-		}
 		
 	},
 	procesar: function(){
 		var dendrita = this;
 		
-		var dendrita = this;
 		var sinapsis = dendrita.sinapsis;
+		
 		var valor;
 		if(Object.keys(sinapsis).length > 0){
 			var suma = 0;
@@ -52,14 +35,33 @@ Dendrita.prototype = {
 			valor = suma / Object.keys(sinapsis).length;
 		}
 		
-		
-		dendrita.valor += valor * dendrita.peso;
-		
-		
-		
-		dendrita.valor -= dendrita.valor * dendrita.COEF_DENDRITA_DECAIMIENTO;
+		dendrita.valor = valor * dendrita.peso;
 		
 		
 		return valor;
+	},
+	entrenar: function(){
+		var dendrita = this;
+		var sinapsis = dendrita.sinapsis;
+		
+		
+		var tensionDendrita = dendrita.valor * dendrita.peso;
+
+		//TODO: probar con
+		// dendrita.neurona.tensionSuperficial - tensionDendrita;
+		var valorEntrenamiento = 1 - Math.abs(dendrita.neurona.axon.valor - tensionDendrita);
+
+
+		if(Object.keys(sinapsis).length > 0){
+			var suma = 0;
+			
+			for(key in sinapsis){
+				var sinap = sinapsis[key];
+				
+				suma += sinap.entrenar(valorEntrenamiento);
+			}
+			
+		}
+		
 	}
 };

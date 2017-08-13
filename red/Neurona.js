@@ -15,8 +15,6 @@ var Neurona = function(opt){
 };
 
 Neurona.prototype = {
-	COEF_UMBRAL_SPIKE: 0.005,
-	COEF_TENSION_DECAIMIENTO: 0.451,
 	start: function(){
 		var neurona = this;
 		
@@ -33,9 +31,6 @@ Neurona.prototype = {
 		var neurona = this;
 
 		
-		tensionSuperficial -= tensionSuperficial * neurona.COEF_TENSION_DECAIMIENTO;
-		
-		
 		//Se normaliza la tensión superficial
 		if(tensionSuperficial < 0){
 			neurona.tensionSuperficial = 0;
@@ -45,26 +40,6 @@ Neurona.prototype = {
 			neurona.tensionSuperficial = tensionSuperficial;
 		}
 		
-	},
-	procesarDendritas: function(){
-		var neurona = this;
-		
-		var sumaValorDendritas = 0.0;
-		
-		for(iDendrita in neurona.dendritas){
-			var dendrita = neurona.dendritas[iDendrita];
-			
-			dendrita.procesar();
-			
-			sumaValorDendritas += dendrita.valor;
-			
-		};
-		
-		if(neurona.dendritas.length > 0){
-			return sumaValorDendritas / neurona.dendritas.length;
-		}else{
-			return 0
-		}
 	},
 	activarExternal: function(valor){
 		var neurona = this;
@@ -76,20 +51,46 @@ Neurona.prototype = {
 	procesar: function(){
 		var neurona = this;
 		
-		var valorDendritas = neurona.procesarDendritas();
+		
+		var procesarDendritas = function(){
+			
+			var sumaValorDendritas = 0.0;
+			
+			for(iDendrita in neurona.dendritas){
+				var dendrita = neurona.dendritas[iDendrita];
+				
+				dendrita.procesar();
+				
+				sumaValorDendritas += dendrita.valor;
+				
+			};
+			
+			if(neurona.dendritas.length > 0){
+				return sumaValorDendritas / neurona.dendritas.length;
+			}else{
+				return 0
+			}
+		};
+		
+		
+		var valorDendritas = procesarDendritas();
 		
 		neurona.setTension(valorDendritas);
 		neurona.axon.activar();
 		
-		/*
-		if(neurona.axon.valor>0){
+	},
+	entrenar: function(signo){
+		var neurona = this;
+		
+
+		// TODO: mejorar con un mapa de las dendritas inhibidoras y las activadores por separado, asi no se recorren de mas
+		for(iDendrita in neurona.dendritas){
+			var dendrita = neurona.dendritas[iDendrita];
 			
-			for(iDendrita in neurona.dendritas){
-				var dendrita = neurona.dendritas[iDendrita];
+			if(Math.sign(signo) == Math.sign(dendrita.peso)){
 				dendrita.entrenar();
-			};
+			}
 			
-		}
-		*/
+		};
 	}
 };

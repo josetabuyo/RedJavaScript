@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Red java script
+		</title>
+		<style>
+			#log{
+				position: absolute;
+				right: 20px;
+				top: 20px;
+				bottom: 20px;
+				width: 200px;
+				border: solid 1px;
+			}
+			
+			
+			#pantallaSvg{
+				position: absolute;
+				left: 20px;
+				top: 20px;
+				
+				width: 80%;
+				height: 80%;
+				border: solid 1px;
+			}
+			
+			
+			
+		</style>
+		
+	</head>
+	
+	<body>
+		<div id="log">
+		</div>
+		
+		<svg id="pantallaSvg" >
+		  <rect x="0" y="0" width="10" height="10" style="fill:rgb(150,150,150);stroke:rgb(0,0,0);stroke-width:1;" />
+		</svg>
+		
+	</body>
+	
+	
+	
+	<script src="lib/jquery-2.1.3.min.js"></script>
+	<script src="lib/snap.svg-min.js"></script>
+	<script src="GraficoRed.js"></script>
+	
+	<script src="Entrada.js"></script>
+	<script src="Red.js"></script>
+	<script src="Neurona.js"></script>
+	<script src="Axon.js"></script>
+	<script src="Sinapsis.js"></script>
+		
+	<script>
+		
+	
+		
+		
+		$(function(){
+			var red;
+		
+			//crear entrada
+			var entrada;
+			
+			
+			console.log('comienzo');
+			
+			//crear red
+			red = new Red({
+				size: {x:4,y:4}
+			});
+			
+			//crear entrada
+			entrada = new Entrada({
+				size: {x:4,y:4}
+			});
+			
+			red.insertarAxones({
+				entrada: entrada
+			});
+			
+			
+			
+			console.log("grafico grafiEntrada");
+			grafiEntrada = new GraficoRed({
+				red: entrada,
+				x: 0,
+				y: 0
+			});
+			
+			console.log("grafico grafiRed");
+			grafiRed = new GraficoRed({
+				red: red,
+				x: 200,
+				y: 0
+			});
+			
+			
+			setInterval(function() {
+				red.procesar();
+				grafiRed.refresh();
+				
+				//DEBUG
+				$('#log').text(red.axones[red.id+"x0y0"].valor);
+				
+			}, 2000);
+			
+			
+			
+			console.log('fin');
+		});
+	</script>
+</html>
