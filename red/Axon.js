@@ -12,8 +12,8 @@ var Axon = function(opt){
 	
 };
 Axon.prototype = {
-	COEF_AXON_ANCHO_PULSO: 6,
-	COEF_AXON_UMBRAL_SPIKE: 0.005,
+	COEF_AXON_ANCHO_PULSO: 4,
+	COEF_AXON_UMBRAL_SPIKE: 0.05,
 	contAnchoPulsoHI: 0,
 	contAnchoPulsoLO: 0,
 	start: function (){
@@ -26,6 +26,7 @@ Axon.prototype = {
 		
 		
 		if(axon.valor == 0 ){
+			axon.neurona.entrenar(-1);
 			if(axon.contAnchoPulsoLO == 0){
 				if(axon.neurona.tensionSuperficial > axon.COEF_AXON_UMBRAL_SPIKE){
 					axon.arriba();
@@ -35,6 +36,8 @@ Axon.prototype = {
 				axon.contAnchoPulsoLO--;
 			}
 		}else if(axon.valor == 1){
+			axon.neurona.entrenar(1);
+			
 			axon.contAnchoPulsoHI--;
 			
 			if(axon.contAnchoPulsoHI == 0){
@@ -49,12 +52,10 @@ Axon.prototype = {
 		var axon = this;
 		
 		axon.valor = 1;
-		axon.neurona.entrenar(1);
 	},
 	abajo: function(){
 		var axon = this;
 		
 		axon.valor = 0;
-		axon.neurona.entrenar(-1);
 	}
 };

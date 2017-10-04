@@ -13,7 +13,8 @@ var Sinapsis = function(opt){
 };
 
 Sinapsis.prototype = {
-	COEF_SINAPSIS_ENTRENAMIENTO: 0,
+	COEF_SINAPSIS_ENTRENAMIENTO: 0.002,
+	COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT: 0.002,
 	COEF_SINAPSIS_UMBRAL_PESO: 0.200,
 	start: function(){
 		var sinapsis = this;

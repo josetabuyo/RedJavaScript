@@ -237,18 +237,358 @@ Test.prototype = {
 		context: {
 			
 			automata: null,
-			comida: null,
-			flag_moverComida: false,
-			motor: {
-				left: 0,
-				right: 0,
-				up: 0,
-				down: 0
+			externo: null,
+			debugMode: false,
+			motor: [0.0, 0.0, 0.0, 0.0]
+		},
+		load: function(){
+			var world = this;
+			
+			var snapWorld = Snap("#svgWorld");
+			
+			var fondo = snapWorld.group(
+				snapWorld.rect(0,0, $("#svgWorld").width(), $("#svgWorld").height())
+			);
+			fondo.attr({
+				fill: "#000000"
+			});
+			fondo.click(function(){
+				world.context.debugMode = !world.context.debugMode;
+			});
+			
+			
+			var automata = snapWorld.group(
+				snapWorld.circle(0, 0, 30)
+			);
+			automata.attr({
+				fill: "rgb(0,0,255)"
+			});
+			automata.transform('T200,150');
+			
+			world.context.automata = automata;
+			
+			
+
+
+
+			
+			world.addExterno({color: "rgb(255,0,0)"});
+			world.addExterno({color: "rgb(255,0,0)"});
+			world.addExterno({color: "rgb(255,0,0)"});
+			
+			world.addExterno({color: "rgb(0,255,0)"});
+			world.addExterno({color: "rgb(0,255,0)"});
+			world.addExterno({color: "rgb(0,255,0)"});
+			
+			
+			$('body').on('keydown', function(e){
+				var motor = world.context.motor;
+				
+				switch (e.which) {
+					case 37:
+						motor[0] = 1.0;
+						e.preventDefault(); 
+						break;
+					case 38:
+						motor[2] = 1.0;
+						e.preventDefault();
+						break;
+					case 39:
+						motor[1] = 1.0;
+						e.preventDefault(); 
+						break;
+					case 40:
+						motor[3] = 1.0;
+						e.preventDefault(); 
+						break;
+				};
+				
+				
+			});
+			
+			
+			$('body').on('keyup', function(e){
+				var motor = world.context.motor;
+				
+				switch (e.which) {
+					case 37:
+						motor[0] = 0.0;
+						break;
+					case 38:
+						motor[2] = 0.0;
+						break;
+					case 39:
+						motor[1] = 0.0;
+						break;
+					case 40:
+						motor[3] = 0.0;
+						break;
+				};
+				
+			});
+			
+		},
+		step: function(){
+			var paso = 5;
+
+			var automata = test.world.context.automata;
+			
+
+			
+			/// PASO 1:
+			/// ACTUALIZA EXTERNOS
+			
+
+
+			var moverExterno = function(externo){
+				//TODO: quitar cuando no se requiera mas
+				if(test.world.context.debugMode) return;
+
+				//mover los elementos del mundito: externo, enemigos, etc
+				
+				var vel = {
+					x: 0,
+					y: 0.5
+				};
+				
+				var bb = externo.getBBox();
+				
+				var pos = {
+					x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+					y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+				};
+				
+				
+				if(!(pos.y > $("#svgWorld").height())){
+					externo.transform( 'T' + pos.x + ',' + pos.y);
+				}else{
+
+					var vColor = test.world.getColor(externo);
+					externo.remove();
+
+					test.world.addExterno({
+						pos:{
+							y: 0
+						},
+						color: "rgb(" + vColor[0] + "," + vColor[1] + "," + vColor[2] + ")"
+					});
+				}
+			};
+			
+			
+			var snapWorld = Snap("#svgWorld");
+			
+			
+
+			snapWorld.selectAll('.externo').forEach(function(externo){
+			    moverExterno(externo);
+			});
+			
+			
+			
+			
+			/// PASO 2:
+			/// PROYECTA EN RETINA
+			test.world.printEntrada();
+
+
+
+
+			/// PASO 3:
+			/// DETECTAR COLICIONES
+			
+			
+
+
+			
+			
+			var distancia = function(externo){
+
+				var bb = externo.getBBox();
+				var radExterno = (bb.width / 2)
+
+				var posExterno = {
+					x: (bb.x + radExterno),
+					y: (bb.y + radExterno)
+				};
+				
+				var bb = automata.getBBox();
+				var radAutomata = (bb.width / 2)
+
+				var posAutomata = {
+					x: (bb.x + radAutomata),
+					y: (bb.y + radAutomata)
+				};
+
+				var vec = {
+					x: (posAutomata.x - posExterno.x),
+					y: -(posAutomata.y - posExterno.y)
+				};
+				
+				
+				var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+
+
+				return (distancia - radExterno - radAutomata) / (2 * radAutomata);
+
+
+				
 			}
+
+			
+
+
+
+
+
+			var solapamiento = {
+				penetracion: 0,
+				color: null
+			};
+
+			snapWorld.selectAll('.externo').forEach(function(externo){
+
+				var distanciaExterno = distancia(externo);
+			    if(distanciaExterno < 0 ){
+				    
+			    	var penetracion = -distanciaExterno;
+
+
+			    	console.log(penetracion);
+			    	
+					var vColor = test.world.getColor(externo);
+
+			    	
+					if(penetracion > solapamiento.penetracion){
+				    	solapamiento = {
+							penetracion: penetracion,
+							color: vColor
+						};
+			    	}
+			    	
+			    }
+			});
+
+
+			var COEF_DOLOR = 0.01;
+
+			// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
+			if(solapamiento.penetracion > 0){
+
+				var valor;
+
+		    	if(solapamiento.color[0]==255){
+		    		//MALO
+					valor = (1 - solapamiento.penetracion);
+		    	}else{
+		    		//BUENO
+					valor = solapamiento.penetracion;
+		    	}
+				
+
+				valor = valor * COEF_DOLOR;
+
+			    setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+
+			
+			} else {
+
+				var valor = Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT;
+				setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+		    }
+
+
+
+
+			
+			/// PASO 4:
+			/// PROCESA LA RED
+			test.red.procesar();
+			
+
+
+
+
+			/// PASO 5:
+			/// LEE SALIDAS MUEVE MOTORES
+			
+
+			var motor = [0.0, 0.0, 0.0, 0.0];;
+
+
+			var COEF_LOCAL_POW_MOTOR = 2;
+
+			var sumaTensionTotalSalida = 0.0;
+
+			
+
+
+
+			//TODO: quitar cuando no se requiera mas
+			if(!test.world.context.debugMode){
+
+				Constructor.eachNeurona({
+					x0: 0,
+					y0: 0,
+					x1: red.box.x1,
+					y1: 0
+				}, function(rx, ry, neurona){
+					
+					var indiceMotor = Math.floor((rx / red.size.x) * motor.length);
+
+					
+					if(! isNaN(neurona.tensionSuperficial)){
+
+						motor[indiceMotor] += neurona.tensionSuperficial;
+						
+						sumaTensionTotalSalida += neurona.tensionSuperficial;
+					}
+				});
+			};
+
+
+
+			for(iMotor in motor){
+				//lo normalizo
+				if(sumaTensionTotalSalida){
+					motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
+				}else{
+					motor[iMotor] = 0.0;
+				}
+
+				//Le sumo lo que se haya hecho con el motor por fuera (teclas)
+				motor[iMotor] += test.world.context.motor[iMotor];
+			}
+			
+
+			/// PASO 6:
+			/// ACTUALIZA POSICION DEL AUTOMATA
+			
+
+
+			var vel = {
+				x: motor[1] - motor[0],
+				y: motor[3] - motor[2]
+			};
+			
+			var bb = automata.getBBox();
+			
+			var pos = {
+				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			};
+			
+			if(pos.x < 0) pos.x = $("#svgWorld").width();
+			if(pos.y < 0) pos.y = $("#svgWorld").height();
+			if(pos.x > $("#svgWorld").width()) pos.x = 0;
+			if(pos.y > $("#svgWorld").height()) pos.y = 0;
+				
+			automata.transform( 'T' + pos.x + ',' + pos.y);
+			
 		},
 		printEntrada: function(){
 			
-			
+			//Ponemos base de ruido
 			for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
 				for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
 					var valor = 0;
@@ -262,77 +602,86 @@ Test.prototype = {
 					var keyNeurona = Constructor.keyByCoord(i, j);
 					
 					test.red.neuronas[keyNeurona].activarExternal(valor);
+				}
+			}
+			
+			
+			
+
+			
+
+			
+			var printExterno = function(externo){
+
+				var bb = externo.getBBox();
+				var rad = (bb.width / 2)
+				
+
+				var posExterno = {
+					x: (bb.x + rad),
+					y: (bb.y + rad)
+				};
+				
+				var automata = test.world.context.automata;
+				var bb = automata.getBBox();
+				
+				var posAutomata = {
+					x: (bb.x + rad),
+					y: (bb.y + rad)
+				};
+				
+				var vec = {
+					x: (posAutomata.x - posExterno.x),
+					y: -(posAutomata.y - posExterno.y)
+				};
+				
+				
+				var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+				
+				if(distancia > rad * 16) return; /// Estaría muy lejos, no lo vería
+				
+				
+				var anguloOffset = Math.atan2(rad, distancia);
+				
+				
+				var anguloCentro = Math.atan2(vec.x, vec.y);
+				
+				var anguloMax = anguloCentro + anguloOffset;
+				var anguloMin = anguloCentro - anguloOffset;
+				
+				var pixelMax = Math.round((test.red.size.x / (2*Math.PI)) * anguloMax);
+				var pixelMin = Math.round((test.red.size.x / (2*Math.PI)) * anguloMin);
+				
+				var vColor = test.world.getColor(externo);
+
+
+				for(var i = pixelMin; i <= pixelMax; i++){
+					var index = i;
 					
+					if((index < test.red.box.x0)) {
+						index+= test.red.size.x;
+					}else if((index > test.red.box.x1)) {
+						index-= test.red.size.x;
+					}
+					try{
+						keyNeurona = Constructor.keyByCoord(index, test.red.box.y1);
+						
+						var valor;
+						if 		((index % 3)==0) valor = Math.round(vColor[0]/255);
+						else if ((index % 3)==1) valor = Math.round(vColor[1]/255);
+						else if ((index % 3)==2) valor = Math.round(vColor[2]/255);
+
+						test.red.neuronas[keyNeurona].activarExternal(valor );
+					}catch(e){
+						debugger;
+					}
 				}
-			}
-			
-			
-			
-			
-			
-			
-			var comida = test.world.context.comida;
-			var bb = comida.getBBox();
-			var rad = (bb.width / 2)
-			
-			
-			var posComida = {
-				x: (bb.x + rad),
-				y: (bb.y + rad)
 			};
 			
-			var automata = test.world.context.automata;
-			var bb = automata.getBBox();
-			
-			
-			var posAutomata = {
-				x: (bb.x + rad),
-				y: (bb.y + rad)
-			};
-			
-			var vec = {
-				x: (posAutomata.x - posComida.x),
-				y: -(posAutomata.y - posComida.y)
-			};
-			
-			
-			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
-			
-			if(distancia > rad * 15) return; /// Estaría muy lejos, no lo vería
-			
-			
-			var anguloOffset = Math.atan2(rad, distancia);
-			
-			
-			var anguloCentro = Math.atan2(vec.x, vec.y);
-			
-			var anguloMax = anguloCentro + anguloOffset;
-			var anguloMin = anguloCentro - anguloOffset;
-			
-			var pixelMax = Math.round((test.red.size.x / (2*Math.PI)) * anguloMax);
-			var pixelMin = Math.round((test.red.size.x / (2*Math.PI)) * anguloMin);
-			
-			for(var i = pixelMin; i <= pixelMax; i++){
-				var index = i;
-				
-				if((index < test.red.box.x0)) {
-					index+= test.red.size.x;
-				}else if((index > test.red.box.x1)) {
-					index-= test.red.size.x;
-				}
-				
-				try{
-					keyNeurona = Constructor.keyByCoord(index, test.red.box.y1);
-					test.red.neuronas[keyNeurona].activarExternal(1);
-				}catch(e){
-					debugger;
-				}
-			}
-			
-			
-			
-			
-			
+			Snap("#svgWorld").selectAll('.externo').forEach(function(externo){
+			    printExterno(externo);
+			});
+
 		},
 		debugPrintEntrada: function(){
 			// TODO: para debuggear mockeo los ojos usando el motor
@@ -344,7 +693,7 @@ Test.prototype = {
 			var indexInput = -1; //Para que arranque en 0 la primera
 			
 			//LEFT
-			valor = motor.left;
+			valor = motor[0];
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
@@ -365,7 +714,7 @@ Test.prototype = {
 			
 			
 			//RIGHT
-			valor = motor.right;
+			valor = motor[1];
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
@@ -384,7 +733,7 @@ Test.prototype = {
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			
 			//UP
-			valor = motor.up;
+			valor = motor[2];
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
@@ -404,7 +753,7 @@ Test.prototype = {
 			
 			
 			//DOWN
-			valor = motor.down;
+			valor = motor[3];
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
@@ -423,163 +772,44 @@ Test.prototype = {
 			test.red.neuronas[keyNeurona].activarExternal(valor);
 			
 		},
-		load: function(){
-			var world = this;
+		addExterno: function(opt) {
+
+			if(!opt)opt={};
+
+			opt = $.extend(true, {}, {
+				pos: {
+					x: Math.round((Math.random() * $("#svgWorld").width())),
+					y: Math.round((Math.random() * $("#svgWorld").height())),
+				},
+				color: "#AABBAA"
+			}, opt);
 			
+
 			var snapWorld = Snap("#svgWorld");
 			
-			var fondo = snapWorld.group(
-				snapWorld.rect(0,0, $("#svgWorld").width(), $("#svgWorld").height())
+			var externo = snapWorld.group(
+				snapWorld.circle(0, 0, 30)
 			);
-			fondo.attr({
-				fill: "#FFFF88"
+
+			externo.attr({
+				fill: opt.color,
+				class: "externo"
 			});
+
+
+			externo.transform("T" + opt.pos.x + "," + opt.pos.y);
 			
 			
-			
-			
-			var automata = snapWorld.group(
-				snapWorld.circle(0, 0, 15)
-			);
-			automata.attr({
-				fill: "#FFA420"
-			});
-			automata.transform('T200,150');
-			
-			world.context.automata = automata;
-			
-			
-			
-			var comida = snapWorld.group(
-				snapWorld.circle(0, 0, 15)
-			);
-			comida.attr({
-				fill: "#668866"
-			});
-			comida.transform('T90,90');
-			
-			comida.click(function(){
-				world.context.flag_moverComida = !world.context.flag_moverComida;
-			});
-			
-			world.context.comida = comida;
-			
-			
-			
-			$('body').on('keydown', function(e){
-				var motor = world.context.motor;
-				
-				switch (e.which) {
-					case 37:
-						motor.left = 1;
-						e.preventDefault(); 
-				break;
-					case 38:
-						motor.up = 1;
-						e.preventDefault();
-						break;
-					case 39:
-						motor.right = 1;
-						e.preventDefault(); 
-						break;
-					case 40:
-						motor.down = 1;
-						e.preventDefault(); 
-						break;
-				};
-				
-				
-			});
-			
-			
-			$('body').on('keyup', function(e){
-				var motor = world.context.motor;
-				
-				switch (e.which) {
-					case 37:
-						motor.left = 0;
-						break;
-					case 38:
-						motor.up = 0;
-						break;
-					case 39:
-						motor.right = 0;
-						break;
-					case 40:
-						motor.down = 0;
-						break;
-				};
-				
-			});
-			
+			return externo;
+
 		},
-		step: function(){
-			var paso = 8;
+		getColor: function(externo){
+
+			var colorString = externo.attr('fill');
 			
-			var moverComida = function(){
-				//mover los elementos del mundito: comida, enemigos, etc
-				var comida = test.world.context.comida;
-				
-				var vel = {
-					x: (Math.random() * 2) - 1,
-					y: (Math.random() * 2) - 1
-				};
-				
-				var bb = comida.getBBox();
-				
-				var pos = {
-					x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-					y: (bb.y + (bb.height / 2)) + (vel.y * paso)
-				};
-				
-				if(pos.x < 0) pos.x = 0;
-				if(pos.y < 0) pos.y = 0;
-				if(pos.x > $("#svgWorld").width()) pos.x = $("#svgWorld").width();
-				if(pos.y > $("#svgWorld").height()) pos.y = $("#svgWorld").height();
-				
-				
-				comida.transform( 'T' + pos.x + ',' + pos.y);
-			};
+			colorString = colorString.replace('rgb(', '').replace(')','');
 			
-			if(test.world.context.flag_moverComida){
-				moverComida();
-			}
-			
-			
-			test.world.printEntrada();
-			
-			
-			
-			
-			test.red.procesar();
-			
-			//TODO: obtener salidas, actualizar objeto motor
-			
-			
-			
-			// actualizar posición:
-			var automata = test.world.context.automata;
-			
-			
-			
-			var motor = test.world.context.motor;
-			
-			var vel = {
-				x: motor.right - motor.left,
-				y: motor.down - motor.up
-			};
-			
-			var bb = automata.getBBox();
-			
-			var pos = {
-				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
-			};
-			
-			
-			automata.transform( 'T' + pos.x + ',' + pos.y);
-			
-			
+			return colorString.split(', ');
 		}
 	},
 	onStep_vEventos: [],

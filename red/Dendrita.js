@@ -46,7 +46,7 @@ Dendrita.prototype = {
 		
 		
 		var tensionDendrita = dendrita.valor * dendrita.peso;
-
+		
 		//TODO: probar con
 		// dendrita.neurona.tensionSuperficial - tensionDendrita;
 		var valorEntrenamiento = 1 - Math.abs(dendrita.neurona.axon.valor - tensionDendrita);

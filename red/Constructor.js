@@ -6,10 +6,11 @@ var Constructor = {
 			size: red.size,
 			box: red.box,
 			
-			COEF_AXON_ANCHO_PULSO			: Axon.prototype.COEF_AXON_ANCHO_PULSO,
-			COEF_AXON_UMBRAL_SPIKE				: Axon.prototype.COEF_AXON_UMBRAL_SPIKE,
-			COEF_SINAPSIS_ENTRENAMIENTO		: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
-			COEF_SINAPSIS_UMBRAL_PESO		: Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO,
+			COEF_AXON_ANCHO_PULSO					: Axon.prototype.COEF_AXON_ANCHO_PULSO,
+			COEF_AXON_UMBRAL_SPIKE					: Axon.prototype.COEF_AXON_UMBRAL_SPIKE,
+			COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT		: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT,
+			COEF_SINAPSIS_ENTRENAMIENTO				: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
+			COEF_SINAPSIS_UMBRAL_PESO				: Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO,
 			
 			neuronas: {}
 		};
@@ -63,10 +64,11 @@ var Constructor = {
 		var red = constructor.red;
 		
 		
-		Axon.prototype.COEF_AXON_ANCHO_PULSO			= _red.COEF_AXON_ANCHO_PULSO			;
-		Axon.prototype.COEF_AXON_UMBRAL_SPIKE				= _red.COEF_AXON_UMBRAL_SPIKE				;
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO	= _red.COEF_SINAPSIS_ENTRENAMIENTO		;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 	= _red.COEF_SINAPSIS_UMBRAL_PESO		;
+		Axon.prototype.COEF_AXON_ANCHO_PULSO					= _red.COEF_AXON_ANCHO_PULSO				;
+		Axon.prototype.COEF_AXON_UMBRAL_SPIKE					= _red.COEF_AXON_UMBRAL_SPIKE				;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT	= _red.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT	;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO			= _red.COEF_SINAPSIS_ENTRENAMIENTO			;
+		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 			= _red.COEF_SINAPSIS_UMBRAL_PESO			;
 		
 		
 		

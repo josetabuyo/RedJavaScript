@@ -10,7 +10,7 @@
 				position: absolute;
 				left: 0px;
 				top: 40px;
-				width: 40%;
+				width: 35%;
 				height: 90%;
 				border: solid 1px;
 				overflow: scroll;
@@ -18,9 +18,9 @@
 			
 			#svgWorld{
 				position: absolute;
-				left: 40%;
+				left: 30%;
 				top: 40px;
-				width: 39%;
+				width: 40%;
 				height: 90%;
 				border: solid 1px;
 				overflow: scroll;
@@ -73,7 +73,7 @@
 				position: absolute;
 				right: 0px;
 				top: 40px;
-				width: 20%;
+				width: 28%;
 				height: 90%;
 				border: solid 1px;
 				font-size: 10px;
@@ -144,17 +144,18 @@
 			
 			}
 			
-			#plantilla_sly
+			li.sly
 			div.sly_ref{
 				left: 20px;
+				width: 100%;
 				font-size: 9px;
 			}
 			
-			#plantilla_sly
+			li.sly
 			input.sly_input{
 				position: relative;
-				top: 20px;
-				left: 20px;
+				top: 0px;
+				left: 0px;
 				width: 90%;
 			}
 			
@@ -182,12 +183,12 @@
 			<div id="newRed" class="boton">
 				NEW
 			</div>
-			<div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+			<!-- div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
 				LOAD
 			</div>
 			<div id="saveRed" class="boton" title="Guarda el estado de la red en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
 				SAVE
-			</div>
+			</div -->
 			<div id="help" class="boton">
 				HELP
 			</div>
@@ -229,6 +230,7 @@
 			<ul id="coeficientes">
 				<li>COEF_AXON_UMBRAL_SPIKE</li>
 				<li>COEF_AXON_ANCHO_PULSO</li>
+				<li>COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT</li>
 				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
 				<li>COEF_SINAPSIS_UMBRAL_PESO</li>
 				
@@ -288,8 +290,7 @@
 			
 			
 			$('body').on('contextmenu', function(e){
-				//e.stopPropagation();
-				//return false;
+				return false;
 			});
 			
 
@@ -334,7 +335,9 @@
 				var nameSly = $(item).text();
 				
 				var newLi = $('#plantilla_sly').clone()
-						.attr('id', nameSly+'_container');
+						.attr('id', nameSly+'_container')
+						.attr('class', 'sly')
+						;
 				
 				newLi.find('div.sly_ref').text(nameSly);
 				
@@ -345,29 +348,50 @@
 			
 			
 			
+			//global
+			setCoef = function(proto, nameSly, valor, escala){
+				var objSly = $('#'+ nameSly);
+
+				if(!escala)escala=1;
+				
+				objSly.val(valor * escala * 255);
+				proto[nameSly] = valor;
+
+				objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+				
+			};
+
+			//global
+			configSlyCoef = function(proto, nameSly, escala) {
+				
+
+				if(!escala)escala=1;
+
+				var objSly = $('#'+ nameSly);
+				
+				
+				objSly.change(function(){
+					var value = ($(this).val() / 255);
+					value = value / escala;
+					
+					
+					proto[nameSly] = value.toFixed(3);
+					
+					$(this).siblings().text(nameSly + ": " + proto[nameSly]);
+				});
+				
+				objSly.val(proto[nameSly] * escala * 255);
+				objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+			};
+
+			
 			var setControlCoeficientes = function(){
-				var configSlyCoef = function(nameSly, proto, escala){
-					var objSly = $('#'+ nameSly);
-					
-					if(!escala)escala=1;
-					
-					objSly.change(function(){
-						var value = ($(this).val() / 255);
-						value = value / escala;
-						
-						proto[nameSly] = value.toFixed(3);
-						
-						$(this).parent().find('div.sly_ref').text(nameSly + ": " + proto[nameSly]);
-					});
-					objSly.val(proto[nameSly] * escala * 255);
-					objSly.change();
-				};
 				
-				
-				configSlyCoef('COEF_AXON_UMBRAL_SPIKE', Axon.prototype, 10);
-				configSlyCoef('COEF_AXON_ANCHO_PULSO', Axon.prototype, 0.05);
-				configSlyCoef('COEF_SINAPSIS_ENTRENAMIENTO', Sinapsis.prototype);
-				configSlyCoef('COEF_SINAPSIS_UMBRAL_PESO', Sinapsis.prototype);
+				configSlyCoef(Axon.prototype, 'COEF_AXON_UMBRAL_SPIKE', 10);
+				configSlyCoef(Axon.prototype, 'COEF_AXON_ANCHO_PULSO', 0.05);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT', 100);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
 			
 			};
 			
@@ -378,9 +402,7 @@
 				
 				
 				guiRed = new GuiRed({
-					red: red,
-					x: 1,
-					y: 1
+					red: red
 				});
 				
 				
@@ -434,7 +456,6 @@
 				
 				Constructor.red = red;
 				
-				
 				var boxEntrada = {
 					x0: 0,
 					y0: red.size.y - 1,
@@ -442,7 +463,6 @@
 					y1: red.size.y - 1
 				};
 				Constructor.makeEntrada(boxEntrada);
-				
 				
 				var boxSalida = {
 					x0: 0,
@@ -461,7 +481,8 @@
 						x0: red.box.x0,
 						y0: red.box.y0,
 						x1: red.box.x1,
-						y1: red.box.y1-1
+						//y1: red.box.y1-1
+						y1: red.box.y1
 					},
 					coronas: [
 						{peso: 1		, densidad: 1,		radioDesde: 0	, radioHasta: 0	, cantDendritas: 1},
@@ -472,7 +493,7 @@
 					]
 				});
 				
-			
+				
 				
 				
 				
@@ -567,228 +588,43 @@
 				
 				console.log('saving..........');
 				
-				
-				
-				
-				/*
-				Vx.send({
-					tipoDeMensaje: 'escribirArchivo',
-					path:'red.json',
-					data: "prueba escritura en archivo remoto desde HTML papaaaaaaaaaa!!" //DEBUG: //_redString
-				}, function(mensaje){
-					console.log('red saved');
-					console.log(mensaje);
-				});
-				*/
-				
-				
-				
-				
-				//constantes 
-				var toleranciaDemora = 1.2;
-				var sizeVentanaProm = 5;
-				var sizePedazo = 1024;
-				var tasaSize = 1.5;
-				
-				
-				//tomar marcar de tiempo
-				var timeStamp = (+ new Date);
-				var promDeltaTime = null;
-				var deltaTime;
-				
-				
-				var loopSend = function(){
-					
-					
-					if(sizePedazo > _redString.length){sizePedazo = _redString.length};
-					
-					//sacar primer pedazo
-					var pedazo = _redString.slice(0, sizePedazo);
-					
-					
-					console.log('se envía pedazo, sizePedazo');
-					console.log(sizePedazo);
-					
-					//send pedazo
-					Vx.send({
-						tipoDeMensaje: 'escribirArchivo',
-						path:'red.json',
-						data: pedazo
-					}, function(mensaje){
-						
-						console.log('mensaje de respuesta a envío de pedazo de archivo');
-						console.log(mensaje);
-						
-						
-						
-						//tomar marca de tiempo
-						//comparar con promedio de tiempo
-						deltaTime = (+ new Date) -  timeStamp;
-						
-						if(!promDeltaTime){
-							promDeltaTime = deltaTime;
-						}else{
-							promDeltaTime = (((sizeVentanaProm - 1)/sizeVentanaProm) * promDeltaTime) + (((1)/sizeVentanaProm) * deltaTime)
-						}
-						
-						console.log('promDeltaTime');
-						console.log(promDeltaTime);
-						
-						
-						//actualizo gran string
-						_redString = _redString.slice(sizePedazo, _redString.length);
-						
-						
-						//si se hace muy lento, agrando el tamaño de pedazo
-						//si se hace muy rápido, achivo el tamaño de pedazo
-						if(deltaTime > promDeltaTime * toleranciaDemora ){
-							sizePedazo = sizePedazo * tasaSize;
-						}else if(deltaTime < promDeltaTime / toleranciaDemora ){
-							sizePedazo = sizePedazo / tasaSize;
-						}else
-						
-						
-						
-						
-						if(_redString.length > 0){
-							loopSend();
-						}
-						
-						
-					});
-					
-					
-					
-				}
-
-				
-				
-				loopSend();
-				
-				
-				
-				
-				
-				
-				/***   como si fuera sincrónico ****/
-				/*
-				while(_redString.length > 0){
-				
-					if(sizePedazo > _redString.length){sizePedazo = _redString.length};
-					
-					//sacar primer pedazo
-					var pedazo = _redString.slice(0, sizePedazo);
-					
-					//actualizo gran string
-					_redString = _redString.slice(sizePedazo, _redString.length);
-					
-					//send pedazo
-					Vx.send({
-						tipoDeMensaje: 'escribirArchivo',
-						path:'red.json',
-						data: pedazo
-					}, function(mensaje){
-						
-						
-						
-						
-						
-						
-						
-						console.log('red saved');
-						console.log(mensaje);
-					});
-					
-					
-					//tomar marca de tiempo
-					//comparar con promedio de tiempo
-					deltaTime = timeStamp - (+ new Date);
-					
-					if(!promDeltaTime){
-						promDeltaTime = deltaTime;
-					}else{
-						promDeltaTime = (((sizeVentanaProm - 1)/sizeVentanaProm) * promDeltaTime) + (((1)/sizeVentanaProm) * deltaTime)
-					}
-					
-					
-					//si se hace muy lento, agrando el tamaño de pedazo
-					//si se hace muy rápido, achivo el tamaño de pedazo
-					if(deltaTime > promDeltaTime * toleranciaDemora ){
-						sizePedazo = sizePedazo * tasaSize;
-					}else if(deltaTime < promDeltaTime / toleranciaDemora ){
-						sizePedazo = sizePedazo / tasaSize;
-					}
-				}
-				
-				*/
-				
-				
-				/*
-				var copyFrom = $('<textarea/>');
-				copyFrom.css({
-					position: "absolute",
-					left: "-1000px",
-					top: "-1000px",
-				});
-				copyFrom.text(_redString);
-				$('body').append(copyFrom);
-				copyFrom.select();
-				document.execCommand('copy');
-				copyFrom.remove();
-				
-				alert("A parte de mandar la red a el nodo vortex FilaBackend\nTmbién se copió al porta pepeles.\nPodés pegarla en un archivo y guardarla!");
-				*/
-				
 			});
 			
 			
 			
 			$('#loadRed').on('click', function(){
 				
-				console.log('loading..........');
-				Vx.send({
-					tipoDeMensaje: 'leerArchivo',
-					path:'red.json'
-					
-				}, function(mensaje){
+				var _red; //= JSON.parse(StringRed);
 				
-					console.log(mensaje);
-					console.log('red loaded');
+				red = Constructor.setRedData(_red);
 				
-					var _red = JSON.parse(mensaje.data);
-					
-					red = Constructor.setRedData(_red);
-					
-					
-					setRedContext();
-					
-					setControlCoeficientes();
-					
-				});
+				setRedContext();
+				
+				setControlCoeficientes();
 			});
 			
-			$('#help').on('click', function(){
-				
-				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
 
+
+			$('#help').on('click', function(){
+				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
 			});
-			
-			
-			
-			
-			
-			
 			
 			
 			
 			
 			//TODO: COMMIG SOON: NEXT:
 			//
+			// agregar pdfs a git, agregar pila de refs a README
+			// agregar a test multiples externos, y malos y buenos
+			// subir a git
+			
+			//Terminar GuiMatriz
+			// salvar en copytext el json de la configuracion de mapas y puntos con otros atributos variables
 			//hacer la edicion de las neuronas de la red en base a la GuiMatriz: es más facil.
 			//hacer la toolbar para dibujar el asistente de conexionado y editor de modelo de dendritas con la nueva GuiMatriz
 			
 			
-			
+		
 			
 			
 			//TODO: DEBUG: sacar el "var"
@@ -825,19 +661,6 @@
 					$('#dendritasModel_Container').hide();
 				}
 			});
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			

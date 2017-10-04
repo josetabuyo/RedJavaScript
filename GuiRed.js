@@ -5,7 +5,7 @@ var GuiRed = function(opt){
 	$.extend(this, {
 		red: null,
 		id: null,
-		modo:"DEPOLARIZACION",
+		modo:"ACTIVACION",
 		x: 0,
 		y: 0,
 		mapaNeuronaCelda: {}
@@ -19,8 +19,8 @@ var GuiRed = function(opt){
 
 GuiRed.prototype = {
 	paso: {
-		x: 6,
-		y: 6
+		x: 11,
+		y: 11
 	},
 	keyByPixelPos: function(pixelPosX, pixelPosY){
 		var grafico = this;

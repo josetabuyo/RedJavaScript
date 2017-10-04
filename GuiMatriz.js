@@ -5,8 +5,8 @@ var GuiMatriz = function(opt){
 		radioPincel: 3,
 		drawObj: "rectangulo",
 		escala: {
-			x: 6,
-			y: 6
+			x: 10,
+			y: 10
 		},
 		backgroundColor: "#999999",
 		strokeCellColor: "#550055",
@@ -242,10 +242,6 @@ GuiMatriz.prototype = {
 		this.refresh();
 	},
 	setDrawMode: function(drawObj){
-		
-		console.log('setDrawMode', 'drawObj');
-		console.log(drawObj);
-		
 		
 		var gui = this;
 		gui.draw[drawObj].load(gui);
