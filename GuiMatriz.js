@@ -1,14 +1,17 @@
 var GuiMatriz = function(opt){
 	$.extend(this, {
-		x: 15,
-		y: 15,
-		radioPincel: 3,
-		drawObj: "rectangulo",
+		x: 0,
+		y: 0,
+		showCero: true,
+		anchoPincel: 3,
+		drawObj: "pincel",
+		tool1:"addCell",
+		tool2:"removeCell",
 		escala: {
 			x: 10,
 			y: 10
 		},
-		backgroundColor: "#999999",
+		backgroundColor: "#000000",
 		strokeCellColor: "#550055",
 		fillCellColor: "#000000",
 		
@@ -19,11 +22,12 @@ var GuiMatriz = function(opt){
 			desde: null,
 			hasta: null,
 			box: null,
-			idMap: 0
+			idLayer: 0
 		},
 		
-		map: []
-		
+		defaultTemplate: [{"data":{"peso":0.2},"cels":{"x-1y-1":{},"x-1y0":{},"x-1y1":{},"x0y-1":{},"x0y1":{},"x1y-1":{},"x1y0":{},"x1y1":{}}}],
+		//defaultTemplate: [{"data":{"peso":0.2},"cels":{"x-1y-1":{},"x-1y0":{},"x-1y1":{},"x0y-1":{},"x0y1":{}}},{"data":null,"cels":{"x0y-1":{},"x0y1":{},"x1y-1":{},"x1y0":{},"x1y1":{}}},{"data":null,"cels":{"x-1y0":{},"x-1y1":{},"x0y1":{},"x1y0":{},"x1y1":{}}},{"data":null,"cels":{"x-1y-1":{},"x-1y0":{},"x0y-1":{},"x1y-1":{},"x1y0":{}}},{"data":null,"cels":{"x-1y-3":{},"x-1y-2":{},"x0y-3":{},"x0y-2":{}}},{"data":null,"cels":{"x1y-3":{},"x1y-2":{},"x2y-3":{},"x2y-2":{}}},{"data":null,"cels":{"x2y-2":{},"x2y-1":{},"x3y-2":{},"x3y-1":{}}},{"data":null,"cels":{"x2y0":{},"x2y1":{},"x3y0":{},"x3y1":{}}},{"data":null,"cels":{"x2y1":{},"x2y2":{},"x3y1":{},"x3y2":{}}},{"data":null,"cels":{"x0y2":{},"x0y3":{},"x1y2":{},"x1y3":{}}},{"data":null,"cels":{"x-2y2":{},"x-2y3":{},"x-1y2":{},"x-1y3":{}}},{"data":null,"cels":{"x-3y1":{},"x-3y2":{},"x-2y1":{},"x-2y2":{}}},{"data":null,"cels":{"x-3y-1":{},"x-3y0":{},"x-2y-1":{},"x-2y0":{}}},{"data":null,"cels":{"x-3y-3":{},"x-3y-2":{},"x-2y-3":{},"x-2y-2":{}}},{"data":null,"cels":{"x-4y-5":{},"x-4y-4":{},"x-3y-5":{},"x-3y-4":{},"x-2y-5":{},"x-2y-4":{},"x-1y-5":{},"x-1y-4":{}}},{"data":null,"cels":{}},{"data":null,"cels":{"x0y-5":{},"x0y-4":{},"x1y-5":{},"x1y-4":{},"x2y-5":{},"x2y-4":{},"x3y-5":{},"x3y-4":{}}},{"data":null,"cels":{"x3y-4":{},"x3y-3":{},"x4y-4":{},"x4y-3":{},"x3y-2":{},"x4y-2":{},"x5y-3":{},"x5y-2":{},"x4y-1":{},"x5y-1":{}}},{"data":null,"cels":{"x4y0":{},"x4y1":{},"x5y0":{},"x5y1":{},"x4y2":{},"x5y2":{},"x4y3":{},"x5y3":{}}},{"data":null,"cels":{"x3y3":{},"x3y4":{},"x4y3":{},"x4y4":{},"x2y3":{},"x2y4":{},"x1y4":{},"x1y5":{},"x2y5":{},"x0y4":{},"x0y5":{}}},{"data":null,"cels":{"x-1y4":{},"x-1y5":{},"x0y4":{},"x0y5":{},"x-2y4":{},"x-2y5":{},"x-3y4":{},"x-3y5":{},"x-3y3":{},"x-2y3":{}}},{"data":null,"cels":{"x-5y3":{},"x-5y4":{},"x-4y3":{},"x-4y4":{},"x-3y3":{},"x-3y4":{},"x-5y2":{},"x-4y2":{},"x-5y1":{},"x-4y1":{}}},{"data":null,"cels":{"x-5y0":{},"x-5y1":{},"x-4y0":{},"x-4y1":{},"x-6y0":{},"x-6y1":{},"x-6y-1":{},"x-5y-1":{},"x-6y-2":{},"x-5y-2":{},"x-6y-3":{},"x-5y-3":{},"x-4y-3":{},"x-4y-2":{}}}],
+		layers: []
 	}, opt);
 	
 	
@@ -35,88 +39,12 @@ var GuiMatriz = function(opt){
 
 GuiMatriz.prototype = {
 	draw: {
-		rectangulo:{
-			load:function(gui){
-				if(gui.sel.box) gui.sel.box.remove();
-				
-			},
-			mousedown: function(e, gui){
-				
-				
-				if(gui.sel.box) gui.sel.box.remove();
-				
-				gui.sel.box = gui.snap.rect(0, 0, 1, 1);
-				
-				gui.sel.box.attr({
-					stroke: "#FF0000",
-					"stroke-width": 2,
-					id : "box",
-					fill: "#FF0000",
-					"fill-opacity": 0.3
-				});
-				
-				gui.sel.desde = gui.coordByPixelPos(e.offsetX, e.offsetY);
-				gui.sel.hasta = gui.sel.desde;
-			},
-			mousemove: function(e, gui){
-				
-				if(!gui.sel.box) return;
-				
-				gui.sel.hasta = gui.coordByPixelPos(e.offsetX, e.offsetY);
-				
-				
-				
-				var desde_pixel = gui.pixelPosByCoord(gui.sel.desde);
-				var hasta_pixel = gui.pixelPosByCoord(gui.sel.hasta);
-				
-				
-				if(desde_pixel.x > hasta_pixel.x ){
-					var aux = desde_pixel.x;
-					desde_pixel.x = hasta_pixel.x;
-					hasta_pixel.x = aux;
-				}
-				
-				if(desde_pixel.y > hasta_pixel.y ){
-					var aux = desde_pixel.y;
-					desde_pixel.y = hasta_pixel.y;
-					hasta_pixel.y = aux;
-				}
-				
-				
-				//TODO: sacar snap svg. usar templates y jquery;
-				// no se puede usar JQuery par svg!!!
-				var box = gui.o.find('#box');
-				
-				box.attr({
-					x: desde_pixel.x,
-					y: desde_pixel.y,
-					width: hasta_pixel.x - desde_pixel.x,
-					height: hasta_pixel.y - desde_pixel.y
-				});
-			
-			},
-			mouseup: function(e, gui){
-				
-				if (e.button === 2) {
-					gui.removeCell(gui.sel.desde, gui.sel.hasta);
-				}else{
-					gui.addCell(gui.sel.desde, gui.sel.hasta);
-					
-				}
-				
-				gui.sel.desde = null;
-				gui.sel.hasta = null;
-				
-				gui.sel.box.remove();
-				gui.sel.box = null;
-			}
-		},
 		pincel:{
-			load:function(gui){
+			init:function(gui){
 				
 				if(gui.sel.box) gui.sel.box.remove();
 				
-				gui.sel.box = gui.snap.rect(0, 0, gui.radioPincel * gui.escala.x, gui.radioPincel * gui.escala.y);
+				gui.sel.box = gui.snap.rect(0, 0, gui.anchoPincel * gui.escala.x, gui.anchoPincel * gui.escala.y);
 				
 				gui.sel.box.attr({
 					stroke: "#FF0000",
@@ -125,34 +53,35 @@ GuiMatriz.prototype = {
 					fill: "#FF0000",
 					"fill-opacity": 0.3
 				});
-				
 			},
 			mousedown: function(e, gui){
-				gui.isDrawing = true;
+				gui.mousedown_event = e;
 				this.mousemove(e, gui);
 			},
 			mousemove: function(e, gui){
 				
 				var pos = gui.coordByPixelPos(e.offsetX, e.offsetY);
+				
 				gui.sel.desde = {
-					x: pos.x - gui.radioPincel,
-					y: pos.y - gui.radioPincel
+					x: pos.x,
+					y: pos.y
 				};
 				gui.sel.hasta = {
-					x: pos.x + gui.radioPincel,
-					y: pos.y + gui.radioPincel
+					x: pos.x + gui.anchoPincel,
+					y: pos.y + gui.anchoPincel
 				};
 				
 				
 
-				if(gui.isDrawing){
-					//pinto el cuadradito
-					if (e.button === 2) {
-						gui.removeCell(gui.sel.desde, gui.sel.hasta);
-					}else{
-						gui.addCell(gui.sel.desde, gui.sel.hasta);
+				if(gui.mousedown_event){
+					gui.cellBox(gui.sel.desde, gui.sel.hasta, function(pos){
 						
-					}
+						if (gui.mousedown_event.button === 2) {
+							gui[gui.tool2](pos);
+						}else{
+							gui[gui.tool1](pos);
+						}
+					});
 				}
 				
 				
@@ -160,24 +89,8 @@ GuiMatriz.prototype = {
 				var hasta_pixel = gui.pixelPosByCoord(gui.sel.hasta);
 				
 
-				/*****************************
-				/* INFO:
-				 * Para que quede el box del "puntero" al final y no por debajo de las celdas
-				 * lo borro y lo vuelvo a crear. hago un load()
-				 *
-				 * SVG ES MUY SIMPLE:
-				 * no sé si está mal la verdad,
-				 * se renderizan en el orden de aparición en el html.. en este caso el componente svg.
-				 * es medio obvio que pase eso al renderizar,
-				 * salvo que se haga una funcionalidad aparte para lograr la ilusión que logra el render de html cuando le movemos el z-index.
-				 ******************************
-				*/
-				this.load(gui);
+				this.init(gui);
 				
-				/**/
-				
-				
-				//TODO: sacar snap svg. usar templates y jquery;
 				var box = gui.o.find('#box');
 				
 				box.attr({
@@ -187,13 +100,9 @@ GuiMatriz.prototype = {
 					height: hasta_pixel.y - desde_pixel.y
 				});
 				
-				
-				
-				
-				
 			},
 			mouseup: function(e, gui){
-				gui.isDrawing = false;
+				gui.mousedown_event = false;
 			}
 		}
 	},
@@ -207,15 +116,144 @@ GuiMatriz.prototype = {
 		gui.snap = Snap("#" + gui.idSvg);
 		
 		
-		gui.load();
+		gui.init();
 
 		
 		gui.setDrawMode(gui.drawObj);
 		
 		
-		//inserto la idMap 0
-		gui.addMap();
+		//inserto la idLayer 0
+		gui.addLayer();
 		
+
+		$('body').on('keydown', function(e){
+			switch (e.which) {
+				case 107:
+					gui.anchoPincel++;
+					e.preventDefault(); 
+					break;
+				case 109:
+					if(gui.anchoPincel>1)gui.anchoPincel--;
+					e.preventDefault();
+					break;
+			};
+
+			var box = gui.o.find('#box');
+			
+			box.attr({
+				width: gui.anchoPincel * gui.escala.x,
+				height: gui.anchoPincel * gui.escala.y
+			});
+		});
+	},
+	init: function(){
+		var gui = this;
+
+		gui.snap.clear();
+
+
+		var ancho = 1000; // gui.o.parent().width();
+		var alto = 1000; // gui.o.parent().height();
+		
+		var lienzo = gui.snap.rect(0, 0, ancho, alto).attr({
+			fill: gui.backgroundColor,
+			id: "lienzo"
+		});
+		
+
+		if(gui.showCero){
+			var pos_pixel = gui.pixelPosByCoord({x:0,y:0});
+			
+			var cero = gui.snap.rect(pos_pixel.x, pos_pixel.y, gui.escala.x, gui.escala.y).attr({
+				fill: "red",
+				opacity: "0.3",
+				stroke: "red"
+			});
+		}
+			
+
+
+	},
+	onRefresh: function(){},
+	onRefreshCell: function(){},
+	refresh: function(){
+		var gui = this;
+		
+
+		gui.init();
+
+
+
+
+		var crearSvgObject = function(key){
+
+			var parts = key.split("y");
+
+			parts[0] = parts[0].replace("x", "");
+			
+
+			var pos = {
+				x: parseInt(parts[0]),
+				y: parseInt(parts[1])
+			};
+
+			var pos_pixel = gui.pixelPosByCoord(pos);
+			
+			var svgObject = gui.snap.rect(pos_pixel.x, pos_pixel.y, gui.escala.x, gui.escala.y).attr({
+				fill: gui.fillCellColor,
+				stroke: gui.strokeCellColor
+			});
+
+
+			gui.onRefreshCell(key, svgObject);
+
+
+			return svgObject;
+		};
+		
+		
+
+
+				
+		gui.fillCellColor = "#FFFFFF";
+		for(var idLayer = 0; idLayer < gui.layers.length; idLayer++){
+			if(gui.sel.idLayer != idLayer){
+				for(key in gui.layers[idLayer].cels){
+					gui.layers[idLayer].cels[key].svgObject = crearSvgObject(key);
+				}
+			}
+		}
+		
+
+		
+
+		gui.fillCellColor = "#000000";
+		for(key in gui.layers[gui.sel.idLayer].cels){
+			gui.layers[gui.sel.idLayer].cels[key].svgObject = crearSvgObject(key);
+		}
+
+
+		gui.draw.pincel.init(gui);
+
+		if(gui.sel.desde && gui.sel.hasta){
+			var desde_pixel = gui.pixelPosByCoord(gui.sel.desde);
+			var hasta_pixel = gui.pixelPosByCoord(gui.sel.hasta);
+			
+
+			var box = gui.o.find('#box');
+			
+			box.attr({
+				x: desde_pixel.x,
+				y: desde_pixel.y,
+				width: hasta_pixel.x - desde_pixel.x,
+				height: hasta_pixel.y - desde_pixel.y
+			});
+		}
+		
+
+		gui.onRefresh();
+
+
 	},
 	setDrawModeNext: function(){
 		var gui = this;
@@ -231,20 +269,11 @@ GuiMatriz.prototype = {
 		
 		gui.setDrawMode(Object.keys(gui.draw)[i]);
 	},
-	addMap: function(){
-		this.map.push({});
-		this.selMap(this.map.length-1);
 
-		this.onAddMap(this, this.map.length-1);
-	},
-	selMap: function(idMap){
-		this.sel.idMap = idMap;
-		this.refresh();
-	},
 	setDrawMode: function(drawObj){
 		
 		var gui = this;
-		gui.draw[drawObj].load(gui);
+		gui.draw[drawObj].init(gui);
 		
 		gui.o.unbind();
 		gui.o.mousedown(function(e){
@@ -261,30 +290,41 @@ GuiMatriz.prototype = {
 		
 		gui.drawObj = drawObj;
 	},
-	removeCell: function(desde, hasta){
+	cellBox: function(desde, hasta, callback){
 		var gui = this;
 		
 		if(((desde.x == hasta.x) && (desde.y == hasta.y)) || (!hasta)){
-			gui.borrarCelda(pos);
+			callback(pos);
 		}else{
-			gui.rectangulo(desde, hasta, function(pos){
-				gui.borrarCelda(pos);
+			gui.eachCellBox(desde, hasta, function(pos){
+				callback(pos);
+			});
+		}
+	},
+	removeCellBox: function(desde, hasta){
+		var gui = this;
+		
+		if(((desde.x == hasta.x) && (desde.y == hasta.y)) || (!hasta)){
+			gui.removeCell(pos);
+		}else{
+			gui.eachCellBox(desde, hasta, function(pos){
+				gui.removeCell(pos);
 			});
 		}
 		
 	},
-	addCell: function(desde, hasta){
+	addCellBox: function(desde, hasta){
 		var gui = this;
 		
 		if(((desde.x == hasta.x) && (desde.y == hasta.y)) || (!hasta)){
-			gui.crearCelda(pos);
+			gui.addCell(pos);
 		}else{
-			gui.rectangulo(desde, hasta, function(pos){
-				gui.crearCelda(pos);
+			gui.eachCellBox(desde, hasta, function(pos){
+				gui.addCell(pos);
 			});
 		}
 	},
-	rectangulo: function(desde, hasta, callback){
+	eachCellBox: function(desde, hasta, callback){
 		var gui = this;
 		
 		if(desde.x > hasta.x ){
@@ -306,27 +346,37 @@ GuiMatriz.prototype = {
 			}
 		}
 	},
-	borrarCelda: function(pos){
+	onRemoveCell:function(){
+		return;
+	},
+	removeCell: function(pos){
 		var gui = this;
 		
 		var key = "x"+pos.x+"y"+pos.y;
 		
-		if(typeof(gui.map[gui.sel.idMap][key]) == 'undefined'){
+		if(typeof(gui.layers[gui.sel.idLayer].cels[key]) == 'undefined'){
 			return;
 		}
 		
-		gui.map[gui.sel.idMap][key].remove();
-		delete gui.map[gui.sel.idMap][key];
+		gui.layers[gui.sel.idLayer].cels[key].svgObject.remove();
+		delete gui.layers[gui.sel.idLayer].cels[key];
+
+
+		gui.onRemoveCell(key);
 	},
-	crearCelda: function(pos, idMap){
+	onAddCell: function(key){
+
+		return;
+	},
+	addCell: function(pos, idLayer){
 		var gui = this;
 		
-		if(typeof(idMap) == "undefined" ){
-			idMap = gui.sel.idMap;
+		if(typeof(idLayer) == "undefined" ){
+			idLayer = gui.sel.idLayer;
 		};
 
 		
-		var key; 
+		var key;
 		if(typeof(pos) == "string"){
 			//MODO REFESH
 			// no tiene validacion de existencia
@@ -348,7 +398,7 @@ GuiMatriz.prototype = {
 			key = "x"+pos.x+"y"+pos.y;
 
 
-			if((typeof(gui.map[gui.sel.idMap][key]) != 'undefined') || (pos.x == 0 && pos.y == 0)){
+			if((typeof(gui.layers[gui.sel.idLayer].cels[key]) != 'undefined') || (pos.x == 0 && pos.y == 0)){
 				return;
 			}
 		}
@@ -357,13 +407,20 @@ GuiMatriz.prototype = {
 		var pos_pixel = gui.pixelPosByCoord(pos);
 		
 		
-		var celda = gui.snap.rect(pos_pixel.x, pos_pixel.y, gui.escala.x, gui.escala.y).attr({
+		var svgObject = gui.snap.rect(pos_pixel.x, pos_pixel.y, gui.escala.x, gui.escala.y).attr({
 			fill: gui.fillCellColor,
 			stroke: gui.strokeCellColor
 		});
 
 		
-		gui.map[idMap][key] = celda;
+		gui.layers[idLayer].cels[key] = {
+			svgObject: svgObject,
+			data: {}
+		};
+
+
+
+		gui.onAddCell(key);
 		
 	},
 	coordByPixelPos: function(pixelPosX, pixelPosY){
@@ -393,53 +450,76 @@ GuiMatriz.prototype = {
 		return 'x'+pos.x+'y='+pos.y;
 	},
 	
-
-	load: function(){
-		var gui = this;
-
-		gui.snap.clear();
-		var ancho = gui.o.width();
-		var alto = gui.o.height();
-		
-		var lienzo = gui.snap.rect(0, 0, ancho, alto).attr({
-			fill: gui.backgroundColor,
-			id: "lienzo"
-		});
-		
-		var pos_pixel = gui.pixelPosByCoord({x:0,y:0});
-		
-		
-		var celda = gui.snap.rect(pos_pixel.x, pos_pixel.y, gui.escala.x, gui.escala.y).attr({
-			fill: "red",
-			stroke: "red"
-		});
+	
+	onAddLayer: function(gui, idLayer){
+		return;
 	},
-	refresh: function(){
+	addLayer: function(proto){
+
+		this.layers.push($.extend(
+			{
+				data: null,
+				cels: {}
+			},proto
+		));
+
+		this.selLayer(this.layers.length-1);
+
+		this.onAddLayer(this, this.layers.length-1);
+
+	},
+	selLayer: function(idLayer){
+		this.sel.idLayer = idLayer;
+		this.refresh();
+	},
+	loadLayers: function(layers){
+		var gui = this;
+
+		gui.removeLayers();
+		
+		for(var idLayer = 0; idLayer < layers.length; idLayer++){
+			
+			gui.addLayer(layers[idLayer]);
+		}
+
+		gui.selLayer(gui.layers.length - 1);
+	},
+	onRemoveLayers: function(){
+		return;
+	},
+	removeLayers: function(){
 		var gui = this;
 		
+		gui.layers = [];
+		gui.onRemoveLayers();
+	},
+	getLayers: function(){
+		var gui = this;
+		var _map = [];
 
-		gui.load();
-
-
-		gui.fillCellColor = "#FFFFFF";
-
-		for(var idMap = 0; idMap < gui.map.length; idMap++){
+		for(var idLayer=0; idLayer < this.layers.length; idLayer++){
+			_map.push({
+				data: gui.layers[idLayer].data,
+				cels: {}
+			});
 			
-			if(gui.sel.idMap != idMap){
-				
-				for(key in gui.map[idMap]){
-					gui.crearCelda(key, idMap);
-				}
-				
+			for(key in gui.layers[idLayer].cels){
+				_map[idLayer].cels[key] = {
+					data: gui.layers[idLayer].cels[key].data
+				};
 			}
 		}
-		
 
-		gui.fillCellColor = "#000000";
-
-		for(key in gui.map[gui.sel.idMap]){
-			gui.crearCelda(key);
-		}
+		return _map;
+	},
+	setLayer: function(idLayer, mapObject){
+		var gui = this;
+		gui.layers[0].cels = {};
+		Object.keys(mapObject).map(function(key){
+			gui.layers[0].cels[key] = {
+				data: null
+			};
+		});
 	}
 	
 }

@@ -25,6 +25,9 @@ Neurona.prototype = {
 				id: neurona.id
 			}
 		));
+
+
+
 		
 	},
 	setTension: function(tensionSuperficial){
@@ -78,6 +81,7 @@ Neurona.prototype = {
 		neurona.setTension(valorDendritas);
 		neurona.axon.activar();
 		
+
 	},
 	entrenar: function(signo){
 		var neurona = this;
@@ -94,3 +98,4 @@ Neurona.prototype = {
 		};
 	}
 };
+

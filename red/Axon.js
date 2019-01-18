@@ -52,6 +52,7 @@ Axon.prototype = {
 		var axon = this;
 		
 		axon.valor = 1;
+
 	},
 	abajo: function(){
 		var axon = this;
