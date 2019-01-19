@@ -319,7 +319,6 @@
 				</div>
 			</div>
 			<div id="toolbarInfo">
-				Hola tarola
 			</div>
 		</div>
 		
@@ -530,35 +529,46 @@
 			
 			$('#newRed').on('click', function(){
 
+
+
 				//crear red
 				red = Constructor.createRed({
 					size: {
-						x: 255,
+						x: 256,
 						y: 10
 					}
 				});
-				
+				red.build();
 
 				Constructor.insertarAxonesConMascara({
 					mascara: templates.conexionado.mini_debug
 				});
 
 
-
-				/*
-				Constructor.makeEntrada({
+				Constructor.eachNeurona({
 					x0: 0,
 					x1: 255,
-					y0: 0,
-					y1: 0
+					y0: 9,
+					y1: 9
+				}, function (x,y,neurona){
+
+					Constructor.makeEntradaNeurona(neurona);
 				});
-				*/
+
+				
+
+				$('#testSelector>select').val("TestAudio");
+				$('#testSelector>select').click();
+				
 				
 				guiRed.setLayer(0, red.neuronas);
 				guiRed.refresh();
+				
 
-
-
+				console.log('red created...');
+				
+				setContext();
+				
 				/*
 				Constructor.insertarAxones({
 					modo: 'coronas_dendriticas',
@@ -654,11 +664,6 @@
 				});
 				*/
 				
-				console.log('red created...');
-				
-				
-				setContext();
-				
 				
 			});
 			
@@ -704,15 +709,21 @@
 
 
 			
-			$('#testSelector').on('click', function(){
+			$('#testSelector>select').on('click', function(){
 
-				var cmd = "test = new "+ $('#testSelector>select').val() +"({red: red})";
+				var cmd = "test = new "+ $(this).val() +"({red: red})";
 				console.log(cmd);
+				
+				try{
+					eval(cmd);
+					test.onStep(function(){
+						guiRed.refresh();
+					});
+					test.red = red;
 
-				eval(cmd);
-				test.onStep(function(){
-					guiRed.refresh();
-				});
+				}catch(e){
+					
+				}
 	
 			});
 			
@@ -898,6 +909,8 @@
 
 					if(typeof(red) == "undefined"){
 						red = new Red();
+						Constructor.red = red;
+
 					}
 
 
@@ -1033,12 +1046,7 @@
 					
 					if(typeof(neurona) != "undefined"){
 
-						if(neurona.tipo == "ENTRADA") return;
-						if(neurona.tipo == "SALIDA") return;
 						
-						neurona.tipo = "ENTRADA";
-
-						red.entrada[key] = neurona;
 						Constructor.makeEntradaNeurona(neurona);
 					}
 
@@ -1256,14 +1264,14 @@
 
 
 			
-			var $template_topologia_select = $('#guiRed_Container>.toolbar>#load>select');
+			var $template_presets_select = $('#guiRed_Container>.toolbar>#load>select');
 			
-			keysTopologia = Object.keys(templates.topologia);
-			for(iTemplateTopologia in keysTopologia){
-				$template_topologia_select.append("<option value='" + keysTopologia[iTemplateTopologia] + "'>" + keysTopologia[iTemplateTopologia] + "</option>");
+			keysPresets = Object.keys(templates.presets);
+			for(iTemplatePresets in keysPresets){
+				$template_presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
 			}
 
-			$template_topologia_select.on('click', function(){
+			$template_presets_select.on('click', function(){
 				event.stopPropagation();
 
 				///// elegir la topología TODO!
@@ -1293,5 +1301,5 @@
 		});
 	</script>
 	<script src="templates/conexionado.js"></script>
-	<script src="templates/topologia.js"></script>
+	<script src="templates/presets.js"></script>
 </html>

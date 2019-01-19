@@ -216,6 +216,12 @@ var Constructor = {
 	
 	
 	makeEntradaNeurona: function(neurona){
+		
+
+		neurona.tipo = "ENTRADA";
+
+		neurona.red.entrada[neurona.id] = neurona;
+
 		neurona.dendritas = [];
 		neurona.procesar = function(){};
 		neurona.axon.activar = function(){
