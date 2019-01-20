@@ -232,8 +232,11 @@
 			<div id="dendritasModel" class="boton" title="Despliega un panel para modelos de dendritas">
 				DendritasModel
 			</div>
-			<div id="newRed" class="boton">
-				NEW
+			<div id="presets" class="boton" title="Cargar una preset">
+				PRESET
+				<select>
+					<option value=""></option>
+				</select>
 			</div>
 			<!-- div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
 				LOAD
@@ -259,7 +262,7 @@
 
 		<div id="dendritasModel_Container" class="guiMatrix"">
 			<div id="dendritasModel_celdas" class="cels">
-				<svg id="dendritasModel_svg" width="1000px" height="1000px">
+				<svg id="dendritasModel_svg" width="10000px" height="10000px">
 				</svg>
 			</div>
 			<div id="dendritasModel_toolbar" class="toolbar">
@@ -285,7 +288,7 @@
 
 		<div id="guiRed_Container"  class="guiMatrix">
 			<div class="cels">
-				<svg id="guiRed_svg" width="1000px" height="1000px" >
+				<svg id="guiRed_svg" width="10000px" height="10000px" >
 				</svg>
 			</div>
 			<div class="toolbar">
@@ -310,12 +313,6 @@
 				</div>
 				<div id="save" class="boton" title="Imprime por la console (F12) la topología de la red">
 					S
-				</div>
-				<div id="load" class="boton" title="Cargar una topología">
-					L
-					<select>
-						<option value=""></option>
-					</select>
 				</div>
 			</div>
 			<div id="toolbarInfo">
@@ -527,145 +524,7 @@
 			};
 			
 			
-			$('#newRed').on('click', function(){
-
-
-
-				//crear red
-				red = Constructor.createRed({
-					size: {
-						x: 256,
-						y: 10
-					}
-				});
-				red.build();
-
-				Constructor.insertarAxonesConMascara({
-					mascara: templates.conexionado.mini_debug
-				});
-
-
-				Constructor.eachNeurona({
-					x0: 0,
-					x1: 255,
-					y0: 9,
-					y1: 9
-				}, function (x,y,neurona){
-
-					Constructor.makeEntradaNeurona(neurona);
-				});
-
-				
-
-				$('#testSelector>select').val("TestAudio");
-				$('#testSelector>select').click();
-				
-				
-				guiRed.setLayer(0, red.neuronas);
-				guiRed.refresh();
-				
-
-				console.log('red created...');
-				
-				setContext();
-				
-				/*
-				Constructor.insertarAxones({
-					modo: 'coronas_dendriticas',
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y0,
-						x1: red.box.x1,
-						//y1: red.box.y1-1
-						y1: red.box.y1
-					},
-					coronas: [
-						{peso: 1		, densidad: 1,		radioDesde: 0	, radioHasta: 0	, cantDendritas: 1},
-						{peso: 0.3		, densidad: 1,		radioDesde: 1	, radioHasta: 1	, cantDendritas: 1},
-						{peso: 0},
-						{peso: -1.5		, densidad: 1,		radioDesde: 3	, radioHasta: 3	, cantDendritas: 1},
-						{peso: 0.2		, densidad: 0.2,	radioDesde: 4	, radioHasta: 6	, cantDendritas: 1}
-					]
-				});
-				*/
-				
-				
-				/*
-				
-				Constructor.insertarAxones({
-					modo: 'dendritas_radiales_pesadas',
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y0,
-						x1: red.box.x1,
-						y1: red.box.y1-1
-					},
-					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
-					
-					
-				});
-				
-				*/
-				
-				//Prueba con entrada relativa, para que fluya
-				/*Constructor.insertarAxones({
-					modo: 'relativo',
-					dendritas_pesos: [-0.2],
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y0,
-						x1: red.box.x1,
-						y1: red.box.y1-1
-					},
-					boxRelativo	: {
-						x0 	: -4,
-						y0 	: 2,
-						x1 	: 4,
-						y1 	: 2
-					}
-				});
-				
-				Constructor.insertarAxones({
-					modo: 'relativo',
-					dendritas_pesos: [1.6],
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y0,
-						x1: red.box.x1,
-						y1: red.box.y1-1
-					},
-					boxRelativo	: {
-						x0 	: -4,
-						y0 	: 3,
-						x1 	: 4,
-						y1 	: 4
-					}
-				});
-				
-				*/
-				
-				/*
-				//entrada con campana reforzada
-				Constructor.insertarAxones({
-					modo: 'dendritas_radiales_pesadas',
-					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
-					boxTarget: {
-						x0: red.box.x0,
-						y0: red.box.y1-2,
-						x1: red.box.x1,
-						y1: red.box.y1-1
-					},
-					boxRelativo	: {
-						x0 	: -5,
-						y0 	: -1,
-						x1 	: 5,
-						y1 	: 0
-					}
-				});
-				*/
-				
-				
-			});
+			
 			
 
 
@@ -813,7 +672,7 @@
 
 			var $template_conexionado_select = $('#dendritasModel_Container>.toolbar>#load>select');
 			
-			keysConexionado = Object.keys(templates.conexionado);
+			keysConexionado = Object.keys(conexionados);
 			for(iTemplateConexionado in keysConexionado){
 				$template_conexionado_select.append("<option value='" + keysConexionado[iTemplateConexionado] + "'>" + keysConexionado[iTemplateConexionado] + "</option>");
 			}
@@ -825,7 +684,7 @@
 					guiDendritasModel.removeLayers();
 					guiDendritasModel.addLayer();
 				}else{
-					guiDendritasModel.loadLayers(templates.conexionado[$(this).val()]);
+					guiDendritasModel.loadLayers(conexionados[$(this).val()]);
 				}
 
 				$(this).hide();
@@ -890,14 +749,18 @@
 			console.log('HELP:');
 			console.log('https://github.com/josetabuyo/RedJavaScript/blob/master/README.md');
 			console.log('');
-			//$('#newRed').click();
-			$('#test>select').change();
 			
 
 
 
+			// DEBUG CHECK DEPRECATED
+			//$('#test>select').change();
 			
-			/*var*/ guiRed = new GuiMatriz({
+
+
+
+			//GLOBAL
+			guiRed = new GuiMatriz({
 				idSvg: 'guiRed_svg',
 				showCero: true,
 				x: 10,
@@ -908,6 +771,8 @@
 					var gui = this;
 
 					if(typeof(red) == "undefined"){
+						
+						//GLOBAL
 						red = new Red();
 						Constructor.red = red;
 
@@ -1263,43 +1128,39 @@
 			});
 
 
+
+
+			$('#presets').on('click', function(){
+				event.stopPropagation()
+				$(this).find('select').show();
+
+			});
+
+
+
+			var $presets_select = $('#presets>select');
 			
-			var $template_presets_select = $('#guiRed_Container>.toolbar>#load>select');
-			
-			keysPresets = Object.keys(templates.presets);
+
+			keysPresets = Object.keys(presets);
 			for(iTemplatePresets in keysPresets){
-				$template_presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
+				$presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
 			}
 
-			$template_presets_select.on('click', function(){
-				event.stopPropagation();
+			$presets_select.on('click', function(){
+				
+					presets[$(this).val()]();
 
-				///// elegir la topología TODO!
-
-
-
-				if($(this).val() == ""){
-					guiRed.removeLayers();
-					guiRed.addLayer();
-				}else{
-
-
-				}
-
+					setContext();
 
 				$(this).hide();
 			});
 
 			
 
-			$('#guiRed_Container>.toolbar>#load').on('click', function(){
-				event.stopPropagation()
-				$(this).find('select').show();
-			});
 
 
 		});
 	</script>
-	<script src="templates/conexionado.js"></script>
+	<script src="templates/conexionados.js"></script>
 	<script src="templates/presets.js"></script>
 </html>

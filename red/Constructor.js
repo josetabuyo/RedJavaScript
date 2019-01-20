@@ -62,10 +62,8 @@ var Constructor = {
 		
 
 		
-
-		constructor.red = new Red(_red);
-		
-		red = constructor.red;
+		//GLOBAL
+		red = new Red(_red);
 		
 		
 		Axon.prototype.COEF_AXON_ANCHO_PULSO					= _red.COEF_AXON_ANCHO_PULSO				;
@@ -167,13 +165,9 @@ var Constructor = {
 
 		var constructor = this;
 		
-
-		constructor.red = new Red();
+		//GLOBAL
+		red = new Red();
 		
-		red = constructor.red;
-		
-
-
 
 		for(var x=0; x < opt.size.x; x++){
 			for(var y=0; y < opt.size.y; y++){
@@ -210,7 +204,7 @@ var Constructor = {
 	keyByIndex: function(index){
 		var constructor = this;
 		
-		return keyNeurona = Object.keys(constructor.red.neuronas)[index];
+		return keyNeurona = Object.keys(red.neuronas)[index];
 		
 	},
 	
@@ -230,7 +224,6 @@ var Constructor = {
 	},
 	makeEntrada: function(box){
 		var constructor = this;
-		var red = constructor.red;
 		
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
@@ -244,7 +237,6 @@ var Constructor = {
 	},
 	
 	makeSalida: function(box){
-		var red = this.red;
 		
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
@@ -259,7 +251,6 @@ var Constructor = {
 	},
 	
 	insertarAxones: function(opt){
-		var red = this.red;
 		
 		opt = $.extend({
 			modo				: 'relativo',
@@ -298,7 +289,7 @@ var Constructor = {
 		}
 	},
 	eachNeuronaEntorno: function(rx, ry, neurona, boxRelativo, callback){
-		var red = this.red;
+		
 		
 		var Ex0;
 		var Ex1;
@@ -422,7 +413,7 @@ var Constructor = {
 			});
 		*/
 		
-		var red = this.red;
+		
 		var constructor = this;
 		
 		constructor.eachNeurona(opt.boxTarget, function(rx, ry, neurona){
@@ -470,7 +461,7 @@ var Constructor = {
 		*/
 		
 		
-		var red = this.red;
+		
 		var constructor = this;
 		
 		constructor.eachNeuronaDendrita(opt, function(dendrita){
@@ -519,7 +510,7 @@ var Constructor = {
 		
 	},
 	modo_full: function(opt){
-		var red = this.red;
+		
 		// RECORRO LA RED
 			
 		//========================================
@@ -592,7 +583,7 @@ var Constructor = {
 			});
 		*/
 		
-		var red = this.red;
+		
 		var constructor = this;
 		
 		constructor.eachNeurona(opt.boxTarget, function(rx, ry, neurona){
@@ -684,7 +675,7 @@ var Constructor = {
 		*/
 		
 		
-		var red = this.red;
+		
 		var constructor = this;
 		
 		
@@ -811,7 +802,7 @@ var Constructor = {
 				}
 			});
 		*/
-		var red = this.red;
+		
 		var constructor = this;
 		
 		
@@ -875,7 +866,7 @@ var Constructor = {
 	},
 
 	insertarAxonesConMascara: function(opt){
-		var red = this.red;
+		
 		
 		opt = $.extend({
 			keyNeurona	: null, 
@@ -966,3 +957,102 @@ var Constructor = {
 	}
 	
 };
+
+
+
+
+				/*
+				Constructor.insertarAxones({
+					modo: 'coronas_dendriticas',
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						//y1: red.box.y1-1
+						y1: red.box.y1
+					},
+					coronas: [
+						{peso: 1		, densidad: 1,		radioDesde: 0	, radioHasta: 0	, cantDendritas: 1},
+						{peso: 0.3		, densidad: 1,		radioDesde: 1	, radioHasta: 1	, cantDendritas: 1},
+						{peso: 0},
+						{peso: -1.5		, densidad: 1,		radioDesde: 3	, radioHasta: 3	, cantDendritas: 1},
+						{peso: 0.2		, densidad: 0.2,	radioDesde: 4	, radioHasta: 6	, cantDendritas: 1}
+					]
+				});
+				*/
+				
+				
+				/*
+				
+				Constructor.insertarAxones({
+					modo: 'dendritas_radiales_pesadas',
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+					
+					
+				});
+				
+				*/
+				
+				//Prueba con entrada relativa, para que fluya
+				/*Constructor.insertarAxones({
+					modo: 'relativo',
+					dendritas_pesos: [-0.2],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -4,
+						y0 	: 2,
+						x1 	: 4,
+						y1 	: 2
+					}
+				});
+				
+				Constructor.insertarAxones({
+					modo: 'relativo',
+					dendritas_pesos: [1.6],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y0,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -4,
+						y0 	: 3,
+						x1 	: 4,
+						y1 	: 4
+					}
+				});
+				
+				*/
+				
+				/*
+				//entrada con campana reforzada
+				Constructor.insertarAxones({
+					modo: 'dendritas_radiales_pesadas',
+					dendritas_pesos: [1.0, 0.2, 0, -1.5, 0.2],
+					boxTarget: {
+						x0: red.box.x0,
+						y0: red.box.y1-2,
+						x1: red.box.x1,
+						y1: red.box.y1-1
+					},
+					boxRelativo	: {
+						x0 	: -5,
+						y0 	: -1,
+						x1 	: 5,
+						y1 	: 0
+					}
+				});
+				*/
+				

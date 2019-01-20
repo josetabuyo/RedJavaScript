@@ -1,26 +1,34 @@
-templates.presets = {
+presets = {
 	
-	audio_255x10: function(){
-		
+	lvq_audio: function(){
+		console.log("Aplicando preset");
+		console.log(this);
+
+
+
+		var size = {
+			x: 256,
+			y: 2
+		};
+
+
 		//crear red
 		red = Constructor.createRed({
-			size: {
-				x: 256,
-				y: 10
-			}
+			size: size
 		});
 		red.build();
 
-		Constructor.insertarAxonesConMascara({
-			mascara: templates.conexionado.mini_debug
-		});
 
+
+		Constructor.insertarAxonesConMascara({
+			mascara: conexionados.lvq
+		});
 
 		Constructor.eachNeurona({
 			x0: 0,
-			x1: 255,
-			y0: 9,
-			y1: 9
+			x1: size.x-1,
+			y0: size.y-1,
+			y1: size.y-1
 		}, function (x,y,neurona){
 
 			Constructor.makeEntradaNeurona(neurona);
@@ -38,6 +46,5 @@ templates.presets = {
 
 		console.log('red created...');
 		
-		setContext();
 	}
 }
