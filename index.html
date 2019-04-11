@@ -596,7 +596,6 @@
 
 			//TODO: COMMIG SOON: NEXT:
 			//
-			// 	salvar en copytext el json de la configuracion de mapas y puntos con otros atributos variables
 			// Revisar el procesamiento de la red
 
 
@@ -606,8 +605,7 @@
 
 
 
-			//TODO: DEBUG: sacar el "var"
-			/*var*/ guiDendritasModel = new GuiMatriz({
+			var guiDendritasModel = new GuiMatriz({
 				idSvg: 'dendritasModel_svg',
 				x: 25,
 				y: 25,
@@ -975,6 +973,8 @@
 
 					console.log("Neurona en observación:");
 					console.log(gui.neuronaWatch);
+
+
 					gui.refresh()
 
 				},
@@ -1110,6 +1110,8 @@
 			$('#guiRed_Container>.toolbar>#watchConexiones').on('click', function(e){
 				guiRed.tool1 = "watchConexiones";
 				guiRed.tool2 = "watchConexionesEnd";
+
+				guiRed.setAnchoPincel(1);
 			});
 
 
