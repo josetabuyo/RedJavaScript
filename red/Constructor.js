@@ -34,10 +34,10 @@ var Constructor = {
 				var dendrita = neurona.dendritas[iDendrita];
 
 				var _dendrita = {
+					neurona: _neurona,
 					sinapsis: {},
 					peso: dendrita.peso
 				};
-				_neurona.dendritas.push(_dendrita);
 
 
 				for(key in dendrita.sinapsis){
@@ -428,8 +428,6 @@ var Constructor = {
 					dendrita.peso = opt.dendritas_pesos[iDentrita]
 				}
 
-				neurona.dendritas.push(dendrita);
-
 				callback(dendrita);
 
 
@@ -521,8 +519,6 @@ var Constructor = {
 				var dendrita = new Dendrita({
 					neurona: neuronaPadre
 				});
-				neuronaPadre.dendritas.push(dendrita);
-
 
 				// RECORRO LA ENTRADA: TODA por modo full
 				//========================================
@@ -597,8 +593,6 @@ var Constructor = {
 				if(typeof(opt.dendritas_pesos) != "undefined"){
 					dendrita.peso = opt.dendritas_pesos[iDentrita]
 				}
-
-				neurona.dendritas.push(dendrita);
 
 				// RECORRO LA ENTRADA
 				//========================================
@@ -751,8 +745,6 @@ var Constructor = {
 									peso: _corona.peso
 								});
 
-								neurona.dendritas.push(dendrita);
-
 								cantSinapsis=0;
 							}
 
@@ -814,8 +806,6 @@ var Constructor = {
 					neurona: neurona,
 					peso: opt.dendritas_pesos[iDentrita]
 				});
-
-				neurona.dendritas.push(dendrita);
 
 				var box = {
 					x0 	: -1 * (iDentrita+1),
@@ -897,11 +887,8 @@ var Constructor = {
 
 				$.extend(dendrita, opt.mascara[iDentrita].data);
 
-				neurona.dendritas.push(dendrita);
-
 
 				for(key in opt.mascara[iDentrita].cels){
-
 
 					var parts = key.split("y");
 					parts[0] = parts[0].replace("x", "");

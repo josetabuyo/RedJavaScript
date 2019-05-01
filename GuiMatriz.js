@@ -129,11 +129,11 @@ GuiMatriz.prototype = {
 		$('body').on('keydown', function(e){
 			switch (e.which) {
 				case 107:
-					setAnchoPincel("++");
+					gui.setAnchoPincel("++");
 					e.preventDefault();
 					break;
 				case 109:
-					setAnchoPincel("++");
+					gui.setAnchoPincel("--");
 					break;
 			};
 		});
@@ -152,7 +152,7 @@ GuiMatriz.prototype = {
 		}
 
 		var box = gui.o.find('#box');
-		
+
 		box.attr({
 			width: gui.anchoPincel * gui.escala.x,
 			height: gui.anchoPincel * gui.escala.y

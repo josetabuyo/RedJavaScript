@@ -8,7 +8,7 @@ var Red = function(opt){
 		entrada: {},
 		salida: {}
 	}, opt);
-	
+
 	this.start();
 };
 
@@ -16,15 +16,11 @@ var Red = function(opt){
 Red.prototype = {
 
 
-	
+
 	start: function(){
 		var red = this;
-		
-		
-		red.build();
-		
 
-		
+
 		/*DEPRECATED*/
 		/*Para mantener interfaz cómoda y común*/
 		red.box = {
@@ -34,48 +30,19 @@ Red.prototype = {
 			y1: red.size.y - 1
 		};
 		/*DEPRECATED*/
-		
-
-	},
-	build: function(){
-		/*
-		Se crean mapas de ordenamiento azaroso para luego ejecutar al azar entre los distintos mapas
-		Gano ejecutar una sola vez la funcion Math.random() por cada paso de la red entera. QuickWin!
-		*/
-		
-		var red = this;
-
-		var compareRandom = function(a, b) {
-		  return Math.random() - 0.5;
-		};
-		
-
-		red.vectorNeronas = [];
-
-		var keys = Object.keys(red.neuronas);
-
-		for (key in keys){
-			red.vectorNeronas.push(red.neuronas[keys[key]]);
-		}
 
 
-		red.mapaOrdenamiento = [];
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		red.mapaOrdenamiento.push(red.vectorNeronas.sort(compareRandom));
-		
 	},
 	procesar: function(){
-		
+
 		var red = this;
-		
-		var randomMapa = Math.floor((Math.random() * red.mapaOrdenamiento.length));
-		
-		for(iNeurona in red.mapaOrdenamiento[randomMapa]){
-			red.mapaOrdenamiento[randomMapa][iNeurona].procesar();
+
+		for(iNeurona in red.neuronas){
+			red.neuronas[iNeurona].procesar();
+		}
+
+		for(iNeurona in red.neuronas){
+			red.neuronas[iNeurona].axon.activar();
 		}
 	}
 }

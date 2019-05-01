@@ -4,49 +4,59 @@ presets = {
 		console.log(this);
 
 
-				var size = {
-					x: 32,
-					y: 32
-				};
+		var size = {
+			x: 32,
+			y: 32
+		};
 
 
-				//crear red
-				red = new Red();
-				red = Constructor.addNeuronas({
-					size: size
-				});
-				red.build();
-
-
-
-				Constructor.insertarAxonesConMascara({
-					mascara: conexionados.mini_feed_foward_inhibido
-				});
-
-				Constructor.eachNeurona({
-					x0: 0,
-					x1: size.x-1,
-					y0: size.y-2,
-					y1: size.y-1
-				}, function (x,y,neurona){
-
-					Constructor.makeEntradaNeurona(neurona);
-				});
+		//crear red
+		red = new Red();
+		red = Constructor.addNeuronas({
+			size: size
+		});
 
 
 
-				$('#testSelector>select').val("TestAudio");
-				$('#testSelector>select').click();
+
+		Constructor.insertarAxonesConMascara({
+			mascara: conexionados.mini_feed_foward_inhibido
+		});
+
+		Constructor.eachNeurona({
+			x0: 0,
+			x1: size.x-1,
+			y0: size.y-2,
+			y1: size.y-1
+		}, function (x,y,neurona){
+
+			Constructor.makeEntradaNeurona(neurona);
+		});
 
 
-				guiRed.setLayer(0, red.neuronas);
-				guiRed.refresh();
+
+		$('#testSelector>select').val("TestAudio");
+		$('#testSelector>select').click();
 
 
-				console.log('red created...');
+		guiRed.setLayer(0, red.neuronas);
 
-			}
-	,
+		guiRed.refresh();
+
+
+		//SET COEFICIENTES
+		Axon.prototype.COEF_AXON_UMBRAL_SPIKE= 0.158;
+		Axon.prototype.COEF_AXON_ANCHO_PULSO= 4;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT= 0.002;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
+		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+
+
+
+
+		console.log('red created...');
+
+	},
 	lvq_audio: function(){
 		console.log("Aplicando preset");
 		console.log(this);
@@ -64,9 +74,6 @@ presets = {
 		red = Constructor.addNeuronas({
 			size: size
 		});
-		red.build();
-
-
 
 		Constructor.insertarAxonesConMascara({
 			mascara: conexionados.lvq

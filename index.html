@@ -248,6 +248,7 @@
 				HELP
 			</div>
 			<div id="testSelector" class="boton">
+				TEST
 				<select>
 					<option value=""></option>
 					<option value="TestAudio">TestAudio</option>
@@ -405,6 +406,13 @@
 
 
 			$('#play').on('click', function(){
+
+				if(typeof(test) == "undefined"){
+					alert("Falta elegir un test");
+					return;
+				};
+
+
 				var btn_play = $('#play');
 				btn_play.removeClass('pause');
 				btn_play.removeClass('play');
@@ -790,11 +798,9 @@
 					gui.onRefreshCell(key, cel.svgObject);
 
 
-					red.build();
 				},
 				onRemoveCell: function(key){
 					delete red.neuronas[key];
-					red.build();
 				},
 				onRefreshCell: function(key, svgObject){
 					var gui = this;
@@ -967,7 +973,8 @@
 				watchConexiones: function(pos){
 					var gui = this;
 
-					gui.neuronaWatch = gui.getNeurona(pos);
+
+					if(typeof(gui.neuronaWatch = gui.getNeurona(pos)) == "undefined") return;
 
 					$('#guiRed_Container>#toolbarInfo').text("Neurona: " + gui.neuronaWatch.id);
 
@@ -981,9 +988,10 @@
 				watchConexionesEnd: function(pos){
 
 					var gui = this;
-					var neuronaSel = gui.getNeurona(pos);
+					if(typeof(neuronaSel = gui.getNeurona(pos)) == "undefined") return;
+
 					if(gui.neuronaWatch.id == neuronaSel.id){
-						console.log("mostramos menu");
+						console.log("TODO: mostrar menu sobre neurona para editar sus conexiones ahi mismo");
 					}else{
 						gui.neuronaWatch = null
 					}
