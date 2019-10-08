@@ -191,11 +191,8 @@ conexionados = {
     mini_feed_foward_inhibido: [
         {
             "cels": {
-                "x-1y1": {},
-                "x-2y1": {},
-                "x0y1": {},
-                "x1y1": {},
-                "x2y1": {}
+                                    "x-1y0":{},           "x1y0":{},
+                                    "x-1y1":{}, "x0y1":{},"x1y1":{},
             },
             "data": {
                 "densidad": "1.0",
@@ -204,10 +201,8 @@ conexionados = {
         },
         {
             "cels": {
-                "x-1y0": {},
-                "x-2y0": {},
-                "x1y0": {},
-                "x2y0": {}
+                "x-3y0":{},"x-2y0":{},                                 "x2y0":{},"x3y0":{},
+                "x-3y1":{},"x-2y1":{},                                 "x2y1":{},"x3y1":{},
             },
             "data": {
                 "densidad": "1.0",

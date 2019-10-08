@@ -6,7 +6,7 @@ presets = {
 
 		var size = {
 			x: 32,
-			y: 32
+			y: 16
 		};
 
 
