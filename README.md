@@ -56,14 +56,6 @@ entre demonios es lo que sucede realmente.
 
 
 
-*TEST*
-
-Para lograr mi cometido necesité crear una interfaz gráfica y un test válido.
-El test propuesto es que la Red pueda recibir entradas de un autómata y enviar las salidas correctas para
-que el autómata pueda "sobrevivir" en el mundo virtual modelado.
-
-
-
 *Lecturas recomendadas*
 
 Agrego en el repositorio material de lectura relacionada y recomendada.
