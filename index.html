@@ -23,15 +23,7 @@
 				display: none;
 			}
 
-			#svgWorld {
-				position: absolute;
-				right: 0px;
-				top: 40px;
-				width: 50%;
-				height: 90%;
-				border: solid 1px;
-				overflow: scroll;
-			}
+
 
 			.rightContainer{
 				position: absolute;
@@ -249,9 +241,25 @@
 			</div>
 		</div>
 
-		<svg id="svgWorld" class="rightContainer">
-		</svg>
 
+		<style>
+			#TestAutomata_Container{
+				border-color: Purple;
+			}
+			#TestAutomata_Container svg{
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				width: 50%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+		</style>
+
+		<div id="TestAutomata_Container" class="rightContainer">
+			<svg></svg>
+		</div>
 
 
 
@@ -278,8 +286,8 @@
 				position: absolute;
 				right: 50%;
 				top: 100px;
-				width: 160px;
-				height: 160px;
+				/* width: 160px;
+				height: 160px; */
 				border: solid 1px;
 				border-color: Yellow;
 			}

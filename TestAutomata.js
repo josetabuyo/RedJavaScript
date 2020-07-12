@@ -56,9 +56,6 @@ TestAutomata.prototype = {
 		}
 
 
-
-
-
 		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
 			var x = testIndex - iEntrada;
 			var y = test.red.size.y - 1;
@@ -226,593 +223,247 @@ TestAutomata.prototype = {
 		test.printEntrada();
 		test.onStep();
 	},
+	context: {
+		automata: null,
+		externo: null,
+		debugMode: false,
+		motor: [0.0, 0.0, 0.0, 0.0]
+	},
+	printEntrada: function(){
 
-	world: {
-		context: {
-
-			automata: null,
-			externo: null,
-			debugMode: false,
-			motor: [0.0, 0.0, 0.0, 0.0]
-		},
-		load: function(){
-			var world = this;
-
-			var snapWorld = Snap("#svgWorld");
-
-			var fondo = snapWorld.group(
-				snapWorld.rect(0,0, $("#svgWorld").width(), $("#svgWorld").height())
-			);
-			fondo.attr({
-				fill: "#000000"
-			});
-			fondo.click(function(){
-				world.context.debugMode = !world.context.debugMode;
-			});
+		if(Object.keys(red.entrada).length = 0){
+			return;
+		}
 
 
-			var automata = snapWorld.group(
-				snapWorld.circle(0, 0, 30)
-			);
-			automata.attr({
-				fill: "rgb(0,0,255)"
-			});
-			automata.transform('T200,150');
+		//Ponemos base de ruido
+		for(key in red.entrada){
 
-			world.context.automata = automata;
+			var neurona = red.neuronas[key];
 
-
-
-
+			if(test.noise){
+				neurona.activarExternal(Math.random() * test.NOISE_LEVEL);
+			}else{
+				neurona.activarExternal(0);
+			}
+		}
 
 
-			world.addExterno({color: "rgb(255,0,0)"});
-			world.addExterno({color: "rgb(255,0,0)"});
-			world.addExterno({color: "rgb(255,0,0)"});
+		var printExterno = function(externo){
 
-			world.addExterno({color: "rgb(0,255,0)"});
-			world.addExterno({color: "rgb(0,255,0)"});
-			world.addExterno({color: "rgb(0,255,0)"});
+			var bb = externo.getBBox();
+			var rad = (bb.width / 2)
 
 
-			$('body').on('keydown', function(e){
-				var motor = world.context.motor;
-
-				switch (e.which) {
-					case 37:
-						motor[0] = 1.0;
-						break;
-					case 38:
-						motor[2] = 1.0;
-						break;
-					case 39:
-						motor[1] = 1.0;
-						break;
-					case 40:
-						motor[3] = 1.0;
-						break;
-				};
-
-
-			});
-
-
-			$('body').on('keyup', function(e){
-				var motor = world.context.motor;
-
-				switch (e.which) {
-					case 37:
-						motor[0] = 0.0;
-						break;
-					case 38:
-						motor[2] = 0.0;
-						break;
-					case 39:
-						motor[1] = 0.0;
-						break;
-					case 40:
-						motor[3] = 0.0;
-						break;
-				};
-
-			});
-
-		},
-		step: function(){
-			var paso = 5;
-
-			var automata = test.world.context.automata;
-
-
-
-			/// PASO 1:
-			/// ACTUALIZA EXTERNOS
-
-
-
-			var moverExterno = function(externo){
-				//TODO: quitar cuando no se requiera mas
-				if(test.world.context.debugMode) return;
-
-				//mover los elementos del mundito: externo, enemigos, etc
-
-				var vel = {
-					x: 0,
-					y: 0.5
-				};
-
-				var bb = externo.getBBox();
-
-				var pos = {
-					x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-					y: (bb.y + (bb.height / 2)) + (vel.y * paso)
-				};
-
-
-				if(!(pos.y > $("#svgWorld").height())){
-					externo.transform( 'T' + pos.x + ',' + pos.y);
-				}else{
-
-					var vColor = test.world.getColor(externo);
-					externo.remove();
-
-					test.world.addExterno({
-						pos:{
-							y: 0
-						},
-						color: "rgb(" + vColor[0] + "," + vColor[1] + "," + vColor[2] + ")"
-					});
-				}
+			var posExterno = {
+				x: (bb.x + rad),
+				y: (bb.y + rad)
 			};
 
-
-			var snapWorld = Snap("#svgWorld");
-
-
-
-			snapWorld.selectAll('.externo').forEach(function(externo){
-			    moverExterno(externo);
-			});
-
-
-
-
-			/// PASO 2:
-			/// PROYECTA EN RETINA
-			test.world.printEntrada();
-
-
-
-
-			/// PASO 3:
-			/// DETECTAR COLICIONES
-
-
-
-
-
-
-			var distancia = function(externo){
-
-				var bb = externo.getBBox();
-				var radExterno = (bb.width / 2)
-
-				var posExterno = {
-					x: (bb.x + radExterno),
-					y: (bb.y + radExterno)
-				};
-
-				var bb = automata.getBBox();
-				var radAutomata = (bb.width / 2)
-
-				var posAutomata = {
-					x: (bb.x + radAutomata),
-					y: (bb.y + radAutomata)
-				};
-
-				var vec = {
-					x: (posAutomata.x - posExterno.x),
-					y: -(posAutomata.y - posExterno.y)
-				};
-
-
-				var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
-
-
-				return (distancia - radExterno - radAutomata) / (2 * radAutomata);
-
-
-
-			}
-
-
-
-
-
-
-
-			var solapamiento = {
-				penetracion: 0,
-				color: null
-			};
-
-			snapWorld.selectAll('.externo').forEach(function(externo){
-
-				var distanciaExterno = distancia(externo);
-			    if(distanciaExterno < 0 ){
-
-			    	var penetracion = -distanciaExterno;
-
-
-					var vColor = test.world.getColor(externo);
-
-
-					if(penetracion > solapamiento.penetracion){
-				    	solapamiento = {
-							penetracion: penetracion,
-							color: vColor
-						};
-			    	}
-
-			    }
-			});
-
-
-			var COEF_DOLOR = 0.01;
-
-			// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
-			if(solapamiento.penetracion > 0){
-
-				var valor;
-
-		    	if(solapamiento.color[0]==255){
-		    		//MALO
-					valor = (1 - solapamiento.penetracion);
-		    	}else{
-		    		//BUENO
-					valor = solapamiento.penetracion;
-		    	}
-
-
-				valor = valor * COEF_DOLOR;
-
-			    setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
-
-
-			} else {
-
-				var valor = Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT;
-				setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
-		  }
-
-
-
-
-
-			/// PASO 4:
-			/// PROCESA LA RED
-			test.onStep();
-
-
-
-
-
-			/// PASO 5:
-			/// LEE SALIDAS MUEVE MOTORES
-
-
-			var motor = [0.0, 0.0, 0.0, 0.0];;
-
-
-			var COEF_LOCAL_POW_MOTOR = 2;
-
-			var sumaTensionTotalSalida = 0.0;
-
-
-
-
-
-			//TODO: quitar cuando no se requiera mas
-			if(!test.world.context.debugMode){
-
-				if(Object.keys(red.salida).length == 0){
-					return;
-				}
-
-
-				var keys = Object.keys(red.salida);
-
-				for(key in keys){
-
-					var neurona = red.salida[keys[key]];
-
-
-
-					var indiceMotor = Math.floor((key / keys.length) * motor.length);
-
-
-					if(! isNaN(neurona.tensionSuperficial)){
-
-						motor[indiceMotor] += neurona.tensionSuperficial;
-
-						sumaTensionTotalSalida += neurona.tensionSuperficial;
-					}
-				}
-			}
-
-
-
-			for(iMotor in motor){
-				//lo normalizo
-				if(sumaTensionTotalSalida){
-					motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
-				}else{
-					motor[iMotor] = 0.0;
-				}
-
-				//Le sumo lo que se haya hecho con el motor por fuera (teclas)
-				motor[iMotor] += test.world.context.motor[iMotor];
-			}
-
-
-			/// PASO 6:
-			/// ACTUALIZA POSICION DEL AUTOMATA
-
-
-
-			var vel = {
-				x: motor[1] - motor[0],
-				y: motor[3] - motor[2]
-			};
-
+			var automata = test.context.automata;
 			var bb = automata.getBBox();
 
-			var pos = {
-				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			var posAutomata = {
+				x: (bb.x + rad),
+				y: (bb.y + rad)
 			};
 
-			if(pos.x < 0) pos.x = $("#svgWorld").width();
-			if(pos.y < 0) pos.y = $("#svgWorld").height();
-			if(pos.x > $("#svgWorld").width()) pos.x = 0;
-			if(pos.y > $("#svgWorld").height()) pos.y = 0;
-
-			automata.transform( 'T' + pos.x + ',' + pos.y);
-
-		},
-		printEntrada: function(){
-
-			if(Object.keys(red.entrada).length = 0){
-				return;
-			}
+			var vec = {
+				x: (posAutomata.x - posExterno.x),
+				y: -(posAutomata.y - posExterno.y)
+			};
 
 
-			//Ponemos base de ruido
-			for(key in red.entrada){
+			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
 
-				var neurona = red.neuronas[key];
-
-				if(test.noise){
-					neurona.activarExternal(Math.random() * test.NOISE_LEVEL);
-				}else{
-					neurona.activarExternal(0);
-				}
-			}
+			if(distancia > rad * 16) return; /// Estaría muy lejos, no lo vería
 
 
-			var printExterno = function(externo){
-
-				var bb = externo.getBBox();
-				var rad = (bb.width / 2)
+			var anguloOffset = Math.atan2(rad, distancia);
 
 
-				var posExterno = {
-					x: (bb.x + rad),
-					y: (bb.y + rad)
-				};
+			var anguloCentro = Math.atan2(vec.x, vec.y);
 
-				var automata = test.world.context.automata;
-				var bb = automata.getBBox();
-
-				var posAutomata = {
-					x: (bb.x + rad),
-					y: (bb.y + rad)
-				};
-
-				var vec = {
-					x: (posAutomata.x - posExterno.x),
-					y: -(posAutomata.y - posExterno.y)
-				};
-
-
-				var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
-
-				if(distancia > rad * 16) return; /// Estaría muy lejos, no lo vería
-
-
-				var anguloOffset = Math.atan2(rad, distancia);
-
-
-				var anguloCentro = Math.atan2(vec.x, vec.y);
-
-				var anguloMax = anguloCentro + anguloOffset;
-				var anguloMin = anguloCentro - anguloOffset;
+			var anguloMax = anguloCentro + anguloOffset;
+			var anguloMin = anguloCentro - anguloOffset;
 
 
 
 
-				var keysbyindex = Object.keys(red.entrada);
+			var keysbyindex = Object.keys(red.entrada);
 
 
-				var pixelMax = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMax);
-				var pixelMin = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMin);
+			var pixelMax = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMax);
+			var pixelMin = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMin);
 
-				var vColor = test.world.getColor(externo);
-
-
-				for(var i = pixelMin; i <= pixelMax; i++){
-					var index = i;
-
-					if((index < 0)) {
-						index+= keysbyindex.length;
-					}else if((index > keysbyindex.length)) {
-						index-= keysbyindex.length;
-					}
-					try{
-						keyNeurona = keysbyindex[index];
+			var vColor = test.getColor(externo);
 
 
-						var valor;
-						if 		((index % 3)==0) valor = Math.round(vColor[0]/255);
-						else if ((index % 3)==1) valor = Math.round(vColor[1]/255);
-						else if ((index % 3)==2) valor = Math.round(vColor[2]/255);
+			for(var i = pixelMin; i <= pixelMax; i++){
+				var index = i;
 
-						test.red.neuronas[keyNeurona].activarExternal(valor );
-					}catch(e){
-						debugger;
-					}
+				if((index < 0)) {
+					index+= keysbyindex.length;
+				}else if((index > keysbyindex.length)) {
+					index-= keysbyindex.length;
 				}
 
 
 
 
+				try{
+					keyNeurona = keysbyindex[index];
 
 
-			};
+					var valor;
+					if 		((index % 3)==0) valor = Math.round(vColor[0]/255);
+					else if ((index % 3)==1) valor = Math.round(vColor[1]/255);
+					else if ((index % 3)==2) valor = Math.round(vColor[2]/255);
 
-			Snap("#svgWorld").selectAll('.externo').forEach(function(externo){
-			    printExterno(externo);
-			});
-
-		},
-		debugPrintEntrada: function(){
-			// TODO: para debuggear mockeo los ojos usando el motor
-			var motor = test.world.context.motor;
-
-
-			var keyNeurona;
-			var valor;
-			var indexInput = -1; //Para que arranque en 0 la primera
-
-			//LEFT
-			valor = motor[0];
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
+					test.red.neuronas[keyNeurona].activarExternal(valor );
+				}catch(e){
+					console.log(e);
+				}
+			}
 
 
 
-			//RIGHT
-			valor = motor[1];
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-
-			//UP
-			valor = motor[2];
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
 
 
-			//DOWN
-			valor = motor[3];
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
-			keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
-			test.red.neuronas[keyNeurona].activarExternal(valor);
 
-		},
-		addExterno: function(opt) {
+		};
 
-			if(!opt)opt={};
+		test.snap.selectAll('.externo').forEach(function(externo){
+		    printExterno(externo);
+		});
 
-			opt = $.extend(true, {}, {
-				pos: {
-					x: Math.round((Math.random() * $("#svgWorld").width())),
-					y: Math.round((Math.random() * $("#svgWorld").height())),
-				},
-				color: "#AABBAA"
-			}, opt);
+	},
+	debugPrintEntrada: function(){
+		// TODO: para debuggear mockeo los ojos usando el motor
+		var motor = test.context.motor;
 
 
-			var snapWorld = Snap("#svgWorld");
+		var keyNeurona;
+		var valor;
+		var indexInput = -1; //Para que arranque en 0 la primera
 
-			var externo = snapWorld.group(
-				snapWorld.circle(0, 0, 30)
-			);
+		//LEFT
+		valor = motor[0];
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
 
-			externo.attr({
-				fill: opt.color,
-				class: "externo"
-			});
 
 
-			externo.transform("T" + opt.pos.x + "," + opt.pos.y);
+		//RIGHT
+		valor = motor[1];
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+
+		//UP
+		valor = motor[2];
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
 
 
-			return externo;
+		//DOWN
+		valor = motor[3];
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
+		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
+		test.red.neuronas[keyNeurona].activarExternal(valor);
 
-		},
-		getColor: function(externo){
+	},
+	addExterno: function(opt) {
+		test = this
+		if(!opt)opt={};
 
-			var colorString = externo.attr('fill');
+		opt = $.extend(true, {}, {
+			pos: {
+				x: Math.round((Math.random() * test.svg.width())),
+				y: Math.round((Math.random() * test.svg.height())),
+			},
+			color: "#AABBAA"
+		}, opt);
 
-			colorString = colorString.replace('rgb(', '').replace(')','');
 
-			return colorString.split(', ');
-		}
+
+		var externo = test.snap.group(
+			test.snap.circle(0, 0, 30)
+		);
+
+		externo.attr({
+			fill: opt.color,
+			class: "externo"
+		});
+
+
+		externo.transform("T" + opt.pos.x + "," + opt.pos.y);
+
+
+		return externo;
+
+	},
+	getColor: function(externo){
+
+		var colorString = externo.attr('fill');
+
+		colorString = colorString.replace('rgb(', '').replace(')','');
+
+		return colorString.split(', ');
 	},
 	onStep_vEventos: [],
 	onStep: function(param){
@@ -827,8 +478,264 @@ TestAutomata.prototype = {
 	step:function(){
 		var test = this;
 
-		test.world.step();
-		//console.log('testeo world step');
+		var paso = 5;
+
+		var automata = test.context.automata;
+
+
+
+		/// PASO 1:
+		/// ACTUALIZA EXTERNOS
+
+
+
+		var moverExterno = function(externo){
+			//TODO: quitar cuando no se requiera mas
+			if(test.context.debugMode) return;
+
+			//mover los elementos del mundito: externo, enemigos, etc
+
+			var vel = {
+				x: 0,
+				y: 0.5
+			};
+
+			var bb = externo.getBBox();
+
+			var pos = {
+				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			};
+
+
+			if(!(pos.y > test.svg.height())){
+				externo.transform( 'T' + pos.x + ',' + pos.y);
+			}else{
+
+				var vColor = test.getColor(externo);
+				externo.remove();
+
+				test.addExterno({
+					pos:{
+						y: 0
+					},
+					color: "rgb(" + vColor[0] + "," + vColor[1] + "," + vColor[2] + ")"
+				});
+			}
+		};
+
+
+
+		test.snap.selectAll('.externo').forEach(function(externo){
+		    moverExterno(externo);
+		});
+
+
+
+
+		/// PASO 2:
+		/// PROYECTA EN RETINA
+		test.printEntrada();
+
+
+
+
+		/// PASO 3:
+		/// DETECTAR COLICIONES
+
+
+
+
+
+
+		var distancia = function(externo){
+
+			var bb = externo.getBBox();
+			var radExterno = (bb.width / 2)
+
+			var posExterno = {
+				x: (bb.x + radExterno),
+				y: (bb.y + radExterno)
+			};
+
+			var bb = automata.getBBox();
+			var radAutomata = (bb.width / 2)
+
+			var posAutomata = {
+				x: (bb.x + radAutomata),
+				y: (bb.y + radAutomata)
+			};
+
+			var vec = {
+				x: (posAutomata.x - posExterno.x),
+				y: -(posAutomata.y - posExterno.y)
+			};
+
+
+			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+
+
+			return (distancia - radExterno - radAutomata) / (2 * radAutomata);
+
+
+
+		}
+
+
+
+
+
+
+
+		var solapamiento = {
+			penetracion: 0,
+			color: null
+		};
+
+		test.snap.selectAll('.externo').forEach(function(externo){
+
+			var distanciaExterno = distancia(externo);
+		    if(distanciaExterno < 0 ){
+
+		    	var penetracion = -distanciaExterno;
+
+
+				var vColor = test.getColor(externo);
+
+
+				if(penetracion > solapamiento.penetracion){
+			    	solapamiento = {
+						penetracion: penetracion,
+						color: vColor
+					};
+		    	}
+
+		    }
+		});
+
+
+		var COEF_DOLOR = 0.01;
+
+		// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
+		if(solapamiento.penetracion > 0){
+
+			var valor;
+
+	    	if(solapamiento.color[0]==255){
+	    		//MALO
+				valor = (1 - solapamiento.penetracion);
+	    	}else{
+	    		//BUENO
+				valor = solapamiento.penetracion;
+	    	}
+
+
+			valor = valor * COEF_DOLOR;
+
+		    setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+
+
+		} else {
+
+			var valor = Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT;
+			setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+	  }
+
+
+
+
+
+		/// PASO 4:
+		/// PROCESA LA RED
+		test.onStep();
+
+
+
+
+
+		/// PASO 5:
+		/// LEE SALIDAS MUEVE MOTORES
+
+
+		var motor = [0.0, 0.0, 0.0, 0.0];;
+
+
+		var COEF_LOCAL_POW_MOTOR = 2;
+
+		var sumaTensionTotalSalida = 0.0;
+
+
+
+
+
+		//TODO: quitar cuando no se requiera mas
+		if(!test.context.debugMode){
+
+			if(Object.keys(red.salida).length == 0){
+				return;
+			}
+
+
+			var keys = Object.keys(red.salida);
+
+			for(key in keys){
+
+				var neurona = red.salida[keys[key]];
+
+
+
+				var indiceMotor = Math.floor((key / keys.length) * motor.length);
+
+
+				if(! isNaN(neurona.tensionSuperficial)){
+
+					motor[indiceMotor] += neurona.tensionSuperficial;
+
+					sumaTensionTotalSalida += neurona.tensionSuperficial;
+				}
+			}
+		}
+
+
+
+		for(iMotor in motor){
+			//lo normalizo
+			if(sumaTensionTotalSalida){
+				motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
+			}else{
+				motor[iMotor] = 0.0;
+			}
+
+			//Le sumo lo que se haya hecho con el motor por fuera (teclas)
+			motor[iMotor] += test.context.motor[iMotor];
+		}
+
+
+		/// PASO 6:
+		/// ACTUALIZA POSICION DEL AUTOMATA
+
+
+
+		var vel = {
+			x: motor[1] - motor[0],
+			y: motor[3] - motor[2]
+		};
+
+		var bb = automata.getBBox();
+
+		var pos = {
+			x: (bb.x + (bb.width / 2)) + (vel.x * paso),
+			y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+		};
+
+		if(pos.x < 0) pos.x = test.svg.width();
+		if(pos.y < 0) pos.y = test.svg.height();
+		if(pos.x > test.svg.width()) pos.x = 0;
+		if(pos.y > test.svg.height()) pos.y = 0;
+
+		automata.transform( 'T' + pos.x + ',' + pos.y);
+
+
 		test.onStep();
 	},
 	play: function(){
@@ -836,7 +743,7 @@ TestAutomata.prototype = {
 
 		if(!test.running){
 
-			test.testInterval = setInterval(function (){
+			test.Interval = setInterval(function (){
 				test.step();
 			}, 0);
 			test.running = true;
@@ -849,76 +756,93 @@ TestAutomata.prototype = {
 		test.running = false;
 	},
 	start: function (){
-		var test =  this;
-
-
-		test.world.load();
-
-
-		//TODO: DEBUG: no estaría en el test world completo
-		//test.graficoPatron();
-
-	},
-	graficoPatron: function (){
-
-		var sizeCelda = 6;
-
 		var test = this;
 
-		var grafico = {
-			x:1,
-			y:1
-		};
 
-		//grafico la entrada
-		var paper = Snap("#svgPatronesTest");
-		var grupoCeldas = paper.g();
+		$("#TestAutomata_Container").show()
 
-		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
+		svgSelector = "#TestAutomata_Container svg"
+		test.snap = Snap(svgSelector);
+		test.svg = $(svgSelector)
 
-			var pos = {
-				x: (grafico.x + iEntrada) * sizeCelda,
-				y: (grafico.y + 0) * sizeCelda
+
+
+
+
+
+
+
+
+
+
+
+		var fondo = test.snap.group(
+			test.snap.rect(0,0, test.svg.width(), test.svg.height())
+		);
+		fondo.attr({
+			fill: "#000000"
+		});
+		fondo.click(function(){
+			test.context.debugMode = !test.context.debugMode;
+		});
+
+
+		var automata = test.snap.group(
+			test.snap.circle(0, 0, 30)
+		);
+		automata.attr({
+			fill: "rgb(0,0,255)"
+		});
+		automata.transform('T200,150');
+
+		test.context.automata = automata;
+
+		test.addExterno({color: "rgb(255,0,0)"});
+		test.addExterno({color: "rgb(255,0,0)"});
+		test.addExterno({color: "rgb(255,0,0)"});
+
+		test.addExterno({color: "rgb(0,255,0)"});
+		test.addExterno({color: "rgb(0,255,0)"});
+		test.addExterno({color: "rgb(0,255,0)"});
+
+
+		$('body').on('keydown', function(e){
+			var motor = test.context.motor;
+
+			switch (e.which) {
+				case 37:
+					motor[0] = 1.0;
+					break;
+				case 38:
+					motor[2] = 1.0;
+					break;
+				case 39:
+					motor[1] = 1.0;
+					break;
+				case 40:
+					motor[3] = 1.0;
+					break;
 			};
 
-			var celda = paper.rect(pos.x, pos.y, sizeCelda, sizeCelda);
-			var byteColor = Math.floor(test.patron.entrada[iEntrada] * 255);
 
-			celda.attr({
-				fill: "#" + byteColor.toString(16) + byteColor.toString(16) + byteColor.toString(16),
-				stroke: "#550055"
-			});
+		});
+		$('body').on('keyup', function(e){
+			var motor = test.context.motor;
 
-			grupoCeldas.add(celda);
-
-			test.patron.mapaCelda[iEntrada] = celda;
-
-			celda.click(function(e){
-
-
-				var iEntrada = (Math.floor(this.node.x.baseVal.value / sizeCelda ) - grafico.x);
-
-
-				if(test.patron.entrada[iEntrada] == 1){
-					test.patron.entrada[iEntrada] = 0;
-				}else{
-					test.patron.entrada[iEntrada] = 1;
-				}
-
-				var byteColor = Math.floor(test.patron.entrada[iEntrada] * 255);
-				this.attr({
-					fill: "#" + byteColor.toString(16) + byteColor.toString(16) + byteColor.toString(16),
-					stroke: "#550055"
-				});
-
-
-			});
-
-
-		}
-
-		grupoCeldas.attr({
-			stroke: "#550055"
+			switch (e.which) {
+				case 37:
+					motor[0] = 0.0;
+					break;
+				case 38:
+					motor[2] = 0.0;
+					break;
+				case 39:
+					motor[1] = 0.0;
+					break;
+				case 40:
+					motor[3] = 0.0;
+					break;
+			};
 		});
 	}
 };
