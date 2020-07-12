@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Red Neuronal by joZbuyo
+		</title>
+		<style>
+			body{
+				background-color: black;
+			}
+
+			#guiRed_Container{
+				position: absolute;
+				left: 0px;
+				top: 40px;
+				right: 50%;
+				bottom: 0px;
+				overflow: hidden;
+				border: solid 3px;
+			    border-color: violet;
+			}
+			#guiRed_Container #load select{
+				display: none;
+			}
+
+			#svgWorld {
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				width: 50%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+
+			.rightContainer{
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				left: 50%;
+				bottom: 0px;
+				border: solid 3px;
+				overflow: hidden;
+				display: none;
+			}
+
+			#dendritasModel_Container{
+				border-color: Yellow;
+			}
+
+			#dendritasModel_Container #load select{
+				display: none;
+			}
+
+			.guiMatrix{
+
+			}
+			.guiMatrix>.toolbar{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 24px;
+			}
+			.guiMatrix>.cels{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				overflow: scroll;
+			}
+			.guiMatrix>.cels>svg{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			.guiMatrix>.layers{
+				position: absolute;
+				left: 0px;
+				top: 24px;
+				width: 84px;
+			}
+
+			.guiMatrix>.layers>.layer>.idLayer{
+				float: left;
+				width: 20px;
+				height: 20px;
+				left: 0px;
+				border: solid 1px;
+				cursor: pointer;
+				user-select: none;
+
+				text-align: center;
+				font-family: "Arial Black", Gadget, sans-serif;
+				background-color: #FFFFFF;
+			}
+
+			.guiMatrix>.layers>.layer>.data{
+				float: right;
+				top: 0px;
+				width: 60px;
+				height: 20px;
+
+				border: solid 1px;
+				display: table-cell;
+			}
+
+
+			.guiMatrix>.layers>.layer>.data>input{
+				width: 100%;
+			}
+
+
+			#toolbarInfo{
+				position: absolute;
+				left: 1px;
+				background-color: black;
+				top: 25px;
+				font-size: 10px;
+				color: white;
+			}
+
+			#control{
+				position: absolute;
+				left: 0px;
+				background-color: black;
+				top: 80px;
+				border: solid 1px;
+				font-size: 10px;
+				color: white;
+				display: none;
+			}
+
+
+
+			#botonera{
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 30px;
+				border-collapse:separate;
+				border-spacing:5px;
+			}
+			.boton{
+				border: solid 1px;
+				cursor: pointer;
+				user-select: none;
+				display: table-cell;
+				padding: 0px 5px 0px 5px;
+				text-align: center;
+				font-family: "Arial Black", Gadget, sans-serif;
+				background-color: #AAAAAA;
+			}
+
+			#botonera #play{
+				width: 60px;
+			}
+			#botonera #play.play{
+				background-color: #66AA66;
+			}
+			#botonera #play.pause{
+				background-color: #AA6666;
+			}
+			#verTensionSuperficial{
+				width: 120px;
+			}
+			#help{
+				color: #A9FFFE;
+			}
+
+			#plantillas{
+				display: none;
+			}
+
+			ul {
+				list-style-type: none;
+				margin:0;
+				padding:0;
+			}
+
+
+			#plantilla_sly{
+
+			}
+
+			li.sly
+			div.sly_ref{
+				left: 20px;
+				width: 100%;
+				font-size: 9px;
+			}
+
+			li.sly
+			input.sly_input{
+				position: relative;
+				top: 0px;
+				left: 0px;
+				width: 90%;
+			}
+
+
+
+		</style>
+
+	</head>
+
+	<body>
+		<div id="botonera">
+			<div id="play" class="boton play" title="Play o Pause al test continuo">
+				Play
+			</div>
+			<div id="step" class="boton" title="Ejecuta solo un test">
+				Step
+			</div>
+
+			<div id="verTensionSuperficial" class="boton" title="Visualiza la matriz de Tensiones o de Activaciones">
+				Tensiones
+			</div>
+			<div id="dendritasModel" class="boton" title="Despliega un panel para modelos de dendritas">
+				DendritasModel
+			</div>
+			<div id="presets" class="boton" title="Cargar una preset">
+				PRESET
+				<select>
+					<option value=""></option>
+				</select>
+			</div>
+			<!-- div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+				LOAD
+			</div>
+			<div id="saveRed" class="boton" title="Guarda el estado de la red en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+				SAVE
+			</div -->
+			<div id="help" class="boton">
+				HELP
+			</div>
+			<div id="testSelector" class="boton">
+				TEST
+				<select>
+					<option value=""></option>
+					<option value="TestAudio">TestAudio</option>
+					<option value="TestAutomata">TestAutomata</option>
+					<option value="TestAsciiImage">TestAsciiImage</option>
+
+				</select>
+
+			</div>
+		</div>
+
+		<svg id="svgWorld" class="rightContainer">
+		</svg>
+
+
+
+
+
+		<style>
+			#TestAsciiImage_Container{
+				border-color: Purple;
+			}
+			#TestAsciiImage_Container input{
+				position: absolute;
+				left: 10px;
+				top: 10px;
+			}
+
+			#TestAsciiImage_Container canvas{
+				position: absolute;
+				left: 10px;
+				top: 40px;
+				border: solid 1px;
+				border-color: Yellow;
+			}
+
+			#TestAsciiImage_Container svg{
+				position: absolute;
+				right: 50%;
+				top: 100px;
+				width: 160px;
+				height: 160px;
+				border: solid 1px;
+				border-color: Yellow;
+			}
+		</style>
+
+		<div id="TestAsciiImage_Container" class="rightContainer">
+			<input value="ABCD"></input>
+			<canvas></canvas>
+			<svg></svg>
+		</div>
+
+		<div id="dendritasModel_Container" class="guiMatrix rightContainer">
+			<div id="dendritasModel_celdas" class="cels">
+				<svg id="dendritasModel_svg" width="10000px" height="10000px">
+				</svg>
+			</div>
+			<div id="dendritasModel_toolbar" class="toolbar">
+				<div id="drawMode" class="boton" title="Modo de dibujo">
+					D
+				</div>
+				<div id="addDendrita" class="boton" title="Agrega una dendrita">
+					+
+				</div>
+				<div id="save" class="boton" title="Imprime por la console (F12) la estructura del modelo de conexionado">
+					S
+				</div>
+				<div id="load" class="boton" title="Cargar un mapa de conexionado">
+					L
+					<select>
+						<option value=""></option>
+					</select>
+				</div>
+			</div>
+			<ul id="dendritasModel_dendritas" class="layers">
+			</ul>
+		</div>
+
+		<div id="guiRed_Container"  class="guiMatrix">
+			<div class="cels">
+				<svg id="guiRed_svg" width="10000px" height="10000px" >
+				</svg>
+			</div>
+			<div class="toolbar">
+				<div id="showControl" class="boton" title="Muestra el control de los coeficientes">
+					...
+				</div>
+
+				<div id="addNeurona" class="boton" title="Agregar neuronas">
+					N
+				</div>
+				<div id="conectar" class="boton" title="Conectar neuronas">
+					C
+				</div>
+				<div id="makeEntrada" class="boton" title="Agregar neuronas a coleccion de Entradas">
+					I
+				</div>
+				<div id="makeSalida" class="boton" title="Agregar neuronas a coleccion de Salidas">
+					O
+				</div>
+				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
+					W
+				</div>
+				<div id="save" class="boton" title="Imprime por la console (F12) la topología de la red">
+					S
+				</div>
+			</div>
+			<div id="toolbarInfo">
+			</div>
+		</div>
+
+
+
+
+		<div id="control">
+
+			<ul id="coeficientes">
+				<li>COEF_AXON_UMBRAL_SPIKE</li>
+				<li>COEF_AXON_ANCHO_PULSO</li>
+				<li>COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT</li>
+				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
+				<li>COEF_SINAPSIS_UMBRAL_PESO</li>
+
+			<ul>
+
+		</div>
+
+
+		<div id="plantillas">
+			<li id="plantilla_sly">
+				<div class="sly_ref">
+				</div>
+				<input class="sly_input" type="range" min="0" max="255" value="100" />
+			</li>
+
+			<li id="plantilla_dendritasModel_dendrita" class="layer">
+				<div class="idLayer">
+				</div>
+				<div class="data">
+					<input class="dendritasModel_dendrita_data" value='1.0,1.0' type='text'/>
+				</div>
+			</li>
+		</div>
+
+
+	</body>
+
+
+
+	<script src="lib/jquery-2.1.3.min.js"></script>
+	<!--script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script-->
+
+	<script src="lib/underscore-min.js"></script>
+
+	<script src="lib/snap.svg-min.js"></script>
+
+	<script src="lib/vortex.min.js"></script>
+	<script src="lib/socket.io.js"></script>
+
+
+	<script src="GuiMatriz.js"></script>
+	<script src="TestAutomata.js"></script>
+	<script src="TestAudio.js"></script>
+	<script src="TestAsciiImage.js"></script>
+	<!-- script src="AudioPrueba.js"></script -->
+
+
+	<script src="red/Constructor.js"></script>
+
+	<script src="red/Red.js"></script>
+	<script src="red/Neurona.js"></script>
+	<script src="red/Axon.js"></script>
+	<script src="red/Dendrita.js"></script>
+	<script src="red/Sinapsis.js"></script>
+
+	<script>
+
+		//GLOBAL PARA FÁCIL DEBUG
+		var red;
+		var test;
+		var modo="ACTIVACION";
+		var templates = {};
+
+		$(function(){
+
+
+			// $('body').on('contextmenu', function(e){
+			// 	return false;
+			// });
+
+
+			$('#play').on('click', function(){
+
+				if(typeof(test) == "undefined"){
+					alert("Falta elegir un test");
+					return;
+				};
+
+
+				var btn_play = $('#play');
+				btn_play.removeClass('pause');
+				btn_play.removeClass('play');
+
+
+				if(!test.running){
+					test.play();
+					btn_play.addClass('pause');
+					btn_play.text('Pause');
+				}else{
+					test.stop();
+					btn_play.addClass('play');
+					btn_play.text('Play');
+				}
+			});
+
+
+			$('#step').on('click', function(){
+				test.step();
+			});
+
+			$('#verTensionSuperficial').on('click', function(){
+
+				if(modo=="DEPOLARIZACION"){
+					modo="ACTIVACION";
+					$('#verTensionSuperficial').text('Activaciones');
+
+				}else if(modo=="ACTIVACION"){
+					modo="DEPOLARIZACION"
+					$('#verTensionSuperficial').text('Tensiones');
+
+				}
+			});
+
+
+			$('ul#coeficientes>li').each(function(index, item){
+
+				var nameSly = $(item).text();
+
+				var newLi = $('#plantilla_sly').clone()
+						.attr('id', nameSly+'_container')
+						.attr('class', 'sly')
+						;
+
+				newLi.find('div.sly_ref').text(nameSly);
+
+				newLi.find('input.sly_input').attr('id', nameSly);
+
+				$(item).replaceWith(newLi)
+			})
+
+
+
+			//global
+			setCoef = function(proto, nameSly, valor, escala){
+				var objSly = $('#'+ nameSly);
+
+				if(!escala)escala=1;
+
+				objSly.val(valor * escala * 255);
+				proto[nameSly] = valor;
+
+				objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+
+			};
+
+			//global
+			configSlyCoef = function(proto, nameSly, escala) {
+
+
+				if(!escala)escala=1;
+
+				var objSly = $('#'+ nameSly);
+
+
+				objSly.change(function(){
+					var value = ($(this).val() / 255);
+					value = value / escala;
+
+
+					proto[nameSly] = value.toFixed(3);
+
+					$(this).siblings().text(nameSly + ": " + proto[nameSly]);
+				});
+
+				objSly.val(proto[nameSly] * escala * 255);
+				objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+			};
+
+
+
+
+			var setControlCoeficientes = function(){
+				configSlyCoef(Axon.prototype, 'COEF_AXON_UMBRAL_SPIKE', 5);
+				configSlyCoef(Axon.prototype, 'COEF_AXON_ANCHO_PULSO', 0.05);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT', 100);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
+
+			};
+
+			setControlCoeficientes();
+
+
+
+
+
+
+
+
+
+			var setContext = function(){
+				if(modo=="DEPOLARIZACION"){
+					$('#verTensionSuperficial').text('Tensiones');
+				}else if(modo=="ACTIVACION"){
+					$('#verTensionSuperficial').text('Activaciones');
+				}
+			};
+
+
+
+
+
+
+
+			$('#saveRed').on('click', function(){
+
+				var _red = Constructor.getRedData();
+
+				var _redString = JSON.stringify(_red);
+
+
+				console.log('copiar el contenido');
+				console.log(_redString);
+
+
+
+			});
+
+
+
+			$('#loadRed').on('click', function(){
+
+				var _red; //= JSON.parse(StringRed);
+
+				red = Constructor.setRedData(_red);
+
+				setContext();
+
+				setControlCoeficientes();
+			});
+
+
+
+			$('#help').on('click', function(){
+				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
+			});
+
+
+
+
+
+
+
+			$('#testSelector>select').on('click', function(){
+				$(".rightContainer").hide();
+
+				var cmd = "test = new "+ $(this).val() +"({red: red})";
+				console.log(cmd);
+
+				try{
+					eval(cmd);
+					test.onStep(function(){
+						guiRed.refresh();
+					});
+
+					test.red = red;
+				}catch(e){
+					console.log(e)
+				}
+
+			});
+
+
+
+
+
+
+			/// / // / / // / ///  /      /    /         /   HISTORIA
+
+
+			//TODO: COMMIG SOON: NEXT:
+			//
+			// Revisar el procesamiento de la red
+
+
+			//// /// / / // /  / // / / // / //  / /  /   /     //    / /   / / / / / // // /// //// // ///  // / /    /  /  /       / / // / /
+
+
+
+
+
+			var guiDendritasModel = new GuiMatriz({
+				idSvg: 'dendritasModel_svg',
+				x: 20,
+				y: 20,
+				onRemoveLayers: function(){
+					$('#dendritasModel_dendritas').html('');
+
+				},
+				onAddLayer: function(parent, idLayer){
+
+
+					var domDentdrita = $('#plantilla_dendritasModel_dendrita').clone()
+										.attr('id', 'dendrita_nro_' + idLayer)
+										;
+
+
+					domDentdrita.find(".idLayer").text(idLayer);
+
+
+					domDentdrita.on('click', function(){
+						parent.selLayer(idLayer);
+					});
+
+
+
+					var $dendritasModel_dendrita_data = domDentdrita.find(".dendritasModel_dendrita_data");
+
+					if(this.layers[idLayer].data){
+
+						$dendritasModel_dendrita_data.val(this.layers[idLayer].data.peso + "," + this.layers[idLayer].data.densidad );
+
+					}
+
+					$dendritasModel_dendrita_data.on('keypress', function(e){
+						if (e.keyCode == 13) {
+
+							var params = $(this).val().split(",");
+
+							guiDendritasModel.layers[idLayer].data = {
+								peso: params[0],
+								densidad: params[1]
+							};
+					    }
+					});
+
+
+					$('#dendritasModel_dendritas').append(domDentdrita);
+
+
+				}
+			});
+
+			$('#dendritasModel_Container>.toolbar>#drawMode').on('click', function(){
+				guiDendritasModel.setDrawModeNext();
+			});
+
+
+			$('#dendritasModel_Container>.toolbar>#addDendrita').on('click', function(){
+				guiDendritasModel.addLayer();
+			});
+
+
+
+			var $template_conexionado_select = $('#dendritasModel_Container>.toolbar>#load>select');
+
+			keysConexionado = Object.keys(conexionados);
+			for(iTemplateConexionado in keysConexionado){
+				$template_conexionado_select.append("<option value='" + keysConexionado[iTemplateConexionado] + "'>" + keysConexionado[iTemplateConexionado] + "</option>");
+			}
+
+			$template_conexionado_select.on('click', function(){
+				event.stopPropagation()
+
+				if($(this).val() == ""){
+					guiDendritasModel.removeLayers();
+					guiDendritasModel.addLayer();
+				}else{
+					guiDendritasModel.loadLayers(conexionados[$(this).val()]);
+				}
+
+				$(this).hide();
+			});
+
+
+
+			$('#dendritasModel_Container>.toolbar>#load').on('click', function(){
+				event.stopPropagation()
+				$(this).find('select').show();
+			});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			$('#dendritasModel_Container>.toolbar>#save').on('click', function(){
+				var model = guiDendritasModel.getLayers();
+
+				var modelString = JSON.stringify(model);
+
+
+				console.log('Modelo de conexionado');
+				console.log('copiar el contenido');
+				console.log(modelString);
+
+			});
+
+
+
+
+			$('#dendritasModel_Container').hide();
+			$('#dendritasModel').on('click', function(){
+
+				if($('#dendritasModel_Container').css('display') == 'none' ){
+					$('#dendritasModel_Container').show();
+
+				}else{
+					$('#dendritasModel_Container').hide();
+				}
+			});
+
+
+
+			console.log('*****************************************************');
+			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
+			console.log('*****************************************************');
+			console.log('');
+			console.log('*Probá escribiendo "red;" en la consola, si querés');
+			console.log('');
+			console.log('HELP:');
+			console.log('https://github.com/josetabuyo/RedJavaScript/blob/master/README.md');
+			console.log('');
+
+
+
+
+			// DEBUG CHECK DEPRECATED
+			//$('#test>select').change();
+
+
+
+
+			//GLOBAL
+			guiRed = new GuiMatriz({
+				idSvg: 'guiRed_svg',
+				showCero: true,
+				x: 10,
+				y: 10,
+				escala: {
+					x: 7,
+					y: 7
+				},
+				tool1: "addCell",
+				tool2: "removeCell",
+				onAddCell: function(key){
+					var gui = this;
+
+					if(typeof(red) == "undefined"){
+
+						//GLOBAL
+						red = new Red();
+						Constructor.red = red;
+
+					}
+
+
+					var neurona = new Neurona({
+						red: red,
+						id: key
+					});
+
+					red.neuronas[key] = neurona;
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+					gui.onRefreshCell(key, cel.svgObject);
+
+
+				},
+				onRemoveCell: function(key){
+					delete red.neuronas[key];
+				},
+				onRefreshCell: function(key, svgObject){
+					var gui = this;
+
+					var valor;
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+					var neurona = red.neuronas[key];
+
+					if(modo=="DEPOLARIZACION"){
+						valor = neurona.tensionSuperficial / Axon.prototype.COEF_AXON_UMBRAL_SPIKE * 0.8;
+
+					} else if(modo=="ACTIVACION"){
+						valor = neurona.axon.valor;
+					}
+
+					var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
+					var byteColorLow = "00";
+
+					var byteRojo = byteColorHigth;
+					var byteVerde = byteColorHigth;
+					var byteAzul = byteColorHigth;
+
+					// DEFAULT
+					svgObject.attr({
+						fill: "#" + byteRojo + byteVerde + byteAzul,
+						stroke: "#EEEEEE"
+					});
+
+
+					if(neurona.dendritas.length > 0){
+
+						svgObject.attr({
+							stroke: "#555555"
+						});
+
+					}
+
+
+					if(neurona.tipo == "SALIDA"){
+
+						var byteVerde = byteColorLow;
+						var byteAzul = byteColorLow;
+
+						svgObject.attr({
+							fill: "#" + byteRojo + byteVerde + byteAzul,
+							stroke: "#EE0000"
+						});
+					}
+
+					if(neurona.tipo == "ENTRADA"){
+
+						var byteRojo = byteColorLow;
+						var byteVerde = byteColorLow;
+
+						svgObject.attr({
+							fill: "#" + byteRojo + byteVerde + byteAzul,
+							stroke: "#0000EE"
+						});
+					}
+				},
+				//extra tools
+				conectarNeurona: function(pos){
+					var gui = this;
+					var key = "x"+pos.x+"y"+pos.y;
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+					if(typeof(cel) == "undefined") return;
+
+
+					Constructor.insertarAxonesConMascara({
+						keyNeurona: key,
+						mascara: guiDendritasModel.getLayers()
+					});
+
+
+					gui.onRefreshCell(key, cel.svgObject);
+				},
+				removeDendritas: function(pos){
+					var gui = this;
+					var key = "x"+pos.x+"y"+pos.y;
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+					if(typeof(cel) == "undefined") return;
+
+					var neurona = red.neuronas[key];
+
+					neurona.dendritas = [];
+
+					gui.onRefreshCell(key, cel.svgObject);
+				},
+				makeEntradaNeurona: function(pos){
+					var gui = this;
+
+					var key = "x"+pos.x+"y"+pos.y;
+
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+
+					if(typeof(cel) == "undefined") return;
+
+
+
+
+
+					var neurona = red.neuronas[key];
+
+					if(typeof(neurona) != "undefined"){
+
+
+						Constructor.makeEntradaNeurona(neurona);
+					}
+
+
+					$('#guiRed_Container>#toolbarInfo').text("Cantidad de entradas: " + Object.keys(red.entrada).length );
+
+					gui.onRefreshCell(key, cel.svgObject);
+				},
+				makeSalidaNeurona: function(pos){
+					var gui = this;
+
+					var key = "x"+pos.x+"y"+pos.y;
+
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+
+					if(typeof(cel) == "undefined") return;
+					if(cel.data.salida) return;
+					if(cel.data.entrada) return;
+
+
+					cel.data.salida = true;
+
+
+					var neurona = red.neuronas[key];
+
+					if(typeof(neurona) != "undefined"){
+
+						red.salida[key] = neurona;
+
+						neurona.tipo = "SALIDA";
+						neurona.axon.sinapsis = {};
+					}
+
+					$('#guiRed_Container>#toolbarInfo').text("Cantidad de salidas: " + Object.keys(red.salida).length );
+
+					gui.onRefreshCell(key, cel.svgObject);
+				},
+				getNeurona: function(pos){
+					var gui = this;
+
+					var key = "x"+pos.x+"y"+pos.y;
+
+
+					var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+
+					if(typeof(cel) == "undefined") return;
+
+					return red.neuronas[key];
+
+				},
+				watchConexiones: function(pos){
+					var gui = this;
+
+
+					if(typeof(gui.neuronaWatch = gui.getNeurona(pos)) == "undefined") return;
+
+					$('#guiRed_Container>#toolbarInfo').text("Neurona: " + gui.neuronaWatch.id);
+
+					console.log("Neurona en observación:");
+					console.log(gui.neuronaWatch);
+
+
+					gui.refresh()
+
+				},
+				watchConexionesEnd: function(pos){
+
+					var gui = this;
+					if(typeof(neuronaSel = gui.getNeurona(pos)) == "undefined") return;
+
+					if(gui.neuronaWatch.id == neuronaSel.id){
+						console.log("TODO: mostrar menu sobre neurona para editar sus conexiones ahi mismo");
+					}else{
+						gui.neuronaWatch = null
+					}
+
+
+				},
+
+				neuronaWatch: null,
+				verDendritas: function(neurona){
+					var gui = this;
+
+					for(keyDendrita in neurona.dendritas){
+						var dendrita = neurona.dendritas[keyDendrita];
+
+
+
+						for(keySinapsis in dendrita.sinapsis){
+
+							var sinapsis = dendrita.sinapsis[keySinapsis];
+							var pesoEfectivo = sinapsis.peso * dendrita.peso;
+
+							var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
+
+							var _attr = {};
+							if(pesoEfectivo>0){
+								var color = Math.floor(pesoEfectivo * 200) + 55;
+
+								_attr.fill = "rgb(55, "+color+", 55)";
+
+							}else{
+								var color = Math.floor(Math.abs(pesoEfectivo) * 200) + 55;
+
+								_attr.fill = "rgb("+color+", 55, "+color+")";
+
+							}
+
+							if(neurona_AxonEntrante.axon.valor == 1){
+								_attr.stroke =  "#FFFFFF";
+							}else{
+								_attr.stroke =  "#000000";
+							}
+
+
+							var celSinapsis = gui.layers[gui.sel.idLayer].cels[keySinapsis];
+
+							celSinapsis.svgObject.attr(_attr);
+
+						}
+					}
+
+					var cel = gui.layers[gui.sel.idLayer].cels[neurona.id];
+
+
+
+					var bb = cel.svgObject.getBBox();
+
+					gui.snap.line(
+						bb.cx - (gui.escala.x / 2),
+						bb.cy - (gui.escala.y / 2),
+						bb.cx + (gui.escala.x / 2),
+						bb.cy + (gui.escala.y / 2)
+						).attr({
+
+						stroke: "#FF00FF"
+					});
+					gui.snap.line(
+						bb.cx + (gui.escala.x / 2),
+						bb.cy - (gui.escala.y / 2),
+						bb.cx - (gui.escala.x / 2),
+						bb.cy + (gui.escala.y / 2)
+						).attr({
+
+						stroke: "#FF00FF"
+					});
+
+				},
+				onRefresh: function(){
+					var gui = this;
+
+
+					if(gui.neuronaWatch){
+						gui.verDendritas(gui.neuronaWatch);
+					}
+
+				}
+
+			});
+
+
+			$('#guiRed_Container>.toolbar>#showControl').on('click', function(e){
+
+
+
+
+				if($('#control').css('display') == 'none' ){
+					$('#guiRed_Container>#toolbarInfo').text("Coeficientes de la red");
+					$('#control').show();
+
+				}else{
+					$('#guiRed_Container>#toolbarInfo').text("");
+					$('#control').hide();
+
+				}
+
+			});
+
+
+
+			$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){
+				guiRed.tool1 = "addCell";
+				guiRed.tool2 = "removeCell";
+			});
+
+			$('#guiRed_Container>.toolbar>#conectar').on('click', function(e){
+				guiRed.tool1 = "conectarNeurona";
+				guiRed.tool2 = "removeDendritas";
+			});
+
+			$('#guiRed_Container>.toolbar>#makeEntrada').on('click', function(e){
+				guiRed.tool1 = "makeEntradaNeurona";
+				guiRed.tool2 = "removeCell";
+			});
+
+			$('#guiRed_Container>.toolbar>#makeSalida').on('click', function(e){
+				guiRed.tool1 = "makeSalidaNeurona";
+				guiRed.tool2 = "removeCell";
+			});
+
+			$('#guiRed_Container>.toolbar>#watchConexiones').on('click', function(e){
+				guiRed.tool1 = "watchConexiones";
+				guiRed.tool2 = "watchConexionesEnd";
+
+				guiRed.setAnchoPincel(1);
+			});
+
+
+
+
+
+
+
+			$('#guiRed_Container>.toolbar>#save').on('click', function(){
+
+				var _red = Constructor.getRedData();
+
+
+				var _redString = JSON.stringify(_red);
+
+
+				console.log('Constructor.getRedData de la red');
+				console.log('copiar el contenido');
+				console.log(_redString);
+
+
+				console.log('guiRed.getLayers de la red');
+				console.log('copiar el contenido');
+				console.log(JSON.stringify(guiRed.getLayers()));
+			});
+
+
+
+
+			$('#presets').on('click', function(){
+				event.stopPropagation()
+				$(this).find('select').show();
+
+			});
+
+
+
+			var $presets_select = $('#presets>select');
+
+
+			keysPresets = Object.keys(presets);
+			for(iTemplatePresets in keysPresets){
+				$presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
+			}
+
+			$presets_select.on('click', function(){
+
+					presets[$(this).val()]();
+
+					setContext();
+
+				$(this).hide();
+			});
+
+
+
+
+
+		});
+	</script>
+	<script src="templates/conexionados.js"></script>
+	<script src="templates/presets.js"></script>
+</html>
