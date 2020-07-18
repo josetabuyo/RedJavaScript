@@ -1,5 +1,5 @@
 presets = {
-	desa: function(){
+	default: function(){
 		console.log("Aplicando preset");
 		console.log(this);
 
@@ -156,3 +156,33 @@ presets = {
 
 	}
 }
+
+
+$(function(){
+	//////////////////////////////////////// GUI PRESET /////////////////////////////////////
+
+	$('#presets').on('click', function(){
+		event.stopPropagation()
+		$(this).find('select').show();
+
+	});
+
+
+
+	var $presets_select = $('#presets>select');
+
+
+	keysPresets = Object.keys(presets);
+	for(iTemplatePresets in keysPresets){
+		$presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
+	}
+
+	$presets_select.on('click', function(){
+
+			presets[$(this).val()]();
+
+		$(this).hide();
+	});
+
+	//////////////////////////////////////// GUI PRESET /////////////////////////////////////
+});

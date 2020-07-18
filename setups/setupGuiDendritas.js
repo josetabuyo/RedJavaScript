@@ -225,3 +225,121 @@ conexionados = {
 
 
 }
+
+$(function(){
+
+  var guiDendritasModel = new GuiMatriz({
+    idSvg: 'dendritasModel_svg',
+    x: 20,
+    y: 20,
+    onRemoveLayers: function(){
+      $('#dendritasModel_dendritas').html('');
+
+    },
+    onAddLayer: function(parent, idLayer){
+
+
+      var domDentdrita = $('#plantilla_dendritasModel_dendrita').clone()
+                .attr('id', 'dendrita_nro_' + idLayer)
+                ;
+
+
+      domDentdrita.find(".idLayer").text(idLayer);
+
+
+      domDentdrita.on('click', function(){
+        parent.selLayer(idLayer);
+      });
+
+
+
+      var $dendritasModel_dendrita_data = domDentdrita.find(".dendritasModel_dendrita_data");
+
+      if(this.layers[idLayer].data){
+
+        $dendritasModel_dendrita_data.val(this.layers[idLayer].data.peso + "," + this.layers[idLayer].data.densidad );
+
+      }
+
+      $dendritasModel_dendrita_data.on('keypress', function(e){
+        if (e.keyCode == 13) {
+
+          var params = $(this).val().split(",");
+
+          guiDendritasModel.layers[idLayer].data = {
+            peso: params[0],
+            densidad: params[1]
+          };
+          }
+      });
+
+
+      $('#dendritasModel_dendritas').append(domDentdrita);
+
+
+    }
+  });
+
+  $('#dendritasModel_Container>.toolbar>#drawMode').on('click', function(){
+    guiDendritasModel.setDrawModeNext();
+  });
+
+
+  $('#dendritasModel_Container>.toolbar>#addDendrita').on('click', function(){
+    guiDendritasModel.addLayer();
+  });
+
+
+
+  var $template_conexionado_select = $('#dendritasModel_Container>.toolbar>#load>select');
+
+  keysConexionado = Object.keys(conexionados);
+  for(iTemplateConexionado in keysConexionado){
+    $template_conexionado_select.append("<option value='" + keysConexionado[iTemplateConexionado] + "'>" + keysConexionado[iTemplateConexionado] + "</option>");
+  }
+
+  $template_conexionado_select.on('click', function(){
+    event.stopPropagation()
+
+    if($(this).val() == ""){
+      guiDendritasModel.removeLayers();
+      guiDendritasModel.addLayer();
+    }else{
+      guiDendritasModel.loadLayers(conexionados[$(this).val()]);
+    }
+
+    $(this).hide();
+  });
+
+
+
+  $('#dendritasModel_Container>.toolbar>#load').on('click', function(){
+    event.stopPropagation()
+    $(this).find('select').show();
+  });
+
+
+  $('#dendritasModel_Container>.toolbar>#save').on('click', function(){
+    var model = guiDendritasModel.getLayers();
+
+    var modelString = JSON.stringify(model);
+
+
+    console.log('Modelo de conexionado');
+    console.log('copiar el contenido');
+    console.log(modelString);
+
+  });
+
+  $('#dendritasModel_Container').hide();
+  $('#dendritasModel').on('click', function(){
+
+    if($('#dendritasModel_Container').css('display') == 'none' ){
+      $('#dendritasModel_Container').show();
+
+    }else{
+      $('#dendritasModel_Container').hide();
+    }
+  });
+
+});
