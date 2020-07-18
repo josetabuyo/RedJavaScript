@@ -3,9 +3,9 @@ var TestAsciiImage = function(opt){
 	$.extend(this, {
 		entrada: null,
 		salida: null,
-		escala: 20,
+		escala: 25,
 
-		altoPixel:8,
+		altoPixel: 8,
 		pixelBig:{}
 
 	}, opt);
@@ -46,7 +46,6 @@ TestAsciiImage.prototype = {
 		var test =  this;
 
 		$("#TestAsciiImage_Container").show()
-		var world = this;
 
 		test.canvas = document.querySelector("#TestAsciiImage_Container canvas");
 
@@ -108,9 +107,9 @@ TestAsciiImage.prototype = {
 		}
 
 		test.ctx.clearRect(0, 0, test.canvas.width, test.canvas.height);
-		test.ctx.font = test.altoPixel + "px Arial";
+		test.ctx.font = (test.altoPixel+1) + "px Arial";
 		test.ctx.fillStyle = "blue";
-		test.ctx.fillText(caracter, 1, test.altoPixel-1);
+		test.ctx.fillText(caracter, 0, test.altoPixel-2);
 
 
 		test.printEntrada();
@@ -146,8 +145,8 @@ TestAsciiImage.prototype = {
 					fill:"rgb("+valorActivacion+","+valorActivacion+","+valorActivacion+")"
 				});
 
-
-				var neurona = red.neuronas[Object.keys(red.entrada)[index]];
+				key = Object.keys(red.entrada)[index]
+				var neurona = red.neuronas[key];
 
 				index++;
 				neurona.activarExternal(valorActivacion / 255);
