@@ -350,9 +350,6 @@
 				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
 					W
 				</div>
-				<div id="save" class="boton" title="Imprime por la console (F12) la topología de la red">
-					S
-				</div>
 			</div>
 			<div id="toolbarInfo">
 			</div>
@@ -395,16 +392,12 @@
 	</body>
 
 
-
 	<script src="lib/jquery-2.1.3.min.js"></script>
 	<!--script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script-->
 
-	<script src="lib/underscore-min.js"></script>
+	<script src="lib/jQuery.stringify.js"></script>
 
 	<script src="lib/snap.svg-min.js"></script>
-
-	<script src="lib/vortex.min.js"></script>
-	<script src="lib/socket.io.js"></script>
 
 
 	<script src="GuiMatriz.js"></script>
@@ -473,9 +466,9 @@
 
 
 			$('#saveRed').on('click', function(){
-
-				var _redString = JSON.stringify(
-					Constructor.getRedData()
+				_red = Constructor.getRedData();
+				var _redString = $.stringify(
+					_red
 				);
 
 				sessionStorage.setItem("_redString", _redString);
@@ -486,7 +479,6 @@
 
 			$('#loadRed').on('click', function(){
 				var _redString = sessionStorage.getItem("_redString");
-				debugger
 				if(_redString==null){
 					presets.default();
 				}else{
@@ -495,8 +487,6 @@
 					);
 				}
 
-				// TODO: hacer que entre un json con los coeficientes, que pueda cargar los de la red, o los default
-				//global
 				configSlyCoef = function(proto, nameSly, escala) {
 
 
@@ -529,6 +519,16 @@
 				};
 				setControlCoeficientes();
 
+
+
+				render = function(){
+					for(iNeurona in red.neuronas){
+						neurona = red.neuronas[iNeurona]
+						guiRed.addCell(neurona.id, false);
+					}
+				};
+				render();
+				guiRed.refresh()
 
 			});
 
