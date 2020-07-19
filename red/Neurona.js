@@ -20,13 +20,9 @@ Neurona.prototype = {
 	start: function(){
 		var neurona = this;
 
-		this.axon = new Axon($.extend({},
-			neurona.axon,
-			{
-				neurona: neurona,
-				id: neurona.id
-			}
-		));
+		neurona.axon = new Axon();
+		neurona.axon.neurona = neurona;
+
 	},
 
 	setTension: function(tensionSuperficial){
