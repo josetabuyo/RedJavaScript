@@ -228,7 +228,9 @@ conexionados = {
 
 $(function(){
 
-  var guiDendritasModel = new GuiMatriz({
+
+  //GLOBAL
+  guiDendritasModel = new GuiMatriz({
     idSvg: 'dendritasModel_svg',
     x: 20,
     y: 20,

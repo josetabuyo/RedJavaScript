@@ -368,30 +368,6 @@ $(function(){
 			});
 
 
-
-
-
-
-
-			$('#guiRed_Container>.toolbar>#save').on('click', function(){
-
-				var _red = Constructor.getRedData();
-
-
-				var _redString = JSON.stringify(_red);
-
-
-				console.log('Constructor.getRedData de la red');
-				console.log('copiar el contenido');
-				console.log(_redString);
-
-
-				console.log('guiRed.getLayers de la red');
-				console.log('copiar el contenido');
-				console.log(JSON.stringify(guiRed.getLayers()));
-			});
-
-
 			////////////////////////////////////////// GUI RED //////////////////////////////////////
 
 
