@@ -7,8 +7,6 @@ var Neurona = function(opt){
 		tipo: "INTERNA",
 		id: null,
 		dendritas: [],
-		dendritas_positivas: [],
-		dendritas_negativas: [],
 		tensionSuperficial: 0
 
 	}, opt);
@@ -76,33 +74,12 @@ Neurona.prototype = {
 
 		neurona.setTension(valorDendritas);
 	},
-	entrenar_positivas: function(){
-		var neurona = this;
-
-		for(iDendrita in neurona.dendritas_positivas){
-			var dendrita = neurona.dendritas_positivas[iDendrita];
-			dendrita.entrenar();
-		};
-
-	},
-	entrenar_negativas: function(){
-		var neurona = this;
-
-		for(iDendrita in neurona.dendritas_negativas){
-			var dendrita = neurona.dendritas_negativas[iDendrita];
-			dendrita.entrenar();
-		};
-
-	},
 	entrenar: function(signo){
 		var neurona = this;
 
 		for(iDendrita in neurona.dendritas){
 			var dendrita = neurona.dendritas[iDendrita];
-
-			if(Math.sign(signo) == Math.sign(dendrita.peso)){
-				dendrita.entrenar();
-			}
+			dendrita.entrenar();
 		};
 	}
 };

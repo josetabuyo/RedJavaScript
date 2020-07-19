@@ -19,12 +19,6 @@ Dendrita.prototype = {
 
 		dendrita.neurona.dendritas.push(dendrita);
 
-		if(dendrita.peso < 0){
-			dendrita.neurona.dendritas_negativas.push(dendrita);
-		}else{
-			dendrita.neurona.dendritas_positivas.push(dendrita);
-		}
-
 	},
 	procesar: function(){
 		var dendrita = this;
