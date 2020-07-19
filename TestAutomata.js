@@ -196,27 +196,6 @@ TestAutomata.prototype = {
 
 
 	},
-
-	step_secada: function(){
-		var test = this;
-
-		test.printEntrada();
-
-		test.onStep()
-
-		//ubico el foco en la media.x de la salida
-
-		test.foco = test.obtenerSalida('mediaX');
-
-		var dolor_set = test.foco + test.offset;
-
-		var dolor_target = test.red.size.x / 2;
-
-		var dolor = Math.abs(dolor_target - dolor_set) / dolor_target;
-
-
-		//Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO = (-dolor) * 0.1;
-	},
 	debugEstandar: function(){
 		var test = this;
 
@@ -615,6 +594,20 @@ TestAutomata.prototype = {
 
 
 		var COEF_DOLOR = 0.01;
+
+
+		setCoef = function(proto, nameSly, valor, escala){
+			var objSly = $('#'+ nameSly);
+
+			if(!escala)escala=1;
+
+			objSly.val(valor * escala * 255);
+			proto[nameSly] = valor;
+
+			objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+
+		};
+
 
 		// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
 		if(solapamiento.penetracion > 0){
