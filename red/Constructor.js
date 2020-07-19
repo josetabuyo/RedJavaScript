@@ -26,7 +26,6 @@ var Constructor = {
 				tipo: neurona.tipo,
 				dendritas: []
 			};
-			_red.neuronas[key] = _neurona;
 
 
 			for(iDendrita in neurona.dendritas){
@@ -34,7 +33,6 @@ var Constructor = {
 				var dendrita = neurona.dendritas[iDendrita];
 
 				var _dendrita = {
-					neurona: _neurona,
 					sinapsis: {},
 					peso: dendrita.peso
 				};
@@ -50,9 +48,16 @@ var Constructor = {
 
 					_dendrita.sinapsis[sinapsis.id] = _sinapsis;
 				}
-			};
-		};
 
+
+				_neurona.dendritas.push(_dendrita)
+			};
+
+			_red.neuronas[neurona.id] = _neurona;
+
+
+
+		};
 
 		return _red;
 	},
@@ -60,94 +65,59 @@ var Constructor = {
 	setRedData: function(_red){
 		var constructor = this;
 
-
-
-		//GLOBAL
 		red = new Red(_red);
 
 
-		Axon.prototype.COEF_AXON_ANCHO_PULSO					= _red.COEF_AXON_ANCHO_PULSO				;
-		Axon.prototype.COEF_AXON_UMBRAL_SPIKE					= _red.COEF_AXON_UMBRAL_SPIKE				;
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT	= _red.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT	;
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO			= _red.COEF_SINAPSIS_ENTRENAMIENTO			;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 			= _red.COEF_SINAPSIS_UMBRAL_PESO			;
+		Axon.prototype.COEF_AXON_ANCHO_PULSO											= _red.COEF_AXON_ANCHO_PULSO										;
+		Axon.prototype.COEF_AXON_UMBRAL_SPIKE											= _red.COEF_AXON_UMBRAL_SPIKE										;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT		= _red.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT			;
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO						= _red.COEF_SINAPSIS_ENTRENAMIENTO							;
+		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 							= _red.COEF_SINAPSIS_UMBRAL_PESO								;
 
 
-
-		for(key in red.neuronas){
-
-			var _neurona = red.neuronas[key];
-
-
-
-			var neurona = new Neurona(
-				$.extend({},
-					_neurona,
-					{
-						red: red
-					}
-				)
-			);
-
-			/*
-			_neurona.red = red;
-			var neurona = new Neurona(_neurona);
-			*/
-
-
-
-			red.neuronas[neurona.id] = neurona;
-			if(neurona.tipo == 'ENTRADA'){
-				constructor.makeEntradaNeurona(neurona);
-			}
-
-		};
-
-
+		//REHIDRATO LAS NEURONAS
 		for(key in red.neuronas){
 
 			var neurona = red.neuronas[key];
 
+			neurona.red = red;
+			neurona.axon = new Axon()
+			neurona.axon.neurona = neurona;
+
+			if(neurona.tipo == 'ENTRADA'){
+				constructor.makeEntradaNeurona(neurona);
+			}
+
+		}
+
+		//REHIDRATO LAS DENDRITAS y los AXONES que tocan
+		for(key in red.neuronas){
+
+			var neurona = red.neuronas[key];
+
+
+
 			for(iDendrita in neurona.dendritas){
 
-				var _dendrita = neurona.dendritas[iDendrita];
 
-				var dendrita = new Dendrita(
-					$.extend({},
-						_dendrita,
-						{
-							neurona: neurona
-						}
-					)
+				var dendrita = neurona.dendritas[iDendrita];
 
-				);
-
-
-				neurona.dendritas[iDendrita] = dendrita;
-
+				dendrita.neurona = neurona;
 
 				for(key in dendrita.sinapsis){
 
-					var _sinapsis = dendrita.sinapsis[key];
+					var sinapsis = dendrita.sinapsis[key];
 
-					var neurona_AxonEntrante = red.neuronas[_sinapsis.id];
+					var neurona_AxonEntrante = red.neuronas[sinapsis.id];
 
-					var sinapsis = new Sinapsis(
-						$.extend({},
-							_sinapsis,
-							{
-								dendrita: dendrita,
-								neurona_AxonEntrante: neurona_AxonEntrante
-							}
-						)
-					);
+					sinapsis.dendrita = dendrita;
+
+					sinapsis.neurona_AxonEntrante = neurona_AxonEntrante;
 
 					neurona_AxonEntrante.axon.sinapsis[neurona.id] = sinapsis;
-
-					dendrita.sinapsis[sinapsis.id] = sinapsis;
 				}
-			};
 
+			}
 		}
 
 		return red;
