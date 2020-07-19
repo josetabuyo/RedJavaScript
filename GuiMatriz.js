@@ -25,8 +25,6 @@ var GuiMatriz = function(opt){
 			idLayer: 0
 		},
 
-		defaultTemplate: [{"data":{"peso":0.2},"cels":{"x-1y-1":{},"x-1y0":{},"x-1y1":{},"x0y-1":{},"x0y1":{},"x1y-1":{},"x1y0":{},"x1y1":{}}}],
-		//defaultTemplate: [{"data":{"peso":0.2},"cels":{"x-1y-1":{},"x-1y0":{},"x-1y1":{},"x0y-1":{},"x0y1":{}}},{"data":null,"cels":{"x0y-1":{},"x0y1":{},"x1y-1":{},"x1y0":{},"x1y1":{}}},{"data":null,"cels":{"x-1y0":{},"x-1y1":{},"x0y1":{},"x1y0":{},"x1y1":{}}},{"data":null,"cels":{"x-1y-1":{},"x-1y0":{},"x0y-1":{},"x1y-1":{},"x1y0":{}}},{"data":null,"cels":{"x-1y-3":{},"x-1y-2":{},"x0y-3":{},"x0y-2":{}}},{"data":null,"cels":{"x1y-3":{},"x1y-2":{},"x2y-3":{},"x2y-2":{}}},{"data":null,"cels":{"x2y-2":{},"x2y-1":{},"x3y-2":{},"x3y-1":{}}},{"data":null,"cels":{"x2y0":{},"x2y1":{},"x3y0":{},"x3y1":{}}},{"data":null,"cels":{"x2y1":{},"x2y2":{},"x3y1":{},"x3y2":{}}},{"data":null,"cels":{"x0y2":{},"x0y3":{},"x1y2":{},"x1y3":{}}},{"data":null,"cels":{"x-2y2":{},"x-2y3":{},"x-1y2":{},"x-1y3":{}}},{"data":null,"cels":{"x-3y1":{},"x-3y2":{},"x-2y1":{},"x-2y2":{}}},{"data":null,"cels":{"x-3y-1":{},"x-3y0":{},"x-2y-1":{},"x-2y0":{}}},{"data":null,"cels":{"x-3y-3":{},"x-3y-2":{},"x-2y-3":{},"x-2y-2":{}}},{"data":null,"cels":{"x-4y-5":{},"x-4y-4":{},"x-3y-5":{},"x-3y-4":{},"x-2y-5":{},"x-2y-4":{},"x-1y-5":{},"x-1y-4":{}}},{"data":null,"cels":{}},{"data":null,"cels":{"x0y-5":{},"x0y-4":{},"x1y-5":{},"x1y-4":{},"x2y-5":{},"x2y-4":{},"x3y-5":{},"x3y-4":{}}},{"data":null,"cels":{"x3y-4":{},"x3y-3":{},"x4y-4":{},"x4y-3":{},"x3y-2":{},"x4y-2":{},"x5y-3":{},"x5y-2":{},"x4y-1":{},"x5y-1":{}}},{"data":null,"cels":{"x4y0":{},"x4y1":{},"x5y0":{},"x5y1":{},"x4y2":{},"x5y2":{},"x4y3":{},"x5y3":{}}},{"data":null,"cels":{"x3y3":{},"x3y4":{},"x4y3":{},"x4y4":{},"x2y3":{},"x2y4":{},"x1y4":{},"x1y5":{},"x2y5":{},"x0y4":{},"x0y5":{}}},{"data":null,"cels":{"x-1y4":{},"x-1y5":{},"x0y4":{},"x0y5":{},"x-2y4":{},"x-2y5":{},"x-3y4":{},"x-3y5":{},"x-3y3":{},"x-2y3":{}}},{"data":null,"cels":{"x-5y3":{},"x-5y4":{},"x-4y3":{},"x-4y4":{},"x-3y3":{},"x-3y4":{},"x-5y2":{},"x-4y2":{},"x-5y1":{},"x-4y1":{}}},{"data":null,"cels":{"x-5y0":{},"x-5y1":{},"x-4y0":{},"x-4y1":{},"x-6y0":{},"x-6y1":{},"x-6y-1":{},"x-5y-1":{},"x-6y-2":{},"x-5y-2":{},"x-6y-3":{},"x-5y-3":{},"x-4y-3":{},"x-4y-2":{}}}],
 		layers: []
 	}, opt);
 
@@ -382,12 +380,17 @@ GuiMatriz.prototype = {
 
 		return;
 	},
-	addCell: function(pos, idLayer){
+	addCell: function(pos, runCallback, idLayer){
 		var gui = this;
 
 		if(typeof(idLayer) == "undefined" ){
 			idLayer = gui.sel.idLayer;
 		};
+
+		if(typeof(runCallback) == "undefined" ){
+			runCallback = true
+		};
+
 
 
 		var key;
@@ -433,8 +436,9 @@ GuiMatriz.prototype = {
 		};
 
 
-
-		gui.onAddCell(key);
+		if(runCallback){
+			gui.onAddCell(key);
+		}
 
 	},
 	coordByPixelPos: function(pixelPosX, pixelPosY){
