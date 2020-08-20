@@ -6,6 +6,7 @@ var Dendrita = function(opt){
 		neurona: null,
 		valor: 0.0,
 		peso: 1.0,
+		id: null,
 		sinapsis:{}
 
 	}, opt);
@@ -17,7 +18,11 @@ Dendrita.prototype = {
 	start: function(){
 		var dendrita = this;
 
-		dendrita.neurona.dendritas.push(dendrita);
+		if(dendrita.id == null){
+			dendrita.id = Object.keys(dendrita.neurona.dendritas).length+1;
+		}
+
+		dendrita.neurona.dendritas[dendrita.id] = dendrita;
 
 	},
 	procesar: function(){
@@ -30,7 +35,9 @@ Dendrita.prototype = {
 			var suma = 0;
 			for(key in sinapsis){
 				var sinap = sinapsis[key];
+
 				suma += sinap.procesar();
+
 			}
 
 
@@ -39,7 +46,6 @@ Dendrita.prototype = {
 		}
 
 		dendrita.valor = valor * dendrita.peso;
-
 
 		return valor;
 	},
@@ -52,16 +58,15 @@ Dendrita.prototype = {
 
 		// TODO: probar con
 		// dendrita.neurona.tensionSuperficial - tensionDendrita;
-		var valorEntrenamiento = 1 - Math.abs(dendrita.neurona.axon.valor - tensionDendrita);
+		var meritoDentrita = 1 - Math.abs(dendrita.neurona.axon.valor - tensionDendrita);
 
 
 		if(Object.keys(sinapsis).length > 0){
-			var suma = 0;
 
 			for(key in sinapsis){
 				var sinap = sinapsis[key];
 
-				suma += sinap.entrenar(valorEntrenamiento);
+				sinap.entrenar(meritoDentrita);
 			}
 
 		}

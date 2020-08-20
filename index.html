@@ -463,19 +463,28 @@
 
 
 
-
-
 			$('#saveRed').on('click', function(){
 				_red = Constructor.getRedData();
 				var _redString = $.stringify(
 					_red
 				);
 
+				try{
+					sessionStorage.removeItem("_redString");
+				}catch(e){
+
+				}
+
 				sessionStorage.setItem("_redString", _redString);
+
+
 
 				console.log('copiar el contenido');
 				console.log(_redString);
 			});
+
+
+
 
 			$('#loadRed').on('click', function(){
 				var _redString = sessionStorage.getItem("_redString");
@@ -528,6 +537,10 @@
 					}
 				};
 				render();
+
+
+
+				guiRed.setLayer(0, red.neuronas);
 				guiRed.refresh()
 
 			});

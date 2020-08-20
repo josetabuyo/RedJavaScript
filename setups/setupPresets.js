@@ -12,7 +12,8 @@ presets = {
 
 		//crear red
 		red = new Red();
-		red = Constructor.addNeuronas({
+		Constructor.red = red;
+		Constructor.addNeuronasBox({
 			size: size
 		});
 
@@ -65,7 +66,8 @@ presets = {
 
 		//crear red
 		red = new Red();
-		red = Constructor.addNeuronas({
+		Constructor.red = red;
+		Constructor.addNeuronasBox({
 			size: size
 		});
 
@@ -124,7 +126,8 @@ presets = {
 
 		//crear red
 		red = new Red();
-		red = Constructor.addNeuronas({
+		Constructor.red = red;
+		Constructor.addNeuronasBox({
 			size: size
 		});
 

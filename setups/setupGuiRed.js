@@ -24,14 +24,10 @@ $(function(){
 
 					}
 
-
-					var neurona = new Neurona({
+					Constructor.addNeurona({
 						red: red,
 						id: key
 					});
-
-					red.neuronas[key] = neurona;
-
 
 					var cel = gui.layers[gui.sel.idLayer].cels[key];
 
@@ -70,7 +66,7 @@ $(function(){
 					});
 
 
-					if(neurona.dendritas.length > 0){
+					if(Object.keys(neurona.dendritas).length > 0){
 
 						svgObject.attr({
 							stroke: "#555555"
@@ -111,6 +107,11 @@ $(function(){
 
 					if(typeof(cel) == "undefined") return;
 
+					var neurona = red.neuronas[key];
+
+					if(Object.keys(neurona.dendritas).length > 0){
+						return
+					}
 
 					Constructor.insertarAxonesConMascara({
 						keyNeurona: key,
