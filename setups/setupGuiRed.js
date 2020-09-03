@@ -49,7 +49,7 @@ $(function(){
 						valor = neurona.tensionSuperficial / Axon.prototype.COEF_AXON_UMBRAL_SPIKE * 0.8;
 
 					} else if(modo=="ACTIVACION"){
-						valor = neurona.axon.valor;
+						valor = neurona.valor;
 					}
 
 					var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
@@ -269,7 +269,7 @@ $(function(){
 
 							}
 
-							if(neurona_AxonEntrante.axon.valor == 1){
+							if(neurona_AxonEntrante.valor == 1){
 								_attr.stroke =  "#FFFFFF";
 							}else{
 								_attr.stroke =  "#000000";

@@ -39,7 +39,7 @@ Sinapsis.prototype = {
 	entrenar: function(valorEntrenamiento){
 
 
-		this.peso += (this.neurona_AxonEntrante.axon.valor - this.peso) * valorEntrenamiento * this.COEF_SINAPSIS_ENTRENAMIENTO;
+		this.peso += (this.neurona_AxonEntrante.valor - this.peso) * valorEntrenamiento * this.COEF_SINAPSIS_ENTRENAMIENTO;
 
 
 		if(this.peso < this.COEF_SINAPSIS_UMBRAL_PESO){
@@ -49,8 +49,8 @@ Sinapsis.prototype = {
 
 	},
 	procesar: function(){
-
-		return this.valor = this.neurona_AxonEntrante.axon.valor * this.peso;
+		this.valor = this.neurona_AxonEntrante.valor * this.peso;
+		return this.valor
 	},
 	kill: function(){
 		var sinapsis = this;

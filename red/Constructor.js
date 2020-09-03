@@ -107,7 +107,7 @@ var Constructor = {
 
 				var dendrita = new Dendrita({
 					id:  _dendrita.id,
-					peso: _dendrita,
+					peso: _dendrita.peso,
 					neurona: neurona
 				});
 
@@ -186,8 +186,11 @@ var Constructor = {
 
 
 	makeEntradaNeurona: function(neurona){
-		neurona.red.neuronas[neurona.id] = new NeuronaEntrada(neurona.red.neuronas[neurona.id]);
 
+		_neurona = new NeuronaEntrada(neurona);
+		_neurona.axon = neurona.axon;
+		neurona = _neurona;
+		neurona.red.neuronas[neurona.id] = neurona;
 	},
 	makeEntrada: function(box){
 		var construct = this;
@@ -376,7 +379,8 @@ var Constructor = {
 		Para usar dentro de un modo de interconexión
 		EJEMPLO DE LLAMADO
 			Constructor.eachNeuronaDendrita({
-
+				boxTarget: <opcional>,
+				dendritas_pesos: <opcional>
 			});
 		*/
 

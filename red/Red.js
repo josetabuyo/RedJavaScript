@@ -42,7 +42,7 @@ Red.prototype = {
 		}
 
 		for(iNeurona in red.neuronas){
-			red.neuronas[iNeurona].axon.activar();
+			red.neuronas[iNeurona].activar();
 		}
 	}
 }
