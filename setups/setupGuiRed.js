@@ -36,7 +36,15 @@ $(function(){
 
 				},
 				onRemoveCell: function(key){
+
+					if(red.neuronas[key].tipo == "ENTRADA"){
+						delete red.entrada[key];
+					} else {
+						delete red.neuronas_process[key];
+					}
+
 					delete red.neuronas[key];
+
 				},
 				onRefreshCell: function(key, svgObject){
 					var gui = this;

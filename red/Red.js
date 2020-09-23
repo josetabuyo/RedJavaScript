@@ -4,7 +4,7 @@ var Red = function(opt){
 		size: {x:0,y:0},
 		id: null,
 		neuronas: {},
-		vectorNeronas: [],
+		neuronas_process: {},
 		entrada: {},
 		salida: {}
 	}, opt);
@@ -37,11 +37,11 @@ Red.prototype = {
 
 		var red = this;
 
-		for(iNeurona in red.neuronas){
+		for(iNeurona in red.neuronas_process){
 			red.neuronas[iNeurona].procesar();
 		}
 
-		for(iNeurona in red.neuronas){
+		for(iNeurona in red.neuronas_process){
 			red.neuronas[iNeurona].activar();
 		}
 	}

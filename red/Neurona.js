@@ -26,6 +26,7 @@ Neurona.prototype = {
 			neurona.valor = Math.random();
 		}
 		neurona.red.neuronas[neurona.id] = neurona;
+		neurona.red.neuronas_process[neurona.id] = neurona;
 
 	},
 
@@ -139,6 +140,7 @@ var NeuronaEntrada = function(opt){
 	neurona.tipo = "ENTRADA";
 
 	neurona.red.entrada[neurona.id] = neurona;
+	delete neurona.red.neuronas_process[neurona.id];
 
 	neurona.dendritas = [];
 	neurona.procesar = function(){};

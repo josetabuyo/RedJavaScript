@@ -189,8 +189,11 @@ var Constructor = {
 
 		_neurona = new NeuronaEntrada(neurona);
 		_neurona.axon = neurona.axon;
-		neurona = _neurona;
-		neurona.red.neuronas[neurona.id] = neurona;
+		// re-apunto
+		neurona.red.neuronas[neurona.id] = _neurona;
+		// sacp de la lista de process
+		delete neurona.red.neuronas_process[neurona.id];
+
 	},
 	makeEntrada: function(box){
 		var construct = this;
