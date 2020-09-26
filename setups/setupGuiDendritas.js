@@ -333,15 +333,4 @@ $(function(){
 
   });
 
-  $('#dendritasModel_Container').hide();
-  $('#dendritasModel').on('click', function(){
-
-    if($('#dendritasModel_Container').css('display') == 'none' ){
-      $('#dendritasModel_Container').show();
-
-    }else{
-      $('#dendritasModel_Container').hide();
-    }
-  });
-
 });

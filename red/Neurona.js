@@ -44,7 +44,7 @@ Neurona.prototype = {
 	},
 	activar: function(){
 
-		if(this.tensionSuperficial > Axon.prototype.COEF_AXON_UMBRAL_SPIKE){
+		if(this.tensionSuperficial > 0){
 			this.valor = 1;
 		}else{
 			this.valor = 0;

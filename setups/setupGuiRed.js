@@ -332,21 +332,17 @@ $(function(){
 
 			$('#guiRed_Container>.toolbar>#showControl').on('click', function(e){
 
-
-
-
-				if($('#control').css('display') == 'none' ){
+				if($('#controlRed_Container').css('display') == 'none' ){
 					$('#guiRed_Container>#toolbarInfo').text("Coeficientes de la red");
-					$('#control').show();
+					$('#controlRed_Container').show();
 
 				}else{
 					$('#guiRed_Container>#toolbarInfo').text("");
-					$('#control').hide();
+					$('#controlRed_Container').hide();
 
 				}
 
 			});
-
 
 
 			$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){

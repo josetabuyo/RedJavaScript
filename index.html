@@ -36,13 +36,26 @@
 				display: none;
 			}
 
-			#dendritasModel_Container{
+
+			#controlRed_Container{
 				border-color: Yellow;
+			}
+
+			#dendritasModel_Container{
+				border: solid 1px;
+				border-color: Yellow;
+				position: absolute;
+
+				left: 0px;
+				top: 50%;
+				height: 50%;
+				width: 100%;
 			}
 
 			#dendritasModel_Container #load select{
 				display: none;
 			}
+
 
 			.guiMatrix{
 
@@ -113,16 +126,6 @@
 				color: white;
 			}
 
-			#control{
-				position: absolute;
-				left: 0px;
-				background-color: black;
-				top: 80px;
-				border: solid 1px;
-				font-size: 10px;
-				color: white;
-				display: none;
-			}
 
 
 
@@ -177,19 +180,46 @@
 
 			}
 
+
+			#control{
+				border: solid 1px;
+				border-color: Yellow;
+
+
+				position: absolute;
+				left: 50%;
+				top: 0px;
+				height: 50%;
+				width: 50%;
+
+				background-color: black;
+				border: solid 1px;
+				font-size: 10px;
+				color: white;
+			}
+
+			ul#coeficientes{
+
+			}
+
+			li.sly{
+				vertical-align: middle;
+			}
+
 			li.sly
 			div.sly_ref{
-				left: 20px;
-				width: 100%;
+				display: inline-block;
+				width: 40%;
+				height: 100%;
 				font-size: 9px;
 			}
 
 			li.sly
 			input.sly_input{
 				position: relative;
-				top: 0px;
-				left: 0px;
-				width: 90%;
+				display: inline-block;
+				left: 18%;
+				width: 39%;
 			}
 
 
@@ -209,9 +239,6 @@
 
 			<div id="verTensionSuperficial" class="boton" title="Visualiza la matriz de Tensiones o de Activaciones">
 				Tensiones
-			</div>
-			<div id="dendritasModel" class="boton" title="Despliega un panel para modelos de dendritas">
-				DendritasModel
 			</div>
 			<div id="presets" class="boton" title="Cargar una preset">
 				PRESET
@@ -299,30 +326,40 @@
 			<svg></svg>
 		</div>
 
-		<div id="dendritasModel_Container" class="guiMatrix rightContainer">
-			<div id="dendritasModel_celdas" class="cels">
-				<svg id="dendritasModel_svg" width="10000px" height="10000px">
-				</svg>
+
+		<div id="controlRed_Container" class="rightContainer">
+			<div id="control">
+
+				<ul id="coeficientes">
+					<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
+					<li>COEF_SINAPSIS_UMBRAL_PESO</li>
+				<ul>
 			</div>
-			<div id="dendritasModel_toolbar" class="toolbar">
-				<div id="drawMode" class="boton" title="Modo de dibujo">
-					D
+			<div id="dendritasModel_Container" class="guiMatrix">
+				<div id="dendritasModel_celdas" class="cels">
+					<svg id="dendritasModel_svg" width="10000px" height="10000px">
+					</svg>
 				</div>
-				<div id="addDendrita" class="boton" title="Agrega una dendrita">
-					+
+				<div id="dendritasModel_toolbar" class="toolbar">
+					<div id="drawMode" class="boton" title="Modo de dibujo">
+						D
+					</div>
+					<div id="addDendrita" class="boton" title="Agrega una dendrita">
+						+
+					</div>
+					<div id="save" class="boton" title="Imprime por la console (F12) la estructura del modelo de conexionado">
+						S
+					</div>
+					<div id="load" class="boton" title="Cargar un mapa de conexionado">
+						L
+						<select>
+							<option value=""></option>
+						</select>
+					</div>
 				</div>
-				<div id="save" class="boton" title="Imprime por la console (F12) la estructura del modelo de conexionado">
-					S
-				</div>
-				<div id="load" class="boton" title="Cargar un mapa de conexionado">
-					L
-					<select>
-						<option value=""></option>
-					</select>
-				</div>
+				<ul id="dendritasModel_dendritas" class="layers">
+				</ul>
 			</div>
-			<ul id="dendritasModel_dendritas" class="layers">
-			</ul>
 		</div>
 
 		<div id="guiRed_Container"  class="guiMatrix">
@@ -356,20 +393,6 @@
 		</div>
 
 
-
-
-		<div id="control">
-
-			<ul id="coeficientes">
-				<li>COEF_AXON_UMBRAL_SPIKE</li>
-				<li>COEF_AXON_ANCHO_PULSO</li>
-				<li>COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT</li>
-				<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
-				<li>COEF_SINAPSIS_UMBRAL_PESO</li>
-
-			<ul>
-
-		</div>
 
 
 		<div id="plantillas">
@@ -441,25 +464,6 @@
 			console.log('');
 
 
-			/// / // / / // / ///  /      /    /         /   HISTORIA
-
-
-			//TODO: COMMIG SOON: NEXT:
-			//
-			// Revisar el procesamiento de la red
-
-
-			//// /// / / // /  / // / / // / //  / /  /   /     //    / /   / / / / / // // /// //// // ///  // / /    /  /  /       / / // / /
-
-
-
-
-
-
-
-
-
-
 
 
 			$('#saveRed').on('click', function(){
@@ -484,6 +488,33 @@
 
 
 
+			var configSlyCoef = function(proto, nameSly, escala) {
+
+
+				if(!escala)escala=1;
+
+				var objSly = $('#'+ nameSly);
+
+
+				objSly.change(function(){
+					var value = ($(this).val() / 255);
+					value = value / escala;
+
+
+					proto[nameSly] = value.toFixed(3);
+
+					$(this).siblings().text(nameSly + ": " + proto[nameSly]);
+				});
+
+				objSly.val(proto[nameSly] * escala * 255);
+				objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+			};
+
+			var setControlCoeficientes = function(){
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
+				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
+
+			};
 
 			$('#loadRed').on('click', function(){
 				var _redString = sessionStorage.getItem("_redString");
@@ -495,36 +526,7 @@
 					);
 				}
 
-				configSlyCoef = function(proto, nameSly, escala) {
 
-
-					if(!escala)escala=1;
-
-					var objSly = $('#'+ nameSly);
-
-
-					objSly.change(function(){
-						var value = ($(this).val() / 255);
-						value = value / escala;
-
-
-						proto[nameSly] = value.toFixed(3);
-
-						$(this).siblings().text(nameSly + ": " + proto[nameSly]);
-					});
-
-					objSly.val(proto[nameSly] * escala * 255);
-					objSly.siblings().text(nameSly + ": " + proto[nameSly]);
-				};
-
-				var setControlCoeficientes = function(){
-					configSlyCoef(Axon.prototype, 'COEF_AXON_UMBRAL_SPIKE', 5);
-					configSlyCoef(Axon.prototype, 'COEF_AXON_ANCHO_PULSO', 0.05);
-					configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT', 100);
-					configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
-					configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
-
-				};
 				setControlCoeficientes();
 
 
@@ -543,6 +545,26 @@
 				guiRed.refresh()
 
 			});
+
+			$('ul#coeficientes>li').each(function(index, item){
+
+				var nameSly = $(item).text();
+
+				var newLi = $('#plantilla_sly').clone()
+						.attr('id', nameSly+'_container')
+						.attr('class', 'sly')
+						;
+
+				newLi.find('div.sly_ref').text(nameSly);
+
+				newLi.find('input.sly_input').attr('id', nameSly);
+
+				$(item).replaceWith(newLi)
+			})
+			setControlCoeficientes();
+
+
+
 
 			$('#help').on('click', function(){
 				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
@@ -600,22 +622,6 @@
 				}
 			});
 
-
-			$('ul#coeficientes>li').each(function(index, item){
-
-				var nameSly = $(item).text();
-
-				var newLi = $('#plantilla_sly').clone()
-						.attr('id', nameSly+'_container')
-						.attr('class', 'sly')
-						;
-
-				newLi.find('div.sly_ref').text(nameSly);
-
-				newLi.find('input.sly_input').attr('id', nameSly);
-
-				$(item).replaceWith(newLi)
-			})
 
 			$('#testSelector>select').on('click', function(){
 				$(".rightContainer").hide();

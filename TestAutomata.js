@@ -625,13 +625,13 @@ TestAutomata.prototype = {
 
 			valor = valor * COEF_DOLOR;
 
-		    setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+		  //setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
 
 
 		} else {
 
-			var valor = Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT;
-			setCoef(Sinapsis.prototype, "COEF_SINAPSIS_ENTRENAMIENTO", valor, 100);
+			//var valor = Sinapsis.prototype.DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO;
+			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
 	  }
 
 

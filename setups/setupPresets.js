@@ -41,9 +41,6 @@ presets = {
 
 
 		//SET COEFICIENTES
-		Axon.prototype.COEF_AXON_UMBRAL_SPIKE= 0.0;
-		Axon.prototype.COEF_AXON_ANCHO_PULSO= 4;
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT= 0.002;
 		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
 		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
 
@@ -100,9 +97,6 @@ presets = {
 
 
 		//SET COEFICIENTES
-		Axon.prototype.COEF_AXON_UMBRAL_SPIKE= 0.158;
-		Axon.prototype.COEF_AXON_ANCHO_PULSO= 4;
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT= 0.002;
 		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
 		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
 
