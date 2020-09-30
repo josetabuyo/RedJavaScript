@@ -1,4 +1,28 @@
 /************** :TEST: ************/
+$(function(){
+  $('body').append(`
+		<style>
+			#TestAutomata_Container{
+				border-color: Yellow;
+			}
+			#TestAutomata_Container svg{
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				width: 50%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+		</style>
+
+		<div id="TestAutomata_Container" class="rightContainer">
+			<svg></svg>
+		</div>
+	`);
+});
+
+
 var TestAutomata = function(opt){
 	$.extend(this, {
 		entrada: null,
@@ -210,13 +234,13 @@ TestAutomata.prototype = {
 	},
 	printEntrada: function(){
 
-		if(Object.keys(red.entrada).length = 0){
+		if(Object.keys(red.regiones["ENTRADA"]).length = 0){
 			return;
 		}
 
 
 		//Ponemos base de ruido
-		for(key in red.entrada){
+		for(key in red.regiones["ENTRADA"]){
 
 			var neurona = red.neuronas[key];
 
@@ -269,7 +293,7 @@ TestAutomata.prototype = {
 
 
 
-			var keysbyindex = Object.keys(red.entrada);
+			var keysbyindex = Object.keys(red.regiones["ENTRADA"]);
 
 
 			var pixelMax = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMax);

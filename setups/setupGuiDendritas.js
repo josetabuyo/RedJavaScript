@@ -228,20 +228,38 @@ conexionados = {
 
 $(function(){
 
+  $('body').append(`
+    <style>
+  		#conectoma{
+  			border: solid 1px;
+  			border-color: Purple;
+  			position: absolute;
+
+  			left: 0px;
+  			top: 50%;
+  			height: 50%;
+  			width: 100%;
+  		}
+
+  		#conectoma #load select{
+  			display: none;
+  		}
+    </style>
+  `);
 
   //GLOBAL
-  guiDendritasModel = new GuiMatriz({
-    idSvg: 'dendritasModel_svg',
+  guiConectoma = new GuiMatriz({
+    idSvg: 'conectoma_svg',
     x: 20,
     y: 20,
     onRemoveLayers: function(){
-      $('#dendritasModel_dendritas').html('');
+      $('#conectoma_dendritas').html('');
 
     },
     onAddLayer: function(parent, idLayer){
 
 
-      var domDentdrita = $('#plantilla_dendritasModel_dendrita').clone()
+      var domDentdrita = $('#plantilla_conectoma_dendrita').clone()
                 .attr('id', 'dendrita_nro_' + idLayer)
                 ;
 
@@ -255,20 +273,20 @@ $(function(){
 
 
 
-      var $dendritasModel_dendrita_data = domDentdrita.find(".dendritasModel_dendrita_data");
+      var $conectoma_dendrita_data = domDentdrita.find(".conectoma_dendrita_data");
 
       if(this.layers[idLayer].data){
 
-        $dendritasModel_dendrita_data.val(this.layers[idLayer].data.peso + "," + this.layers[idLayer].data.densidad );
+        $conectoma_dendrita_data.val(this.layers[idLayer].data.peso + "," + this.layers[idLayer].data.densidad );
 
       }
 
-      $dendritasModel_dendrita_data.on('keypress', function(e){
+      $conectoma_dendrita_data.on('keypress', function(e){
         if (e.keyCode == 13) {
 
           var params = $(this).val().split(",");
 
-          guiDendritasModel.layers[idLayer].data = {
+          guiConectoma.layers[idLayer].data = {
             peso: params[0],
             densidad: params[1]
           };
@@ -276,24 +294,24 @@ $(function(){
       });
 
 
-      $('#dendritasModel_dendritas').append(domDentdrita);
+      $('#conectoma_dendritas').append(domDentdrita);
 
 
     }
   });
 
-  $('#dendritasModel_Container>.toolbar>#drawMode').on('click', function(){
-    guiDendritasModel.setDrawModeNext();
+  $('#conectoma>.toolbar>#drawMode').on('click', function(){
+    guiConectoma.setDrawModeNext();
   });
 
 
-  $('#dendritasModel_Container>.toolbar>#addDendrita').on('click', function(){
-    guiDendritasModel.addLayer();
+  $('#conectoma>.toolbar>#addDendrita').on('click', function(){
+    guiConectoma.addLayer();
   });
 
 
 
-  var $template_conexionado_select = $('#dendritasModel_Container>.toolbar>#load>select');
+  var $template_conexionado_select = $('#conectoma>.toolbar>#load>select');
 
   keysConexionado = Object.keys(conexionados);
   for(iTemplateConexionado in keysConexionado){
@@ -304,10 +322,10 @@ $(function(){
     event.stopPropagation()
 
     if($(this).val() == ""){
-      guiDendritasModel.removeLayers();
-      guiDendritasModel.addLayer();
+      guiConectoma.removeLayers();
+      guiConectoma.addLayer();
     }else{
-      guiDendritasModel.loadLayers(conexionados[$(this).val()]);
+      guiConectoma.loadLayers(conexionados[$(this).val()]);
     }
 
     $(this).hide();
@@ -315,14 +333,14 @@ $(function(){
 
 
 
-  $('#dendritasModel_Container>.toolbar>#load').on('click', function(){
+  $('#conectoma>.toolbar>#load').on('click', function(){
     event.stopPropagation()
     $(this).find('select').show();
   });
 
 
-  $('#dendritasModel_Container>.toolbar>#save').on('click', function(){
-    var model = guiDendritasModel.getLayers();
+  $('#conectoma>.toolbar>#save').on('click', function(){
+    var model = guiConectoma.getLayers();
 
     var modelString = JSON.stringify(model);
 

@@ -125,7 +125,7 @@ TestAudio.prototype = {
 		test.analyser.getByteFrequencyData(test.dataArray);
 
 
-		if(Object.keys(red.entrada).length = 0){
+		if(Object.keys(red.regiones["ENTRADA"]).length = 0){
 			return;
 		}
 
@@ -134,7 +134,7 @@ TestAudio.prototype = {
 		var index = 0;
 
 		//Ponemos base de ruido
-		for(key in red.entrada){
+		for(key in red.regiones["ENTRADA"]){
 
 			var neurona = red.neuronas[key];
 

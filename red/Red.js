@@ -5,7 +5,7 @@ var Red = function(opt){
 		id: null,
 		neuronas: {},
 		neuronas_process: {},
-		entrada: {},
+		regiones: {},
 		salida: {}
 	}, opt);
 
@@ -20,6 +20,10 @@ Red.prototype = {
 	start: function(){
 		var red = this;
 
+
+		red.regiones["ENTRADA"] = {}
+		red.regiones["SALIDA"] = {}
+		red.regiones["INTERNA"] = {}
 
 		/*DEPRECATED*/
 		/*Para mantener interfaz cómoda y común*/

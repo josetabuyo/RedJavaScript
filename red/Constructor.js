@@ -20,7 +20,7 @@ var Constructor = {
 
 			var _neurona = {
 				id: neurona.id,
-				tipo: neurona.tipo,
+				region: neurona.region,
 				dendritas: []
 			};
 
@@ -77,11 +77,11 @@ var Constructor = {
 
 			var neurona = new Neurona({
 				id: _neurona.id,
-				tipo: _neurona.tipo,
+				region: _neurona.region,
 				red: red
 			});
 
-			if(neurona.tipo == 'ENTRADA'){
+			if(neurona.region == 'ENTRADA'){
 				construct.makeEntradaNeurona(neurona);
 			}
 
@@ -185,7 +185,7 @@ var Constructor = {
 		_neurona.axon = neurona.axon;
 		// re-apunto
 		neurona.red.neuronas[neurona.id] = _neurona;
-		// sacp de la lista de process
+		// saco de la lista de process
 		delete neurona.red.neuronas_process[neurona.id];
 
 	},
@@ -210,7 +210,7 @@ var Constructor = {
 
 				var keyNeurona = "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
-				neurona.tipo = "SALIDA";
+				neurona.region = "SALIDA";
 				neurona.axon.sinapsis = {};
 
 			}
@@ -370,14 +370,14 @@ var Constructor = {
 		}
 	},
 
-	eachNeuronaDendrita: function(opt, callback){
+	eachNeuronaCreateDendritasCallback: function(opt, callback){
 
 		/*
 		Para usar dentro de un modo de interconexión
 		EJEMPLO DE LLAMADO
-			Constructor.eachNeuronaDendrita({
-				boxTarget: <opcional>,
-				dendritas_pesos: <opcional>
+			constructor.eachNeuronaCreateDendritasCallback({
+				boxTarget:,
+				dendritas_pesos:
 			});
 		*/
 
@@ -415,10 +415,10 @@ var Constructor = {
 			Constructor.insertarAxones({
 				modo: 'full_random_fixed_input',
 				dendritas_pesos: [1],
-				entrada	: entrada,
+				region	: {},
 				boxTarget: {
+				y0: red.box.y1-2,
 					x0: red.box.x0,
-					y0: red.box.y1-2,
 					x1: red.box.x1,
 					y1: red.box.y1-1
 				}
@@ -430,7 +430,7 @@ var Constructor = {
 
 		var construct = this;
 
-		construct.eachNeuronaDendrita(opt, function(dendrita){
+		construct.eachNeuronaCreateDendritasCallback(opt, function(dendrita){
 			// RECORRO LA ENTRADA
 			//========================================
 			var neurona = dendrita.neurona;
@@ -947,7 +947,7 @@ var Constructor = {
 
 				*/
 
-				//Prueba con entrada relativa, para que fluya
+				//Prueba con region relativa, para que fluya
 				/*Constructor.insertarAxones({
 					modo: 'relativo',
 					dendritas_pesos: [-0.2],

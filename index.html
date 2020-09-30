@@ -9,22 +9,6 @@
 				background-color: black;
 			}
 
-			#guiRed_Container{
-				position: absolute;
-				left: 0px;
-				top: 40px;
-				right: 50%;
-				bottom: 0px;
-				overflow: hidden;
-				border: solid 3px;
-			    border-color: violet;
-			}
-			#guiRed_Container #load select{
-				display: none;
-			}
-
-
-
 			.rightContainer{
 				position: absolute;
 				right: 0px;
@@ -37,85 +21,6 @@
 			}
 
 
-			#controlRed_Container{
-				border-color: Yellow;
-			}
-
-			#dendritasModel_Container{
-				border: solid 1px;
-				border-color: Yellow;
-				position: absolute;
-
-				left: 0px;
-				top: 50%;
-				height: 50%;
-				width: 100%;
-			}
-
-			#dendritasModel_Container #load select{
-				display: none;
-			}
-
-
-			.guiMatrix{
-
-			}
-			.guiMatrix>.toolbar{
-				position: absolute;
-				left: 0px;
-				top: 0px;
-				width: 100%;
-				height: 24px;
-			}
-			.guiMatrix>.cels{
-				position: absolute;
-				left: 0px;
-				top: 0px;
-				width: 100%;
-				height: 100%;
-				overflow: scroll;
-			}
-			.guiMatrix>.cels>svg{
-				position: absolute;
-				left: 0px;
-				top: 0px;
-			}
-			.guiMatrix>.layers{
-				position: absolute;
-				left: 0px;
-				top: 24px;
-				width: 84px;
-			}
-
-			.guiMatrix>.layers>.layer>.idLayer{
-				float: left;
-				width: 20px;
-				height: 20px;
-				left: 0px;
-				border: solid 1px;
-				cursor: pointer;
-				user-select: none;
-
-				text-align: center;
-				font-family: "Arial Black", Gadget, sans-serif;
-				background-color: #FFFFFF;
-			}
-
-			.guiMatrix>.layers>.layer>.data{
-				float: right;
-				top: 0px;
-				width: 60px;
-				height: 20px;
-
-				border: solid 1px;
-				display: table-cell;
-			}
-
-
-			.guiMatrix>.layers>.layer>.data>input{
-				width: 100%;
-			}
-
 
 			#toolbarInfo{
 				position: absolute;
@@ -125,9 +30,6 @@
 				font-size: 10px;
 				color: white;
 			}
-
-
-
 
 			#botonera{
 				position: absolute;
@@ -181,11 +83,35 @@
 			}
 
 
+
+			#regiones{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 50%;
+				height: 50%;
+			}
+
+			li.region{
+				vertical-align: middle;
+				color: white;
+			}
+
+			li.region
+			div.region_ref{
+			    display: inline-block;
+			    font-size: 1em;
+			}
+
+			#controlRed_Container{
+				border-color: Purple;
+				display: block;
+			}
+
+
 			#control{
-				border: solid 1px;
-				border-color: Yellow;
-
-
+				border: solid 1px Purple;
+				
 				position: absolute;
 				left: 50%;
 				top: 0px;
@@ -193,10 +119,11 @@
 				width: 50%;
 
 				background-color: black;
-				border: solid 1px;
 				font-size: 10px;
 				color: white;
 			}
+
+
 
 			ul#coeficientes{
 
@@ -268,65 +195,6 @@
 			</div>
 		</div>
 
-
-		<style>
-			#TestAutomata_Container{
-				border-color: Purple;
-			}
-			#TestAutomata_Container svg{
-				position: absolute;
-				right: 0px;
-				top: 40px;
-				width: 50%;
-				height: 90%;
-				border: solid 1px;
-				overflow: scroll;
-			}
-		</style>
-
-		<div id="TestAutomata_Container" class="rightContainer">
-			<svg></svg>
-		</div>
-
-
-
-
-		<style>
-			#TestAsciiImage_Container{
-				border-color: Purple;
-			}
-			#TestAsciiImage_Container input{
-				position: absolute;
-				left: 10px;
-				top: 10px;
-			}
-
-			#TestAsciiImage_Container canvas{
-				position: absolute;
-				left: 10px;
-				top: 40px;
-				border: solid 1px;
-				border-color: Yellow;
-			}
-
-			#TestAsciiImage_Container svg{
-				position: absolute;
-				right: 50%;
-				top: 100px;
-				/* width: 160px;
-				height: 160px; */
-				border: solid 1px;
-				border-color: Yellow;
-			}
-		</style>
-
-		<div id="TestAsciiImage_Container" class="rightContainer">
-			<input value="ABCD"></input>
-			<canvas></canvas>
-			<svg></svg>
-		</div>
-
-
 		<div id="controlRed_Container" class="rightContainer">
 			<div id="control">
 
@@ -335,12 +203,16 @@
 					<li>COEF_SINAPSIS_UMBRAL_PESO</li>
 				<ul>
 			</div>
-			<div id="dendritasModel_Container" class="guiMatrix">
-				<div id="dendritasModel_celdas" class="cels">
-					<svg id="dendritasModel_svg" width="10000px" height="10000px">
+			<div id="regiones">
+				<ul>
+				</ul>
+			</div>
+			<div id="conectoma" class="guiMatrix">
+				<div id="conectoma_celdas" class="cels">
+					<svg id="conectoma_svg" width="10000px" height="10000px">
 					</svg>
 				</div>
-				<div id="dendritasModel_toolbar" class="toolbar">
+				<div id="conectoma_toolbar" class="toolbar">
 					<div id="drawMode" class="boton" title="Modo de dibujo">
 						D
 					</div>
@@ -357,62 +229,13 @@
 						</select>
 					</div>
 				</div>
-				<ul id="dendritasModel_dendritas" class="layers">
+				<ul id="conectoma_dendritas" class="layers">
 				</ul>
 			</div>
 		</div>
 
-		<div id="guiRed_Container"  class="guiMatrix">
-			<div class="cels">
-				<svg id="guiRed_svg" width="10000px" height="10000px" >
-				</svg>
-			</div>
-			<div class="toolbar">
-				<div id="showControl" class="boton" title="Muestra el control de los coeficientes">
-					...
-				</div>
-
-				<div id="addNeurona" class="boton" title="Agregar neuronas">
-					N
-				</div>
-				<div id="conectar" class="boton" title="Conectar neuronas">
-					C
-				</div>
-				<div id="makeEntrada" class="boton" title="Agregar neuronas a coleccion de Entradas">
-					I
-				</div>
-				<div id="makeSalida" class="boton" title="Agregar neuronas a coleccion de Salidas">
-					O
-				</div>
-				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
-					W
-				</div>
-			</div>
-			<div id="toolbarInfo">
-			</div>
-		</div>
-
-
-
-
-		<div id="plantillas">
-			<li id="plantilla_sly">
-				<div class="sly_ref">
-				</div>
-				<input class="sly_input" type="range" min="0" max="255" value="100" />
-			</li>
-
-			<li id="plantilla_dendritasModel_dendrita" class="layer">
-				<div class="idLayer">
-				</div>
-				<div class="data">
-					<input class="dendritasModel_dendrita_data" value='1.0,1.0' type='text'/>
-				</div>
-			</li>
-		</div>
-
-
 	</body>
+
 
 
 	<script src="lib/jquery-2.1.3.min.js"></script>
@@ -438,6 +261,7 @@
 	<script src="red/Dendrita.js"></script>
 	<script src="red/Sinapsis.js"></script>
 
+	<script src="setups/setupPlantillas.js"></script>
 	<script>
 
 		//GLOBAL PARA FÁCIL DEBUG
@@ -449,10 +273,6 @@
 		$(function(){
 
 
-
-			d3.selectAll('svg').on('contextmenu', function(data, index) {
-				event.preventDefault();
-			});
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
 			console.log('*****************************************************');
@@ -513,7 +333,6 @@
 			var setControlCoeficientes = function(){
 				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
 				configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
-
 			};
 
 			$('#loadRed').on('click', function(){
@@ -561,6 +380,7 @@
 
 				$(item).replaceWith(newLi)
 			})
+
 			setControlCoeficientes();
 
 
@@ -649,4 +469,15 @@
 	<script src="setups/setupPresets.js"></script>
 	<script src="setups/setupGuiRed.js"></script>
 	<script src="setups/setupGuiDendritas.js"></script>
+	<script src="setups/setupRegiones.js"></script>
+	<script>
+		$(function(){
+			d3.selectAll('svg').on('contextmenu', function(data, index) {
+
+				event.preventDefault();
+			});
+		});
+	</script>
+
+
 </html>

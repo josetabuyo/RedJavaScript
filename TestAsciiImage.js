@@ -1,4 +1,44 @@
 /************** :TEST: ************/
+$(function(){
+  $('body').append(`
+		<style>
+			#TestAsciiImage_Container{
+				border-color: Yellow;
+			}
+			#TestAsciiImage_Container input{
+				position: absolute;
+				left: 10px;
+				top: 10px;
+			}
+
+			#TestAsciiImage_Container canvas{
+				position: absolute;
+				left: 10px;
+				top: 40px;
+				border: solid 1px;
+				border-color: Yellow;
+			}
+
+			#TestAsciiImage_Container svg{
+				position: absolute;
+				right: 50%;
+				top: 100px;
+				/* width: 160px;
+				height: 160px; */
+				border: solid 1px;
+				border-color: Yellow;
+			}
+		</style>
+
+		<div id="TestAsciiImage_Container" class="rightContainer">
+			<input value="ABCD"></input>
+			<canvas></canvas>index
+			<svg></svg>
+		</div>
+	`);
+});
+
+
 var TestAsciiImage = function(opt){
 	$.extend(this, {
 		entrada: null,
@@ -145,7 +185,7 @@ TestAsciiImage.prototype = {
 					fill:"rgb("+valorActivacion+","+valorActivacion+","+valorActivacion+")"
 				});
 
-				key = Object.keys(red.entrada)[index]
+				key = Object.keys(red.regiones["ENTRADA"])[index]
 				var neurona = red.neuronas[key];
 
 				index++;

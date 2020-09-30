@@ -1,3 +1,69 @@
+$(function(){
+  $('body').append(`
+		<style>
+
+			.guiMatrix{
+
+			}
+			.guiMatrix>.toolbar{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 24px;
+			}
+			.guiMatrix>.cels{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				overflow: scroll;
+			}
+			.guiMatrix>.cels>svg{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			.guiMatrix>.layers{
+				position: absolute;
+				left: 0px;
+				top: 24px;
+				width: 84px;
+			}
+
+			.guiMatrix>.layers>.layer>.idLayer{
+				float: left;
+				width: 20px;
+				height: 20px;
+				left: 0px;
+				border: solid 1px;
+				cursor: pointer;
+				user-select: none;
+
+				text-align: center;
+				font-family: "Arial Black", Gadget, sans-serif;
+				background-color: #FFFFFF;
+			}
+
+			.guiMatrix>.layers>.layer>.data{
+				float: right;
+				top: 0px;
+				width: 60px;
+				height: 20px;
+
+				border: solid 1px;
+				display: table-cell;
+			}
+
+
+			.guiMatrix>.layers>.layer>.data>input{
+				width: 100%;
+			}
+		</style>
+	`);
+});
+
 var GuiMatriz = function(opt){
 	$.extend(this, {
 		x: 0,

@@ -1,379 +1,410 @@
 $(function(){
 
-			////////////////////////////////////////// GUI RED //////////////////////////////////////
-			//GLOBAL
-			guiRed = new GuiMatriz({
-				idSvg: 'guiRed_svg',
-				showCero: true,
-				x: 10,
-				y: 10,
-				escala: {
-					x: 7,
-					y: 7
-				},
-				tool1: "addCell",
-				tool2: "removeCell",
-				onAddCell: function(key){
-					var gui = this;
+	$('body').append(`
+		<style>
+			#guiRed_Container{
+				position: absolute;
+				left: 0px;
+				top: 40px;
+				right: 50%;
+				bottom: 0px;
+				overflow: hidden;
+				border: solid 3px;
+				border-color: violet;
+			}
+			#guiRed_Container #load select{
+				display: none;
+			}
+
+			
+		</style>
+
+		<div id="guiRed_Container"  class="guiMatrix">
+			<div class="cels">
+				<svg id="guiRed_svg" width="10000px" height="10000px" >
+				</svg>
+			</div>
+			<div class="toolbar">
+				<div id="showControl" class="boton" title="Muestra el control de los coeficientes">
+					...
+				</div>
+
+				<div id="addNeurona" class="boton" title="Agregar neuronas">
+					N
+				</div>
+				<div id="conectar" class="boton" title="Conectar neuronas">
+					C
+				</div>
+				<div id="makeEntrada" class="boton" title="Agregar neuronas a coleccion de Entradas">
+					I
+				</div>
+				<div id="makeSalida" class="boton" title="Agregar neuronas a coleccion de Salidas">
+					O
+				</div>
+				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
+					W
+				</div>
+			</div>
+			<div id="toolbarInfo">
+			</div>
+		</div>
+	`);
+
+
+
+	//GLOBAL
+	red = new Red();
+	Constructor.red = red;
+
+
+	guiRed = new GuiMatriz({
+		idSvg: 'guiRed_svg',
+		showCero: true,
+		x: 10,
+		y: 10,
+		escala: {
+			x: 7,
+			y: 7
+		},
+		tool1: "addCell",
+		tool2: "removeCell",
+		onAddCell: function(key){
+			var gui = this;
+			Constructor.addNeurona({
+				red: red,
+				id: key,
+				region: gui.region
+			});
+
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
+
+			gui.onRefreshCell(key, cel.svgObject);
+
+
+		},
+		onRemoveCell: function(key){
+
+			delete red.regiones[red.neuronas[key].region][key];
+			delete red.neuronas_process[key];
+			delete red.neuronas[key];
 
-					if(typeof(red) == "undefined"){
+		},
+		onRefreshCell: function(key, svgObject){
+			var gui = this;
 
-						//GLOBAL
-						red = new Red();
-						Constructor.red = red;
+			var valor;
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
+			var neurona = red.neuronas[key];
 
-					}
+			if(modo=="DEPOLARIZACION"){
+				valor = neurona.tensionSuperficial / Axon.prototype.COEF_AXON_UMBRAL_SPIKE * 0.8;
 
-					Constructor.addNeurona({
-						red: red,
-						id: key
-					});
+			} else if(modo=="ACTIVACION"){
+				valor = neurona.valor;
+			}
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
+			var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
+			var byteColorLow = "00";
 
-					gui.onRefreshCell(key, cel.svgObject);
+			var byteRojo = byteColorHigth;
+			var byteVerde = byteColorHigth;
+			var byteAzul = byteColorHigth;
 
+			// DEFAULT
+			svgObject.attr({
+				fill: "#" + byteRojo + byteVerde + byteAzul,
+				stroke: "#EEEEEE"
+			});
 
-				},
-				onRemoveCell: function(key){
 
-					if(red.neuronas[key].tipo == "ENTRADA"){
-						delete red.entrada[key];
-					} else {
-						delete red.neuronas_process[key];
-					}
+			if(Object.keys(neurona.dendritas).length > 0){
 
-					delete red.neuronas[key];
+				svgObject.attr({
+					stroke: "#555555"
+				});
 
-				},
-				onRefreshCell: function(key, svgObject){
-					var gui = this;
+			}
 
-					var valor;
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
-					var neurona = red.neuronas[key];
 
-					if(modo=="DEPOLARIZACION"){
-						valor = neurona.tensionSuperficial / Axon.prototype.COEF_AXON_UMBRAL_SPIKE * 0.8;
+			if(neurona.region == "SALIDA"){
 
-					} else if(modo=="ACTIVACION"){
-						valor = neurona.valor;
-					}
+				var byteVerde = byteColorLow;
+				var byteAzul = byteColorLow;
 
-					var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
-					var byteColorLow = "00";
+				svgObject.attr({
+					fill: "#" + byteRojo + byteVerde + byteAzul,
+					stroke: "#EE0000"
+				});
+			}
 
-					var byteRojo = byteColorHigth;
-					var byteVerde = byteColorHigth;
-					var byteAzul = byteColorHigth;
+			if(neurona.region == "ENTRADA"){
 
-					// DEFAULT
-					svgObject.attr({
-						fill: "#" + byteRojo + byteVerde + byteAzul,
-						stroke: "#EEEEEE"
-					});
+				var byteRojo = byteColorLow;
+				var byteVerde = byteColorLow;
 
+				svgObject.attr({
+					fill: "#" + byteRojo + byteVerde + byteAzul,
+					stroke: "#0000EE"
+				});
+			}
 
-					if(Object.keys(neurona.dendritas).length > 0){
 
-						svgObject.attr({
-							stroke: "#555555"
-						});
 
-					}
+		},
+		//extra tools //////////////////////////////
+		conectarNeurona: function(pos){
+			var gui = this;
+			var key = "x"+pos.x+"y"+pos.y;
 
 
-					if(neurona.tipo == "SALIDA"){
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-						var byteVerde = byteColorLow;
-						var byteAzul = byteColorLow;
+			if(typeof(cel) == "undefined") return;
 
-						svgObject.attr({
-							fill: "#" + byteRojo + byteVerde + byteAzul,
-							stroke: "#EE0000"
-						});
-					}
+			var neurona = red.neuronas[key];
 
-					if(neurona.tipo == "ENTRADA"){
+			if(Object.keys(neurona.dendritas).length > 0){
+				return
+			}
 
-						var byteRojo = byteColorLow;
-						var byteVerde = byteColorLow;
+			Constructor.insertarAxonesConMascara({
+				keyNeurona: key,
+				mascara: guiConectoma.getLayers()
+			});
 
-						svgObject.attr({
-							fill: "#" + byteRojo + byteVerde + byteAzul,
-							stroke: "#0000EE"
-						});
-					}
-				},
-				//extra tools
-				conectarNeurona: function(pos){
-					var gui = this;
-					var key = "x"+pos.x+"y"+pos.y;
 
+			gui.onRefreshCell(key, cel.svgObject);
+		},
+		removeDendritas: function(pos){
+			var gui = this;
+			var key = "x"+pos.x+"y"+pos.y;
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-					if(typeof(cel) == "undefined") return;
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-					var neurona = red.neuronas[key];
+			if(typeof(cel) == "undefined") return;
 
-					if(Object.keys(neurona.dendritas).length > 0){
-						return
-					}
+			var neurona = red.neuronas[key];
 
-					Constructor.insertarAxonesConMascara({
-						keyNeurona: key,
-						mascara: guiDendritasModel.getLayers()
-					});
+			neurona.dendritas = [];
 
+			gui.onRefreshCell(key, cel.svgObject);
+		},
+		makeEntradaNeurona: function(pos){
+			var gui = this;
 
-					gui.onRefreshCell(key, cel.svgObject);
-				},
-				removeDendritas: function(pos){
-					var gui = this;
-					var key = "x"+pos.x+"y"+pos.y;
+			var key = "x"+pos.x+"y"+pos.y;
 
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-					if(typeof(cel) == "undefined") return;
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-					var neurona = red.neuronas[key];
 
-					neurona.dendritas = [];
+			if(typeof(cel) == "undefined") return;
 
-					gui.onRefreshCell(key, cel.svgObject);
-				},
-				makeEntradaNeurona: function(pos){
-					var gui = this;
 
-					var key = "x"+pos.x+"y"+pos.y;
 
 
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
+			var neurona = red.neuronas[key];
 
+			if(typeof(neurona) != "undefined"){
 
-					if(typeof(cel) == "undefined") return;
 
+				Constructor.makeEntradaNeurona(neurona);
+			}
 
 
+			$('#guiRed_Container>#toolbarInfo').text("Cantidad de entradas: " + Object.keys(red.regiones["ENTRADA"]).length );
 
+			gui.onRefreshCell(key, cel.svgObject);
+		},
+		makeSalidaNeurona: function(pos){
+			var gui = this;
 
-					var neurona = red.neuronas[key];
+			var key = "x"+pos.x+"y"+pos.y;
 
-					if(typeof(neurona) != "undefined"){
 
 
-						Constructor.makeEntradaNeurona(neurona);
-					}
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
 
 
-					$('#guiRed_Container>#toolbarInfo').text("Cantidad de entradas: " + Object.keys(red.entrada).length );
+			if(typeof(cel) == "undefined") return;
 
-					gui.onRefreshCell(key, cel.svgObject);
-				},
-				makeSalidaNeurona: function(pos){
-					var gui = this;
 
-					var key = "x"+pos.x+"y"+pos.y;
 
+			if(cel.data.salida) return;
+			if(cel.data.entrada) return;
 
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
+			cel.data.salida = true;
 
 
-					if(typeof(cel) == "undefined") return;
-					if(cel.data.salida) return;
-					if(cel.data.entrada) return;
+			var neurona = red.neuronas[key];
 
+			if(typeof(neurona) != "undefined"){
 
-					cel.data.salida = true;
+				red.salida[key] = neurona;
 
+				neurona.region = "SALIDA";
+				neurona.axon.sinapsis = {};
+			}
 
-					var neurona = red.neuronas[key];
+			$('#guiRed_Container>#toolbarInfo').text("Cantidad de salidas: " + Object.keys(red.salida).length );
 
-					if(typeof(neurona) != "undefined"){
+			gui.onRefreshCell(key, cel.svgObject);
+		},
+		getNeurona: function(pos){
+			var gui = this;
 
-						red.salida[key] = neurona;
+			var key = "x"+pos.x+"y"+pos.y;
 
-						neurona.tipo = "SALIDA";
-						neurona.axon.sinapsis = {};
-					}
 
-					$('#guiRed_Container>#toolbarInfo').text("Cantidad de salidas: " + Object.keys(red.salida).length );
+			var cel = gui.layers[gui.sel.idLayer].cels[key];
 
-					gui.onRefreshCell(key, cel.svgObject);
-				},
-				getNeurona: function(pos){
-					var gui = this;
 
-					var key = "x"+pos.x+"y"+pos.y;
+			if(typeof(cel) == "undefined") return;
 
+			return red.neuronas[key];
 
-					var cel = gui.layers[gui.sel.idLayer].cels[key];
+		},
+		watchConexiones: function(pos){
+			var gui = this;
 
 
-					if(typeof(cel) == "undefined") return;
+			if(typeof(gui.neuronaWatch = gui.getNeurona(pos)) == "undefined") return;
 
-					return red.neuronas[key];
+			$('#guiRed_Container>#toolbarInfo').text("Neurona: " + gui.neuronaWatch.id);
 
-				},
-				watchConexiones: function(pos){
-					var gui = this;
+			console.log("Neurona en observación:");
+			console.log(gui.neuronaWatch);
 
 
-					if(typeof(gui.neuronaWatch = gui.getNeurona(pos)) == "undefined") return;
+			gui.refresh()
 
-					$('#guiRed_Container>#toolbarInfo').text("Neurona: " + gui.neuronaWatch.id);
+		},
+		watchConexionesEnd: function(pos){
 
-					console.log("Neurona en observación:");
-					console.log(gui.neuronaWatch);
+			var gui = this;
+			if(typeof(neuronaSel = gui.getNeurona(pos)) == "undefined") return;
 
+			if(gui.neuronaWatch.id == neuronaSel.id){
+				console.log("TODO: mostrar menu sobre neurona para editar sus conexiones ahi mismo");
+			}else{
+				gui.neuronaWatch = null
+			}
 
-					gui.refresh()
 
-				},
-				watchConexionesEnd: function(pos){
+		},
 
-					var gui = this;
-					if(typeof(neuronaSel = gui.getNeurona(pos)) == "undefined") return;
+		neuronaWatch: null,
+		verDendritas: function(neurona){
+			var gui = this;
 
-					if(gui.neuronaWatch.id == neuronaSel.id){
-						console.log("TODO: mostrar menu sobre neurona para editar sus conexiones ahi mismo");
+			for(keyDendrita in neurona.dendritas){
+				var dendrita = neurona.dendritas[keyDendrita];
+
+
+
+				for(keySinapsis in dendrita.sinapsis){
+
+					var sinapsis = dendrita.sinapsis[keySinapsis];
+					var pesoEfectivo = sinapsis.peso * dendrita.peso;
+
+					var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
+
+					var _attr = {};
+					if(pesoEfectivo>0){
+						var color = Math.floor(pesoEfectivo * 200) + 55;
+
+						_attr.fill = "rgb(55, "+color+", 55)";
+
 					}else{
-						gui.neuronaWatch = null
+						var color = Math.floor(Math.abs(pesoEfectivo) * 200) + 55;
+
+						_attr.fill = "rgb("+color+", 55, "+color+")";
+
+					}
+
+					if(neurona_AxonEntrante.valor == 1){
+						_attr.stroke =  "#FFFFFF";
+					}else{
+						_attr.stroke =  "#000000";
 					}
 
 
-				},
+					var celSinapsis = gui.layers[gui.sel.idLayer].cels[keySinapsis];
 
-				neuronaWatch: null,
-				verDendritas: function(neurona){
-					var gui = this;
-
-					for(keyDendrita in neurona.dendritas){
-						var dendrita = neurona.dendritas[keyDendrita];
-
-
-
-						for(keySinapsis in dendrita.sinapsis){
-
-							var sinapsis = dendrita.sinapsis[keySinapsis];
-							var pesoEfectivo = sinapsis.peso * dendrita.peso;
-
-							var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
-
-							var _attr = {};
-							if(pesoEfectivo>0){
-								var color = Math.floor(pesoEfectivo * 200) + 55;
-
-								_attr.fill = "rgb(55, "+color+", 55)";
-
-							}else{
-								var color = Math.floor(Math.abs(pesoEfectivo) * 200) + 55;
-
-								_attr.fill = "rgb("+color+", 55, "+color+")";
-
-							}
-
-							if(neurona_AxonEntrante.valor == 1){
-								_attr.stroke =  "#FFFFFF";
-							}else{
-								_attr.stroke =  "#000000";
-							}
-
-
-							var celSinapsis = gui.layers[gui.sel.idLayer].cels[keySinapsis];
-
-							celSinapsis.svgObject.attr(_attr);
-
-						}
-					}
-
-					var cel = gui.layers[gui.sel.idLayer].cels[neurona.id];
-
-
-
-					var bb = cel.svgObject.getBBox();
-
-					gui.snap.line(
-						bb.cx - (gui.escala.x / 2),
-						bb.cy - (gui.escala.y / 2),
-						bb.cx + (gui.escala.x / 2),
-						bb.cy + (gui.escala.y / 2)
-						).attr({
-
-						stroke: "#FF00FF"
-					});
-					gui.snap.line(
-						bb.cx + (gui.escala.x / 2),
-						bb.cy - (gui.escala.y / 2),
-						bb.cx - (gui.escala.x / 2),
-						bb.cy + (gui.escala.y / 2)
-						).attr({
-
-						stroke: "#FF00FF"
-					});
-
-				},
-				onRefresh: function(){
-					var gui = this;
-
-
-					if(gui.neuronaWatch){
-						gui.verDendritas(gui.neuronaWatch);
-					}
+					celSinapsis.svgObject.attr(_attr);
 
 				}
+			}
 
+			var cel = gui.layers[gui.sel.idLayer].cels[neurona.id];
+
+
+
+			var bb = cel.svgObject.getBBox();
+
+			gui.snap.line(
+				bb.cx - (gui.escala.x / 2),
+				bb.cy - (gui.escala.y / 2),
+				bb.cx + (gui.escala.x / 2),
+				bb.cy + (gui.escala.y / 2)
+				).attr({
+
+				stroke: "#FF00FF"
+			});
+			gui.snap.line(
+				bb.cx + (gui.escala.x / 2),
+				bb.cy - (gui.escala.y / 2),
+				bb.cx - (gui.escala.x / 2),
+				bb.cy + (gui.escala.y / 2)
+				).attr({
+
+				stroke: "#FF00FF"
 			});
 
-
-			$('#guiRed_Container>.toolbar>#showControl').on('click', function(e){
-
-				if($('#controlRed_Container').css('display') == 'none' ){
-					$('#guiRed_Container>#toolbarInfo').text("Coeficientes de la red");
-					$('#controlRed_Container').show();
-
-				}else{
-					$('#guiRed_Container>#toolbarInfo').text("");
-					$('#controlRed_Container').hide();
-
-				}
-
-			});
+		},
+		onRefresh: function(){
+			var gui = this;
 
 
-			$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){
-				guiRed.tool1 = "addCell";
-				guiRed.tool2 = "removeCell";
-			});
+			if(gui.neuronaWatch){
+				gui.verDendritas(gui.neuronaWatch);
+			}
 
-			$('#guiRed_Container>.toolbar>#conectar').on('click', function(e){
-				guiRed.tool1 = "conectarNeurona";
-				guiRed.tool2 = "removeDendritas";
-			});
+		}
 
-			$('#guiRed_Container>.toolbar>#makeEntrada').on('click', function(e){
-				guiRed.tool1 = "makeEntradaNeurona";
-				guiRed.tool2 = "removeCell";
-			});
-
-			$('#guiRed_Container>.toolbar>#makeSalida').on('click', function(e){
-				guiRed.tool1 = "makeSalidaNeurona";
-				guiRed.tool2 = "removeCell";
-			});
-
-			$('#guiRed_Container>.toolbar>#watchConexiones').on('click', function(e){
-				guiRed.tool1 = "watchConexiones";
-				guiRed.tool2 = "watchConexionesEnd";
-
-				guiRed.setAnchoPincel(1);
-			});
+	});
 
 
-			////////////////////////////////////////// GUI RED //////////////////////////////////////
+	$('#guiRed_Container>.toolbar>#showControl').on('click', function(e){
+		$('.rightContainer').hide();
+		$('#controlRed_Container').show();
+	});
+
+
+	$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){
+		guiRed.tool1 = "addCell";
+		guiRed.tool2 = "removeCell";
+	});
+
+	$('#guiRed_Container>.toolbar>#conectar').on('click', function(e){
+		guiRed.tool1 = "conectarNeurona";
+		guiRed.tool2 = "removeDendritas";
+	});
+
+
+	$('#guiRed_Container>.toolbar>#watchConexiones').on('click', function(e){
+		guiRed.tool1 = "watchConexiones";
+		guiRed.tool2 = "watchConexionesEnd";
+
+		guiRed.setAnchoPincel(1);
+	});
+
+
+	////////////////////////////////////////// GUI RED //////////////////////////////////////
 
 
 });

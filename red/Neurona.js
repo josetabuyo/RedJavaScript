@@ -4,7 +4,7 @@ var Neurona = function(opt){
 	$.extend(this, {
 		red: null,		// container
 		axon: null,
-		tipo: "INTERNA",
+		region: "INTERNA",
 		id: null,
 		dendritas: {},
 		tensionSuperficial: 0
@@ -21,13 +21,12 @@ Neurona.prototype = {
 		neurona.axon = new Axon();
 		neurona.axon.neurona = neurona;
 
-		neurona.valor
 		if(!neurona.valor){
 			neurona.valor = Math.random();
 		}
 		neurona.red.neuronas[neurona.id] = neurona;
 		neurona.red.neuronas_process[neurona.id] = neurona;
-
+		neurona.red.regiones[neurona.region][neurona.id] = neurona;
 	},
 
 	setTension: function(tensionSuperficial){
@@ -137,9 +136,9 @@ var NeuronaEntrada = function(opt){
 
 	neurona = this;
 
-	neurona.tipo = "ENTRADA";
+	neurona.region = "ENTRADA";
+	red.regiones[neurona.region][neurona.id] = neurona;
 
-	neurona.red.entrada[neurona.id] = neurona;
 	delete neurona.red.neuronas_process[neurona.id];
 
 	neurona.dendritas = [];
