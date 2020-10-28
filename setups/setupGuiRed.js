@@ -16,7 +16,7 @@ $(function(){
 				display: none;
 			}
 
-			
+
 		</style>
 
 		<div id="guiRed_Container"  class="guiMatrix">
@@ -113,27 +113,15 @@ $(function(){
 			// DEFAULT
 			svgObject.attr({
 				fill: "#" + byteRojo + byteVerde + byteAzul,
-				stroke: "#EEEEEE"
+				stroke: $('#region_' + neurona.region).css('color')
 			});
 
 
-			if(Object.keys(neurona.dendritas).length > 0){
-
-				svgObject.attr({
-					stroke: "#555555"
-				});
-
-			}
-
-
 			if(neurona.region == "SALIDA"){
-
 				var byteVerde = byteColorLow;
 				var byteAzul = byteColorLow;
-
 				svgObject.attr({
-					fill: "#" + byteRojo + byteVerde + byteAzul,
-					stroke: "#EE0000"
+					fill: "#" + byteRojo + byteVerde + byteAzul
 				});
 			}
 
@@ -143,8 +131,7 @@ $(function(){
 				var byteVerde = byteColorLow;
 
 				svgObject.attr({
-					fill: "#" + byteRojo + byteVerde + byteAzul,
-					stroke: "#0000EE"
+					fill: "#" + byteRojo + byteVerde + byteAzul
 				});
 			}
 
@@ -163,7 +150,9 @@ $(function(){
 
 			var neurona = red.neuronas[key];
 
-			if(Object.keys(neurona.dendritas).length > 0){
+
+			if(Object.keys(neurona.dendritas).length > 0
+			|| neurona.region == "ENTRADA"){
 				return
 			}
 
