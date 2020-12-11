@@ -228,7 +228,7 @@ conexionados = {
 
 $(function(){
 
-  $('body').append(`
+  $('#controlRed_Container').append(`
     <style>
   		#conectoma{
   			border: solid 1px;
@@ -245,6 +245,33 @@ $(function(){
   			display: none;
   		}
     </style>
+
+
+    <div id="conectoma" class="guiMatrix">
+      <div id="conectoma_celdas" class="cels">
+        <svg id="conectoma_svg" width="10000px" height="10000px">
+        </svg>
+      </div>
+      <div id="conectoma_toolbar" class="toolbar">
+        <div id="drawMode" class="boton" title="Modo de dibujo">
+          D
+        </div>
+        <div id="addDendrita" class="boton" title="Agrega una dendrita">
+          +
+        </div>
+        <div id="save" class="boton" title="Imprime por la console (F12) la estructura del modelo de conexionado">
+          S
+        </div>
+        <div id="load" class="boton" title="Cargar un mapa de conexionado">
+          L
+          <select>
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+      <ul id="conectoma_dendritas" class="layers">
+      </ul>
+    </div>
   `);
 
   //GLOBAL

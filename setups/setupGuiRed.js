@@ -17,6 +17,28 @@ $(function(){
 			}
 
 
+
+
+
+			#controlRed_Container{
+				border-color: Purple;
+				display: block;
+			}
+
+			#control{
+				border: solid 1px Purple;
+
+				position: absolute;
+				left: 50%;
+				top: 0px;
+				height: 50%;
+				width: 50%;
+
+				background-color: black;
+				font-size: 10px;
+				color: white;
+			}
+
 		</style>
 
 		<div id="guiRed_Container"  class="guiMatrix">
@@ -48,6 +70,18 @@ $(function(){
 			<div id="toolbarInfo">
 			</div>
 		</div>
+
+		<div id="controlRed_Container" class="rightContainer">
+			<div id="control">
+
+				<ul id="coeficientes">
+					<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
+					<li>COEF_SINAPSIS_UMBRAL_PESO</li>
+				<ul>
+			</div>
+
+		</div>
+
 	`);
 
 
@@ -394,6 +428,105 @@ $(function(){
 
 
 	////////////////////////////////////////// GUI RED //////////////////////////////////////
+
+	$('#saveRed').on('click', function(){
+		_red = Constructor.getRedData();
+		var _redString = $.stringify(
+			_red
+		);
+
+		try{
+			sessionStorage.removeItem("_redString");
+		}catch(e){
+
+		}
+
+		sessionStorage.setItem("_redString", _redString);
+
+
+
+		console.log('copiar el contenido');
+		console.log(_redString);
+	});
+
+
+
+	var configSlyCoef = function(proto, nameSly, escala) {
+
+
+		if(!escala)escala=1;
+
+		var objSly = $('#'+ nameSly);
+
+
+		objSly.change(function(){
+			var value = ($(this).val() / 255);
+			value = value / escala;
+
+
+			proto[nameSly] = value.toFixed(3);
+
+			$(this).siblings().text(nameSly + ": " + proto[nameSly]);
+		});
+
+		objSly.val(proto[nameSly] * escala * 255);
+		objSly.siblings().text(nameSly + ": " + proto[nameSly]);
+	};
+
+	var setControlCoeficientes = function(){
+		configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
+		configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
+	};
+
+	$('#loadRed').on('click', function(){
+		var _redString = sessionStorage.getItem("_redString");
+		if(_redString==null){
+			presets.default();
+		}else{
+			red = Constructor.setRedData(
+				JSON.parse(_redString)
+			);
+		}
+
+
+		setControlCoeficientes();
+
+
+
+		render = function(){
+			for(iNeurona in red.neuronas){
+				neurona = red.neuronas[iNeurona]
+				guiRed.addCell(neurona.id, false);
+			}
+		};
+		render();
+
+
+
+		guiRed.setLayer(0, red.neuronas);
+		guiRed.refresh()
+
+	});
+
+	$('ul#coeficientes>li').each(function(index, item){
+
+		var nameSly = $(item).text();
+
+		var newLi = $('#plantilla_sly').clone()
+				.attr('id', nameSly+'_container')
+				.attr('class', 'sly')
+				;
+
+		newLi.find('div.sly_ref').text(nameSly);
+
+		newLi.find('input.sly_input').attr('id', nameSly);
+
+		$(item).replaceWith(newLi)
+	})
+
+	setControlCoeficientes();
+
+
 
 
 });
