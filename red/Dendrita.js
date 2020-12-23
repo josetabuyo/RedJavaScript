@@ -19,7 +19,13 @@ Dendrita.prototype = {
 		var dendrita = this;
 
 		if(dendrita.id == null){
-			dendrita.id = Object.keys(dendrita.neurona.dendritas).length+1;
+
+			try {
+				dendrita.id = Object.keys(dendrita.neurona.dendritas).length+1;
+			} catch (e) {
+				dendrita.id = 0
+			}
+			
 		}
 
 		dendrita.neurona.dendritas[dendrita.id] = dendrita;
@@ -32,7 +38,7 @@ Dendrita.prototype = {
 
 		var valor;
 		var suma = 0.0;
-		
+
 		if(Object.keys(sinapsis).length > 0){
 
 			for(key in sinapsis){

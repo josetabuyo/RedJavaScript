@@ -237,6 +237,67 @@ var Constructor = {
 
 		this["modo_" + opt.modo](opt);
 	},
+
+
+	conectarRegiones: function(keyRegiones){
+
+		var keyRegionSource = keyRegiones[0];
+		
+		for (iKeyRegion in keyRegiones){
+			if (iKeyRegion == 0) continue;
+
+			var keyNeuronaArrayConector = []
+			var keyRegionTarget = keyRegiones[iKeyRegion];
+
+			for(keyNeuronaTarget in this.red.regiones[keyRegionTarget]){
+
+				keyNeuronaArrayConector = keyNeuronaArrayConector.concat(Object.keys(this.red.regiones[keyRegionSource]));
+				keyNeuronaArrayConector.unshift(keyNeuronaTarget
+				 );
+				this.conectarNeuronas(keyNeuronaArrayConector);
+			}
+		}
+
+
+
+	},
+
+	conectarNeuronas: function(keyNeuronas){
+		var keyNeuronaTarget = keyNeuronas.shift()
+
+		var neuronaTarget = this.red.neuronas[keyNeuronaTarget];
+
+		var dendrita = new Dendrita({
+			neurona: neuronaTarget
+		});
+
+
+		for(iKeyNeuronaSource in keyNeuronas){
+
+			var keyNeuronaSource = keyNeuronas[iKeyNeuronaSource]
+
+			var neuronaSource = this.red.neuronas[keyNeuronaSource];
+
+			var sinapsis = new Sinapsis({
+				neurona_AxonEntrante: neuronaSource,
+				dendrita: dendrita,
+				id: keyNeuronaSource
+			});
+
+			if(
+				(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO)
+			){
+				dendrita.sinapsis[keyNeuronaSource] = sinapsis;
+				neuronaSource.axon.sinapsis[neuronaTarget.id] = sinapsis;
+			}
+		}
+
+
+		neuronaTarget.dendritas[dendrita.id] = dendrita;
+
+
+	},
+
 	eachNeurona: function(box, callback){
 
 

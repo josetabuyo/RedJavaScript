@@ -1,5 +1,10 @@
 $(function(){
   $('body').append(`
+    <style>
+  		#plantillas{
+  			display: none;
+  		}
+    </style>
     <div id="plantillas">
       <li id="plantilla_sly">
         <div class="sly_ref">
