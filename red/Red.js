@@ -1,23 +1,16 @@
 /************** :RED: ************/
-var Red = function(opt){
-	$.extend(this, {
-		size: {x:0,y:0},
-		id: null,
-		neuronas: {},
-		neuronas_process: {},
-		regiones: {},
-		salida: {}
-	}, opt);
+class Red {
+  constructor(opt) {
 
-	this.start();
-};
+		$.extend(this, {
+			size: {x:0,y:0},
+			id: null,
+			neuronas: {},
+			neuronas_process: {},
+			regiones: {},
+			salida: {}
+		}, opt);
 
-
-Red.prototype = {
-
-
-
-	start: function(){
 		var red = this;
 
 
@@ -36,16 +29,17 @@ Red.prototype = {
 		/*DEPRECATED*/
 
 
-	},
-	procesar: function(){
+	}
+
+	procesar (){
 
 		var red = this;
 
-		for(iNeurona in red.neuronas_process){
+		for(var iNeurona in red.neuronas_process){
 			red.neuronas[iNeurona].procesar();
 		}
 
-		for(iNeurona in red.neuronas_process){
+		for(var iNeurona in red.neuronas_process){
 			red.neuronas[iNeurona].activar();
 		}
 	}

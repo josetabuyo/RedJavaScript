@@ -14,7 +14,7 @@ var Constructor = {
 
 
 
-		for(key in red.neuronas){
+		for(var key in red.neuronas){
 
 			var neurona = red.neuronas[key];
 
@@ -25,7 +25,7 @@ var Constructor = {
 			};
 
 
-			for(iDendrita in neurona.dendritas){
+			for(var iDendrita in neurona.dendritas){
 
 				var dendrita = neurona.dendritas[iDendrita];
 
@@ -36,7 +36,7 @@ var Constructor = {
 				};
 
 
-				for(key in dendrita.sinapsis){
+				for(var key in dendrita.sinapsis){
 					var sinapsis = dendrita.sinapsis[key];
 					var _sinapsis = {
 						id: sinapsis.id,
@@ -70,7 +70,7 @@ var Constructor = {
 
 
 		//REHIDRATO LAS NEURONAS
-		for(key in _red.neuronas){
+		for(var key in _red.neuronas){
 
 
 			var _neurona = _red.neuronas[key];
@@ -88,14 +88,14 @@ var Constructor = {
 		}
 
 		//REHIDRATO LAS DENDRITAS y los AXONES que tocan
-		for(key in _red.neuronas){
+		for(var key in _red.neuronas){
 
 			var _neurona = _red.neuronas[key];
 			var neurona = red.neuronas[key];
 
 
 
-			for(iDendrita in _neurona.dendritas){
+			for(var iDendrita in _neurona.dendritas){
 
 				var _dendrita = _neurona.dendritas[iDendrita]
 
@@ -106,7 +106,7 @@ var Constructor = {
 				});
 
 
-				for(key in _dendrita.sinapsis){
+				for(var key in _dendrita.sinapsis){
 
 					var _sinapsis = _dendrita.sinapsis[key];
 
@@ -127,9 +127,17 @@ var Constructor = {
 
 	addNeurona: function(_neurona){
 
-		var neurona = new Neurona($.extend(_neurona, {
-			red: this.red,
-		}));
+		if(_neurona.region == "ENTRADA"){
+
+			var neurona = new NeuronaEntrada(_neurona);
+			// var neurona = new NeuronaEntrada($.extend(_neurona, {
+			// 	red: this.red
+			// }));
+		}else{
+
+			var neurona = new Neurona(_neurona);
+
+		}
 
 	},
 	addNeuronasBox: function(opt){
@@ -242,14 +250,14 @@ var Constructor = {
 	conectarRegiones: function(keyRegiones){
 
 		var keyRegionSource = keyRegiones[0];
-		
+
 		for (iKeyRegion in keyRegiones){
 			if (iKeyRegion == 0) continue;
 
 			var keyNeuronaArrayConector = []
 			var keyRegionTarget = keyRegiones[iKeyRegion];
 
-			for(keyNeuronaTarget in this.red.regiones[keyRegionTarget]){
+			for(var keyNeuronaTarget in this.red.regiones[keyRegionTarget]){
 
 				keyNeuronaArrayConector = keyNeuronaArrayConector.concat(Object.keys(this.red.regiones[keyRegionSource]));
 				keyNeuronaArrayConector.unshift(keyNeuronaTarget
@@ -272,7 +280,7 @@ var Constructor = {
 		});
 
 
-		for(iKeyNeuronaSource in keyNeuronas){
+		for(var iKeyNeuronaSource in keyNeuronas){
 
 			var keyNeuronaSource = keyNeuronas[iKeyNeuronaSource]
 
@@ -896,7 +904,7 @@ var Constructor = {
 		}
 
 
-		for(iKey in keys){
+		for(var iKey in keys){
 
 			var neurona = red.neuronas[keys[iKey]];
 
@@ -912,7 +920,7 @@ var Constructor = {
 				$.extend(dendrita, opt.mascara[iDentrita].data);
 
 
-				for(key in opt.mascara[iDentrita].cels){
+				for(var key in opt.mascara[iDentrita].cels){
 
 					var parts = key.split("y");
 					parts[0] = parts[0].replace("x", "");

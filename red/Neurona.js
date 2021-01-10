@@ -1,25 +1,22 @@
 
 /************** :NEURONA: ************/
-var Neurona = function(opt){
-	$.extend(this, {
-		red: null,		// container
-		axon: null,
-		region: "INTERNA",
-		id: null,
-		dendritas: {},
-		tensionSuperficial: 0
 
-	}, opt);
+class Neurona {
+  constructor(opt) {
 
-	this.start();
-};
+		$.extend(this, {
+			axon: null,
+			region: "INTERNA",
+			id: null,
+			dendritas: {},
+			tensionSuperficial: 0,
+			axon:{
+				sinapsis: {}
+			}
 
-Neurona.prototype = {
-	start: function(){
+		}, opt);
+
 		var neurona = this;
-
-		neurona.axon = new Axon();
-		neurona.axon.neurona = neurona;
 
 		if(!neurona.valor){
 			neurona.valor = Math.random();
@@ -27,9 +24,12 @@ Neurona.prototype = {
 		neurona.red.neuronas[neurona.id] = neurona;
 		neurona.red.neuronas_process[neurona.id] = neurona;
 		neurona.red.regiones[neurona.region][neurona.id] = neurona;
-	},
 
-	setTension: function(tensionSuperficial){
+
+
+	}
+
+	setTension (tensionSuperficial) {
 
 		//Se normaliza la tensión superficial
 		if(tensionSuperficial < -1.0){
@@ -40,21 +40,21 @@ Neurona.prototype = {
 			this.tensionSuperficial = tensionSuperficial;
 		}
 
-	},
-	activar: function(){
+	}
+	activar () {
 
 		if(this.tensionSuperficial > 0){
 			this.valor = 1;
 		}else{
 			this.valor = 0;
 		}
-	},
-	activarExternal: function(valor){
+	}
+	activarExternal (valor){
 		var neurona = this;
 		neurona.tensionSuperficial = valor;
 		neurona.valor = valor;
-	},
-	procesar: function(){
+	}
+	procesar (){
 		var neurona = this;
 
 
@@ -62,7 +62,9 @@ Neurona.prototype = {
 		var maxValorDendrita = 0.0;
 		var minValorDendrita = 0.0;
 
-		for(iDendrita in neurona.dendritas){
+
+
+		for(var iDendrita in neurona.dendritas){
 			var dendrita = neurona.dendritas[iDendrita];
 
 			dendrita.procesar();
@@ -80,18 +82,16 @@ Neurona.prototype = {
 
 		this.setTension(maxValorDendrita + minValorDendrita);
 
-		for(iDendrita in neurona.dendritas){
+		for(var iDendrita in neurona.dendritas){
 			var dendrita = neurona.dendritas[iDendrita];
 
 				this.entrenar(this.tensionSuperficial);
 
 		};
 
+	}
 
-
-
-	},
-	procesarPromedio: function(){
+	procesarPromedio (){
 		var neurona = this;
 
 
@@ -99,7 +99,7 @@ Neurona.prototype = {
 
 			var sumaValorDendritas = 0.0;
 
-			for(iDendrita in neurona.dendritas){
+			for(var iDendrita in neurona.dendritas){
 				var dendrita = neurona.dendritas[iDendrita];
 
 				dendrita.procesar();
@@ -120,30 +120,38 @@ Neurona.prototype = {
 
 
 		neurona.setTension(valorDendritas);
-	},
-	entrenar: function(valor){
+	}
+	entrenar (valor){
 		var neurona = this;
 
-		for(iDendrita in neurona.dendritas){
+		for(var iDendrita in neurona.dendritas){
 			neurona.dendritas[iDendrita].entrenar(valor);
 		};
 	}
-};
+
+}
 
 
-var NeuronaEntrada = function(opt){
-	Neurona.call(this, opt);
 
-	neurona = this;
+class NeuronaEntrada extends Neurona{
+  constructor (opt) {
 
-	neurona.region = "ENTRADA";
-	red.regiones[neurona.region][neurona.id] = neurona;
+		super(opt);
 
-	delete neurona.red.neuronas_process[neurona.id];
 
-	neurona.dendritas = [];
-	neurona.procesar = function(){};
-	neurona.activar = function(){};
-	neurona.entrenar = function(){};
+		$.extend(this, {
+			region: "ENTRADA",
+			dendritas: {}
+		}, opt);
 
+
+		var neurona = this;
+
+		neurona.red.regiones[neurona.region][neurona.id] = neurona;
+
+		delete neurona.red.neuronas_process[neurona.id];
+		neurona.dendritas = [];
+
+
+	}
 }

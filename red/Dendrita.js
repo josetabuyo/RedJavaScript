@@ -1,21 +1,18 @@
 
 /************** :DENDRITA: ************/
-var Dendrita = function(opt){
 
-	$.extend(this, {
-		neurona: null,
-		valor: 0.0,
-		peso: 1.0,
-		id: null,
-		sinapsis:{}
+class Dendrita {
+  constructor(opt) {
 
-	}, opt);
+		$.extend(this, {
+			neurona: null,
+			valor: 0.0,
+			peso: 1.0,
+			id: null,
+			sinapsis:{}
 
-	this.start();
-};
+		}, opt);
 
-Dendrita.prototype = {
-	start: function(){
 		var dendrita = this;
 
 		if(dendrita.id == null){
@@ -25,13 +22,14 @@ Dendrita.prototype = {
 			} catch (e) {
 				dendrita.id = 0
 			}
-			
+
 		}
 
 		dendrita.neurona.dendritas[dendrita.id] = dendrita;
 
-	},
-	procesar: function(){
+	}
+
+	procesar (){
 		var dendrita = this;
 
 		var sinapsis = dendrita.sinapsis;
@@ -41,7 +39,7 @@ Dendrita.prototype = {
 
 		if(Object.keys(sinapsis).length > 0){
 
-			for(key in sinapsis){
+			for(var key in sinapsis){
 				suma += sinapsis[key].procesar();
 			}
 
@@ -53,8 +51,9 @@ Dendrita.prototype = {
 		dendrita.valor = valor * dendrita.peso;
 
 		return valor;
-	},
-	entrenar: function(modulador){
+	}
+
+	entrenar (modulador){
 		var dendrita = this;
 		var sinapsis = dendrita.sinapsis;
 
@@ -66,7 +65,7 @@ Dendrita.prototype = {
 
 		if(Object.keys(sinapsis).length > 0){
 
-			for(key in sinapsis){
+			for(var key in sinapsis){
 				var sinap = sinapsis[key];
 
 				sinap.entrenar(meritoDentrita);

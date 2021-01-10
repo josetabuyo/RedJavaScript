@@ -1,23 +1,20 @@
-
-
 /************** :SINAPSIS: ************/
-var Sinapsis = function(opt){
-	$.extend(this, {
-		dendrita: null,
-		neurona_AxonEntrante: null,
-		id: null,
-		peso: null,			//peso
-		valor: 0
-	}, opt);
+class Sinapsis {
+  constructor(opt) {
 
-	this.start();
-};
+		$.extend(this, {
+			dendrita: null,
+			neurona_AxonEntrante: null,
+			id: null,
+			peso: null,
+			valor: 0,
+			COEF_SINAPSIS_ENTRENAMIENTO: 0.002,
+			COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT: 0.002,
+			COEF_SINAPSIS_UMBRAL_PESO: 0.200
 
-Sinapsis.prototype = {
-	COEF_SINAPSIS_ENTRENAMIENTO: 0.002,
-	COEF_SINAPSIS_ENTRENAMIENTO_DEFAULT: 0.002,
-	COEF_SINAPSIS_UMBRAL_PESO: 0.200,
-	start: function(){
+		}, opt);
+
+
 		var sinapsis = this;
 
 		if(!sinapsis.peso){
@@ -34,9 +31,10 @@ Sinapsis.prototype = {
 		sinapsis.dendrita.sinapsis[sinapsis.id] = sinapsis;
 
 
+	}
 
-	},
-	entrenar: function(valorEntrenamiento){
+
+	entrenar (valorEntrenamiento){
 
 
 		this.peso += (this.neurona_AxonEntrante.valor - this.peso) * valorEntrenamiento * this.COEF_SINAPSIS_ENTRENAMIENTO;
@@ -47,12 +45,14 @@ Sinapsis.prototype = {
 			return;
 		}
 
-	},
-	procesar: function(){
+	}
+
+	procesar (){
 		this.valor = this.neurona_AxonEntrante.valor * this.peso;
 		return this.valor
-	},
-	kill: function(){
+	}
+
+	kill (){
 		var sinapsis = this;
 		delete sinapsis.dendrita.sinapsis[sinapsis.id];
 	}

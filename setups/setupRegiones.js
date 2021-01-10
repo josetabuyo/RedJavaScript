@@ -136,7 +136,6 @@ $(function(){
 
     $('#regiones').on( "click", "li.region", regionSelect);
 
-    debugger
     $('#regiones>.toolbar #conectar_Accept').show();
 
   });
@@ -164,7 +163,6 @@ $(function(){
     }
 
 
-    debugger;
     delete Constructor.keyRegionArrayConector;
     $('#regiones').off( "click", "li.region");
     $('#regiones>.toolbar #conectar_Accept').hide();
