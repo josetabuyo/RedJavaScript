@@ -53,11 +53,8 @@ $(function(){
         <div id="conectar_Accept" class="boton">
           Accept
         </div>
-        <div id="makeEntrada" class="boton" title="Agregar neuronas a coleccion de Entradas">
-          I
-        </div>
-        <div id="makeSalida" class="boton" title="Agregar neuronas a coleccion de Salidas">
-          O
+        <div id="autoConnect" class="boton" title="Crear conexiones inter región">
+          A
         </div>
       </div>
       <ul>
@@ -168,6 +165,27 @@ $(function(){
     $('#regiones>.toolbar #conectar_Accept').hide();
 
   });
+
+
+
+
+
+  $('#regiones>.toolbar>#autoConnect').on('click', function(e){
+    event.preventDefault();
+
+
+
+    for(var keyNeurona in red.regiones[guiRed.region]){
+
+      Constructor.insertarAxonesConMascara({
+        keyNeurona: keyNeurona,
+        mascara: guiConectoma.getLayers()
+      });
+
+    }
+
+  });
+
 
 
 });
