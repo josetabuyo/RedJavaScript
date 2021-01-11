@@ -60,9 +60,6 @@
 			#botonera #play.pause{
 				background-color: #AA6666;
 			}
-			#verTensionSuperficial{
-				width: 120px;
-			}
 			#help{
 				color: #A9FFFE;
 			}
@@ -111,9 +108,6 @@
 				Step
 			</div>
 
-			<div id="verTensionSuperficial" class="boton" title="Visualiza la matriz de Tensiones o de Activaciones">
-				Tensiones
-			</div>
 			<div id="presets" class="boton" title="Cargar una preset">
 				PRESET
 				<select>
@@ -160,9 +154,7 @@
 	<script src="TestAutomata.js"></script>
 	<script src="TestAudio.js"></script>
 	<script src="TestAsciiImage.js"></script>
-	<!-- script src="AudioPrueba.js"></script -->
-
-
+	
 	<script src="red/Constructor.js"></script>
 
 	<script src="red/Red.js"></script>
@@ -185,11 +177,9 @@
 		//GLOBAL PARA FÁCIL DEBUG
 		var red;
 		var test;
-		var modo="ACTIVACION";
 		var templates = {};
 
 		$(function(){
-
 
 			console.log('*****************************************************');
 			console.log('HELLO Red Neuronal HELLO - en Javascript by joZbuyo');
@@ -201,14 +191,9 @@
 			console.log('https://github.com/josetabuyo/RedJavaScript/blob/master/README.md');
 			console.log('');
 
-
-
-
 			$('#help').on('click', function(){
 				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
 			});
-
-
 
 			$('#play').on('click', function(){
 
@@ -241,24 +226,6 @@
 
 
 
-			if(modo=="DEPOLARIZACION"){
-				$('#verTensionSuperficial').text('Tensiones');
-			}else if(modo=="ACTIVACION"){
-				$('#verTensionSuperficial').text('Activaciones');
-			}
-
-			$('#verTensionSuperficial').on('click', function(){
-
-				if(modo=="DEPOLARIZACION"){
-					modo="ACTIVACION";
-					$('#verTensionSuperficial').text('Activaciones');
-
-				}else if(modo=="ACTIVACION"){
-					modo="DEPOLARIZACION"
-					$('#verTensionSuperficial').text('Tensiones');
-
-				}
-			});
 
 
 			$('#testSelector>select').on('click', function(){

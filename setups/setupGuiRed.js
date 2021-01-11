@@ -57,12 +57,6 @@ $(function(){
 				<div id="conectar" class="boton" title="Conectar neuronas">
 					C
 				</div>
-				<div id="makeEntrada" class="boton" title="Agregar neuronas a coleccion de Entradas">
-					I
-				</div>
-				<div id="makeSalida" class="boton" title="Agregar neuronas a coleccion de Salidas">
-					O
-				</div>
 				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
 					W
 				</div>
@@ -130,13 +124,8 @@ $(function(){
 			var cel = gui.layers[gui.sel.idLayer].cels[key];
 			var neurona = red.neuronas[key];
 
-			if(modo=="DEPOLARIZACION"){
-				valor = neurona.tensionSuperficial / Axon.prototype.COEF_AXON_UMBRAL_SPIKE * 0.8;
-
-			} else if(modo=="ACTIVACION"){
-				valor = neurona.valor;
-			}
-
+			valor = neurona.valor;
+			
 			var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
 			var byteColorLow = "00";
 
@@ -210,70 +199,6 @@ $(function(){
 			var neurona = red.neuronas[key];
 
 			neurona.dendritas = [];
-
-			gui.onRefreshCell(key, cel.svgObject);
-		},
-		makeEntradaNeurona: function(pos){
-			var gui = this;
-
-			var key = "x"+pos.x+"y"+pos.y;
-
-
-
-			var cel = gui.layers[gui.sel.idLayer].cels[key];
-
-
-			if(typeof(cel) == "undefined") return;
-
-
-
-
-
-			var neurona = red.neuronas[key];
-
-			if(typeof(neurona) != "undefined"){
-
-
-				Constructor.makeEntradaNeurona(neurona);
-			}
-
-
-			$('#guiRed_Container>#toolbarInfo').text("Cantidad de entradas: " + Object.keys(red.regiones["ENTRADA"]).length );
-
-			gui.onRefreshCell(key, cel.svgObject);
-		},
-		makeSalidaNeurona: function(pos){
-			var gui = this;
-
-			var key = "x"+pos.x+"y"+pos.y;
-
-
-
-			var cel = gui.layers[gui.sel.idLayer].cels[key];
-
-
-			if(typeof(cel) == "undefined") return;
-
-
-
-			if(cel.data.salida) return;
-			if(cel.data.entrada) return;
-
-
-			cel.data.salida = true;
-
-
-			var neurona = red.neuronas[key];
-
-			if(typeof(neurona) != "undefined"){
-
-				red.salida[key] = neurona;
-
-				neurona.region = "SALIDA";
-				neurona.axon.sinapsis = {};
-			}
-
-			$('#guiRed_Container>#toolbarInfo').text("Cantidad de salidas: " + Object.keys(red.salida).length );
 
 			gui.onRefreshCell(key, cel.svgObject);
 		},
