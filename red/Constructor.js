@@ -140,26 +140,21 @@ var Constructor = {
 		}
 
 	},
-	addNeuronasBox: function(opt){
+	addNeuronasBox: function(from, to, opt){
+
 		var construct = this;
 
-		$.extend(this, {
-			size: {x:0,y:0}
-		}, opt);
+		for(var x=from.x; x <= to.x; x++){
+			for(var y=from.y; y <= to.y; y++){
 
+				construct.addNeurona($.extend({
+					id: construct.keyByCoord(x,y),
+					dendritas: {},
+					red: red
+				}, opt));
 
-
-
-
-		for(var x=0; x < opt.size.x; x++){
-			for(var y=0; y < opt.size.y; y++){
-
-				construct.addNeurona({id: construct.keyByCoord(x,y)});
 			}
 		}
-
-
-		return red;
 
 	},
 
