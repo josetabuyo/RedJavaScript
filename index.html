@@ -9,6 +9,12 @@
 				background-color: black;
 			}
 
+
+
+			.container{
+				overflow-y: scroll;
+			}
+
 			.rightContainer{
 				position: absolute;
 				right: 0px;
@@ -40,16 +46,33 @@
 				border-collapse:separate;
 				border-spacing:5px;
 			}
+
+
+
+			.toolbar {
+			  display: inline-block;
+				width: 100%;
+			}
+
+
 			.boton{
 				border: solid 1px;
 				cursor: pointer;
 				user-select: none;
-				display: table-cell;
+				/*display: table-cell;*/
 				padding: 0px 5px 0px 5px;
 				text-align: center;
 				font-family: "Arial Black", Gadget, sans-serif;
 				background-color: #AAAAAA;
+				float: left;
 			}
+
+			.botonLeft {
+			    float: right;
+			    right: 21px;
+			    position: relative;
+			}
+
 
 			#botonera #play{
 				width: 60px;
@@ -93,7 +116,12 @@
 				width: 39%;
 			}
 
-
+			.rightContainer .maximized {
+				top: 0% !important;
+				left: 0% !important;
+				height: 100% !important;
+				width: 100% !important;
+			}
 
 		</style>
 
@@ -154,7 +182,7 @@
 	<script src="TestAutomata.js"></script>
 	<script src="TestAudio.js"></script>
 	<script src="TestAsciiImage.js"></script>
-	
+
 	<script src="red/Constructor.js"></script>
 
 	<script src="red/Red.js"></script>
@@ -190,6 +218,8 @@
 			console.log('HELP:');
 			console.log('https://github.com/josetabuyo/RedJavaScript/blob/master/README.md');
 			console.log('');
+
+
 
 			$('#help').on('click', function(){
 				window.location="https://github.com/josetabuyo/RedJavaScript/blob/master/README.md";
@@ -246,6 +276,25 @@
 				}
 
 			});
+
+
+
+		  $('.rightContainer .container .toolbar>.maximize').on('click', function(){
+
+		    var this_container = $(this).parent().parent();
+
+
+		    if(this_container.hasClass('maximized')){
+		      $('.rightContainer .container').show();
+		      this_container.removeClass('maximized')
+		    }else{
+		      $('.rightContainer .container').hide();
+		      this_container.show();
+		      this_container.addClass('maximized');
+		    }
+
+
+		  });
 
 
 

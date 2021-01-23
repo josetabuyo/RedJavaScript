@@ -45,7 +45,7 @@ $(function(){
 
 
 
-    <div id="regiones">
+    <div id="regiones" class="container">
       <div class="toolbar">
         <div id="conectar" class="boton" title="Conectar neuronas">
           C
@@ -56,6 +56,11 @@ $(function(){
         <div id="autoConnect" class="boton" title="Crear conexiones inter región">
           A
         </div>
+        <div class="maximize boton botonLeft" title="Maximizar">
+				#
+				</div>
+
+
       </div>
       <ul>
         <li id="addRegion"><input type="text"/></li>
@@ -185,6 +190,8 @@ $(function(){
     }
 
   });
+
+
 
 
 

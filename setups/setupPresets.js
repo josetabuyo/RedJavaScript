@@ -1,39 +1,38 @@
 presets = {
 	default: function(){
 		console.log("Aplicando preset");
-		console.log(this);
-
-
-		var size = {
-			x: 64,
-			y: 16
-		};
-
 
 		//crear red
 		red = new Red();
 		Constructor.red = red;
-		Constructor.addNeuronasBox({
-			size: size
-		});
+
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 0 },
+			{ x: 64, y: 14 },
+			{
+				region: "SALIDA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 15 },
+			{ x: 64, y: 16 },
+			{
+				region: "ENTRADA"
+			}
+		);
 
 
 
 
-		Constructor.insertarAxonesConMascara({
-			mascara: conexionados.mini_feed_foward_inhibido
-		});
+    for(var keyNeurona in red.regiones["SALIDA"]){
 
-		Constructor.eachNeurona({
-			x0: 0,
-			x1: size.x-1,
-			y0: size.y-1,
-			y1: size.y-1
-		}, function (x,y,neurona){
+      Constructor.insertarAxonesConMascara({
+        keyNeurona: keyNeurona,
+        mascara: conexionados.mini_feed_foward_inhibido
+      });
 
-			Constructor.makeEntradaNeurona(neurona);
-		});
-
+    }
 
 		guiRed.setLayer(0, red.neuronas);
 
@@ -52,40 +51,38 @@ presets = {
 	},
 	desa_audio: function(){
 		console.log("Aplicando preset");
-		console.log(this);
-
-
-		var size = {
-			x: 32,
-			y: 16
-		};
-
 
 		//crear red
 		red = new Red();
 		Constructor.red = red;
-		Constructor.addNeuronasBox({
-			size: size
-		});
+
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 0 },
+			{ x: 64, y: 5 },
+			{
+				region: "SALIDA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 6 },
+			{ x: 64, y: 7 },
+			{
+				region: "ENTRADA"
+			}
+		);
 
 
 
 
-		Constructor.insertarAxonesConMascara({
-			mascara: conexionados.mini_feed_foward_inhibido
-		});
+    for(var keyNeurona in red.regiones["SALIDA"]){
 
-		Constructor.eachNeurona({
-			x0: 0,
-			x1: size.x-1,
-			y0: size.y-2,
-			y1: size.y-1
-		}, function (x,y,neurona){
+      Constructor.insertarAxonesConMascara({
+        keyNeurona: keyNeurona,
+        mascara: conexionados.mini_feed_foward_inhibido
+      });
 
-			Constructor.makeEntradaNeurona(neurona);
-		});
-
-
+    }
 
 		$('#testSelector>select').val("TestAudio");
 		$('#testSelector>select').click();
@@ -106,47 +103,56 @@ presets = {
 		console.log('red created...');
 
 	},
+
 	lvq_audio: function(){
 		console.log("Aplicando preset");
-		console.log(this);
-
-
-
-		var size = {
-			x: 256,
-			y: 2
-		};
-
 
 		//crear red
 		red = new Red();
 		Constructor.red = red;
-		Constructor.addNeuronasBox({
-			size: size
-		});
 
-		Constructor.insertarAxonesConMascara({
-			mascara: conexionados.lvq
-		});
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 0 },
+			{ x: 256, y: 0 },
+			{
+				region: "SALIDA"
+			}
+		);
 
-		Constructor.eachNeurona({
-			x0: 0,
-			x1: size.x-1,
-			y0: size.y-1,
-			y1: size.y-1
-		}, function (x,y,neurona){
-
-			Constructor.makeEntradaNeurona(neurona);
-		});
+		Constructor.addNeuronasBox(
+			{ x: 0, y: 1 },
+			{ x: 256, y: 1 },
+			{
+				region: "ENTRADA"
+			}
+		);
 
 
+
+
+    for(var keyNeurona in red.regiones["SALIDA"]){
+
+      Constructor.insertarAxonesConMascara({
+        keyNeurona: keyNeurona,
+        mascara: conexionados.lvq
+      });
+
+    }
 
 		$('#testSelector>select').val("TestAudio");
 		$('#testSelector>select').click();
 
 
 		guiRed.setLayer(0, red.neuronas);
+
 		guiRed.refresh();
+
+
+		//SET COEFICIENTES
+		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
+		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+
+
 
 
 		console.log('red created...');

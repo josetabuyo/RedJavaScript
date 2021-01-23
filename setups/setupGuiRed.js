@@ -25,7 +25,9 @@ $(function(){
 				display: block;
 			}
 
-			#control{
+
+
+			#control {
 				border: solid 1px Purple;
 
 				position: absolute;
@@ -35,13 +37,17 @@ $(function(){
 				width: 50%;
 
 				background-color: black;
+
+			}
+
+
+			#control li {
 				font-size: 10px;
 				color: white;
 			}
-
 		</style>
 
-		<div id="guiRed_Container"  class="guiMatrix">
+		<div id="guiRed_Container"  class="guiMatrix container">
 			<div class="cels">
 				<svg id="guiRed_svg" width="10000px" height="10000px" >
 				</svg>
@@ -60,14 +66,27 @@ $(function(){
 				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
 					W
 				</div>
+				<div class="maximize boton botonLeft" title="Maximizar">
+				#
+				</div>
+				<div class="zoomOut boton botonLeft" title="Zoom -">
+				-
+				</div>
+				<div class="zoomIn boton botonLeft" title="Zoom +">
+					+
+				</div>
 			</div>
 			<div id="toolbarInfo">
 			</div>
 		</div>
 
 		<div id="controlRed_Container" class="rightContainer">
-			<div id="control">
-
+			<div id="control" class="container">
+				<div class="toolbar">
+					<div class="maximize boton botonLeft" title="Maximizar">
+					#
+					</div>
+				</div>
 				<ul id="coeficientes">
 					<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
 					<li>COEF_SINAPSIS_UMBRAL_PESO</li>
@@ -125,7 +144,7 @@ $(function(){
 			var neurona = red.neuronas[key];
 
 			valor = neurona.valor;
-			
+
 			var byteColorHigth = ("0" + Math.floor(valor * 255).toString(16)).slice(-2); ;
 			var byteColorLow = "00";
 
@@ -351,6 +370,57 @@ $(function(){
 		guiRed.setAnchoPincel(1);
 	});
 
+
+
+
+	$('#guiRed_Container>.toolbar>.zoomIn').on('click', function(){
+
+		guiRed.escala.x++;
+		guiRed.escala.y++;
+
+		guiRed.refresh()
+
+	});
+
+
+	$('#guiRed_Container>.toolbar>.zoomOut').on('click', function(){
+
+		guiRed.escala.x--;
+		guiRed.escala.y--;
+
+		guiRed.refresh()
+
+	});
+
+
+	$('#guiRed_Container>.toolbar>.maximize').on('click', function(){
+		var this_container = $(this).parent().parent();
+
+		if(this_container.attr('maximized') == 'true'){
+			$('.rightContainer').show();
+
+
+			this_container.css({
+				right: '50%'
+			});
+
+			this_container.attr('maximized', 'false');
+
+		}else{
+
+			$('.rightContainer').hide();
+
+			this_container.show();
+
+			this_container.css({
+				right: '0%'
+			});
+
+			this_container.attr('maximized', 'true');
+		}
+
+
+	});
 
 	////////////////////////////////////////// GUI RED //////////////////////////////////////
 
