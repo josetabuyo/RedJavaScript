@@ -1,55 +1,150 @@
-/************** :TEST: ************/
-$(function(){
-  $('body').append(`
-		<style>
-			#TestAutomata_Container{
-				border-color: Yellow;
-			}
-			#TestAutomata_Container svg{
-				position: absolute;
-				right: 0px;
-				top: 40px;
-				width: 50%;
-				height: 90%;
-				border: solid 1px;
-				overflow: scroll;
-			}
-		</style>
+class TestAutomata extends Test{
 
-		<div id="TestAutomata_Container" class="rightContainer">
-			<svg></svg>
-		</div>
-	`);
-});
+  start (opt) {
 
+    var test = this;
 
-var TestAutomata = function(opt){
-	$.extend(this, {
-		entrada: null,
-		salida: null,
-		noise: true
-	}, opt);
+    $.extend(test, {
+      NOISE_LEVEL: 0.01,
+      running: false,
+      estado: {
+        current:	{
+          neuronaCoord: {x:null, y:null}
+        }
+      },
+      patron: {
+        mapaCelda: [],
+        entrada: [0,0,0,1,1,1,0,0,1,1,1,0,0,0],
+        salida: [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
+      },
+      testInterval: null,
+      foco: null,
+      offset: 0,
 
 
-	this.start();
-};
 
-TestAutomata.prototype = {
-	NOISE_LEVEL: 0.01,
-	running: false,
-	estado: {
-		current:	{
-			neuronaCoord: {x:null, y:null}
-		}
-	},
-	patron: {
-		mapaCelda: [],
-		entrada: [0,0,0,1,1,1,0,0,1,1,1,0,0,0],
-		salida: [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
-	},
-	testInterval: null,
+  		entrada: null,
+  		salida: null,
+  		noise: true,
 
-	desplazamientoConstante: function(){
+
+
+      context: {
+        automata: null,
+        externo: null,
+        debugMode: false,
+        motor: [0.0, 0.0, 0.0, 0.0]
+      }
+    }, opt);
+
+
+
+    if(Object.keys(test.red.neuronas).length == 0){
+      alert("Debe existir al menos una neurona");
+      return
+    }
+
+
+
+
+
+		$("#TestAutomata_Container").show()
+
+		var svgSelector = "#TestAutomata_Container svg"
+		test.snap = Snap(svgSelector);
+		test.svg = $(svgSelector)
+
+
+
+
+
+
+
+
+		var fondo = test.snap.group(
+			test.snap.rect(0,0, test.svg.width(), test.svg.height())
+		);
+		fondo.attr({
+			fill: "#000000"
+		});
+		fondo.click(function(){
+			test.context.debugMode = !test.context.debugMode;
+		});
+
+
+		var automata = test.snap.group(
+			test.snap.circle(0, 0, 30)
+		);
+		automata.attr({
+			fill: "rgb(0,0,255)"
+		});
+		automata.transform('T200,150');
+
+		test.context.automata = automata;
+
+		test.addExterno({color: "rgb(255,0,0)"});
+		test.addExterno({color: "rgb(255,0,0)"});
+		test.addExterno({color: "rgb(255,0,0)"});
+
+		test.addExterno({color: "rgb(0,255,0)"});
+		test.addExterno({color: "rgb(0,255,0)"});
+		test.addExterno({color: "rgb(0,255,0)"});
+
+
+		$('body').on('keydown', function(e){
+			var motor = test.context.motor;
+
+			switch (e.which) {
+				case 37:
+					motor[0] = 1.0;
+					break;
+				case 38:
+					motor[2] = 1.0;
+					break;
+				case 39:
+					motor[1] = 1.0;
+					break;
+				case 40:
+					motor[3] = 1.0;
+					break;
+			};
+
+
+		});
+		$('body').on('keyup', function(e){
+			var motor = test.context.motor;
+
+			switch (e.which) {
+				case 37:
+					motor[0] = 0.0;
+					break;
+				case 38:
+					motor[2] = 0.0;
+					break;
+				case 39:
+					motor[1] = 0.0;
+					break;
+				case 40:
+					motor[3] = 0.0;
+					break;
+			};
+		});
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  desplazamientoConstante(){
 		var test = this;
 
 		var testIndex =  test.estado.current.neuronaCoord.x;
@@ -105,12 +200,10 @@ TestAutomata.prototype = {
 			test.estado.current.neuronaCoord.x = 0;
 		}
 
-	},
+	}
 
-	foco: null,
-	offset: 0,
 
-	printEntrada: function(){
+	printEntrada (){
 		var test = this;
 
 
@@ -170,8 +263,9 @@ TestAutomata.prototype = {
 			}
 
 		}
-	},
-	obtenerSalida: function(modo){
+	}
+
+	obtenerSalida (modo){
 
 		//tomo el centro de masa (x,y) de la salida
 		var sumaTension = 0.0;
@@ -219,20 +313,16 @@ TestAutomata.prototype = {
 		return Math.round(mediaX);
 
 
-	},
-	debugEstandar: function(){
+	}
+
+	debugEstandar(){
 		var test = this;
 
 		test.printEntrada();
 		test.onStep();
-	},
-	context: {
-		automata: null,
-		externo: null,
-		debugMode: false,
-		motor: [0.0, 0.0, 0.0, 0.0]
-	},
-	printEntrada: function(){
+	}
+
+	printEntrada(){
 
 		if(Object.keys(red.regiones["ENTRADA"]).length = 0){
 			return;
@@ -315,7 +405,7 @@ TestAutomata.prototype = {
 
 
 				try{
-					keyNeurona = keysbyindex[index];
+					var keyNeurona = keysbyindex[index];
 
 
 					var valor;
@@ -340,8 +430,9 @@ TestAutomata.prototype = {
 		    printExterno(externo);
 		});
 
-	},
-	debugPrintEntrada: function(){
+	}
+
+	debugPrintEntrada(){
 		// TODO: para debuggear mockeo los ojos usando el motor
 		var motor = test.context.motor;
 
@@ -429,8 +520,9 @@ TestAutomata.prototype = {
 		keyNeurona = Constructor.keyByCoord(test.red.box.x0 + (++indexInput), test.red.box.y1);
 		test.red.neuronas[keyNeurona].activarExternal(valor);
 
-	},
-	addExterno: function(opt) {
+	}
+
+	addExterno(opt) {
 		test = this
 		if(!opt)opt={};
 
@@ -459,26 +551,19 @@ TestAutomata.prototype = {
 
 		return externo;
 
-	},
-	getColor: function(externo){
+	}
+
+	getColor (externo){
 
 		var colorString = externo.attr('fill');
 
 		colorString = colorString.replace('rgb(', '').replace(')','');
 
 		return colorString.split(', ');
-	},
-	onStep_vEventos: [],
-	onStep: function(param){
-		if(typeof param == "function"){
-			this.onStep_vEventos.push(param);
-		}else{
-			$.each(this.onStep_vEventos, function(index, value){
-				value(param);
-			});
-		}
-	},
-	step:function(){
+	}
+
+
+	step (){
 		var test = this;
 
 		var paso = 5;
@@ -539,8 +624,6 @@ TestAutomata.prototype = {
 		/// PASO 2:
 		/// PROYECTA EN RETINA
 		test.printEntrada();
-
-
 
 
 		/// PASO 3:
@@ -620,7 +703,7 @@ TestAutomata.prototype = {
 		var COEF_DOLOR = 0.01;
 
 
-		setCoef = function(proto, nameSly, valor, escala){
+		var setCoef = function(proto, nameSly, valor, escala){
 			var objSly = $('#'+ nameSly);
 
 			if(!escala)escala=1;
@@ -663,8 +746,10 @@ TestAutomata.prototype = {
 
 
 		/// PASO 4:
-		/// PROCESA LA RED
-		test.onStep();
+		/// PROCESA LA RED, lo hace el suoer
+		super.step();
+
+
 
 
 
@@ -672,7 +757,6 @@ TestAutomata.prototype = {
 
 		/// PASO 5:
 		/// LEE SALIDAS MUEVE MOTORES
-
 
 		var motor = [0.0, 0.0, 0.0, 0.0];;
 
@@ -752,114 +836,39 @@ TestAutomata.prototype = {
 
 		automata.transform( 'T' + pos.x + ',' + pos.y);
 
-
-		test.onStep();
-	},
-	play: function(){
-		var test = this;
-
-		if(!test.running){
-
-			test.Interval = setInterval(function (){
-				test.step();
-			}, 0);
-			test.running = true;
-		}
-
-	},
-
-	stop: function(){
-		clearInterval(this.testInterval);
-		test.running = false;
-	},
-	start: function (){
-		var test = this;
-
-
-		$("#TestAutomata_Container").show()
-
-		svgSelector = "#TestAutomata_Container svg"
-		test.snap = Snap(svgSelector);
-		test.svg = $(svgSelector)
-
-
-
-
-
-
-
-
-
-
-
-
-		var fondo = test.snap.group(
-			test.snap.rect(0,0, test.svg.width(), test.svg.height())
-		);
-		fondo.attr({
-			fill: "#000000"
-		});
-		fondo.click(function(){
-			test.context.debugMode = !test.context.debugMode;
-		});
-
-
-		var automata = test.snap.group(
-			test.snap.circle(0, 0, 30)
-		);
-		automata.attr({
-			fill: "rgb(0,0,255)"
-		});
-		automata.transform('T200,150');
-
-		test.context.automata = automata;
-
-		test.addExterno({color: "rgb(255,0,0)"});
-		test.addExterno({color: "rgb(255,0,0)"});
-		test.addExterno({color: "rgb(255,0,0)"});
-
-		test.addExterno({color: "rgb(0,255,0)"});
-		test.addExterno({color: "rgb(0,255,0)"});
-		test.addExterno({color: "rgb(0,255,0)"});
-
-
-		$('body').on('keydown', function(e){
-			var motor = test.context.motor;
-
-			switch (e.which) {
-				case 37:
-					motor[0] = 1.0;
-					break;
-				case 38:
-					motor[2] = 1.0;
-					break;
-				case 39:
-					motor[1] = 1.0;
-					break;
-				case 40:
-					motor[3] = 1.0;
-					break;
-			};
-
-
-		});
-		$('body').on('keyup', function(e){
-			var motor = test.context.motor;
-
-			switch (e.which) {
-				case 37:
-					motor[0] = 0.0;
-					break;
-				case 38:
-					motor[2] = 0.0;
-					break;
-				case 39:
-					motor[1] = 0.0;
-					break;
-				case 40:
-					motor[3] = 0.0;
-					break;
-			};
-		});
 	}
-};
+}
+
+
+
+
+$(function(){
+  $('#tests').append(`
+		<style>
+			#TestAutomata_Container{
+				border-color: Yellow;
+			}
+			#TestAutomata_Container svg{
+				position: absolute;
+				right: 0px;
+				top: 40px;
+				width: 50%;
+				height: 90%;
+				border: solid 1px;
+				overflow: scroll;
+			}
+		</style>
+
+		<div id="TestAutomata_Container">
+			<svg></svg>
+		</div>
+	`);
+
+  $('#tests>.toolbar #select_Accept select').append("<option value='TestAutomata'>TestAutomata</option>");
+
+
+  $("#tests>#TestAutomata_Container").hide()
+
+
+
+});

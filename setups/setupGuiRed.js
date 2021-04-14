@@ -20,7 +20,7 @@ $(function(){
 
 
 
-			#controlRed_Container{
+			#rightContainer{
 				border-color: Purple;
 				display: block;
 			}
@@ -53,10 +53,6 @@ $(function(){
 				</svg>
 			</div>
 			<div class="toolbar">
-				<div id="showControl" class="boton" title="Muestra el control de los coeficientes">
-					...
-				</div>
-
 				<div id="addNeurona" class="boton" title="Agregar neuronas">
 					N
 				</div>
@@ -80,7 +76,7 @@ $(function(){
 			</div>
 		</div>
 
-		<div id="controlRed_Container" class="rightContainer">
+		<div id="rightContainer">
 			<div id="control" class="container">
 				<div class="toolbar">
 					<div class="maximize boton botonLeft" title="Maximizar">
@@ -345,13 +341,6 @@ $(function(){
 
 	});
 
-
-	$('#guiRed_Container>.toolbar>#showControl').on('click', function(e){
-		$('.rightContainer').hide();
-		$('#controlRed_Container').show();
-	});
-
-
 	$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){
 		guiRed.tool1 = "addCell";
 		guiRed.tool2 = "removeCell";
@@ -397,7 +386,7 @@ $(function(){
 		var this_container = $(this).parent().parent();
 
 		if(this_container.attr('maximized') == 'true'){
-			$('.rightContainer').show();
+			$('#rightContainer').show();
 
 
 			this_container.css({
@@ -408,7 +397,7 @@ $(function(){
 
 		}else{
 
-			$('.rightContainer').hide();
+			$('#rightContainer').hide();
 
 			this_container.show();
 

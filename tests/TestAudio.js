@@ -1,66 +1,21 @@
-/************** :TEST: ************/
-var TestAudio = function(opt){
-	$.extend(this, {
-		entrada: null,
-		salida: null
-	}, opt);
+class TestAudio extends Test{
 
 
-	this.start();
-};
-
-TestAudio.prototype = {
-	onStep_vEventos: [],
-	onStep: function(param){
-		if(typeof param == "function"){
-			this.onStep_vEventos.push(param);
-		}else{
-			$.each(this.onStep_vEventos, function(index, value){
-				value(param);
-			});
-		}
-	},
-	step:function(){
-		var test = this;
-
-		//drawVisual = requestAnimationFrame(test.step);
-
-
-		test.printEntrada();
-		test.red.procesar();
-
-
-		test.onStep();
-	},
-	play: function(){
-		var test = this;
-
-
-		console.log(test.dataArray.length);
-
-
-
-		if(!test.running){
-
-			//drawVisual = requestAnimationFrame(test.step);
-
-
-			test.testInterval = setInterval(function (){
-				test.step();
-			}, 0);
-
-
-			test.running = true;
-		}
-
-	},
-
-	stop: function(){
-		clearInterval(this.testInterval);
-		test.running = false;
-	},
-	start: function (){
+	start(opt) {
 		var test =  this;
+
+		$.extend(test, {
+			entrada: null,
+			salida: null
+		}, opt);
+
+
+
+    if(Object.keys(test.red.neuronas).length == 0){
+      alert("Debe existir al menos una neurona");
+      return
+    }
+
 
 
 		navigator.mediaDevices.getUserMedia({ audio: true })
@@ -117,9 +72,22 @@ TestAudio.prototype = {
 
 		});
 
-	},
 
-	printEntrada: function(){
+
+
+		$('#TestAudio_Container').show();
+	}
+
+	step (){
+		var test = this;
+
+		test.printEntrada();
+
+		super.step();
+	}
+
+
+	printEntrada(){
 		var test = this;
 
 		test.analyser.getByteFrequencyData(test.dataArray);
@@ -145,4 +113,40 @@ TestAudio.prototype = {
 			}
 		}
 	}
-};
+
+
+}
+
+
+
+
+
+/************** :TEST: ************/
+$(function(){
+  $('#tests').append(`
+		<style>
+			#TestAudio_Container{
+				border-color: Yellow;
+			}
+
+			#TestAudio_Container span{
+				color: White;
+				font-size: 30px;
+				padding-left: 48px;
+				padding-top: 24px;
+			}
+		</style>
+
+		<div id="TestAudio_Container">
+			<span>LISTENING</span>
+		</div>
+	`);
+
+  $('#tests>.toolbar #select_Accept select').append("<option value='TestAudio'>TestAudio</option>");
+
+
+  $("#tests>#TestAudio_Container").hide()
+
+
+
+});

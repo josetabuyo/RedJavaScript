@@ -220,7 +220,7 @@ conexionados = {
 
 $(function(){
 
-  $('#controlRed_Container').append(`
+  $('#rightContainer').append(`
     <style>
   		#conectoma{
   			border: solid 1px;
@@ -230,7 +230,7 @@ $(function(){
   			left: 0px;
   			top: 50%;
   			height: 50%;
-  			width: 100%;
+  			width: 50%;
         overflow: hidden;
   		}
 
@@ -413,10 +413,10 @@ $(function(){
   //
   //
   //   if(this_container.hasClass('maximized')){
-  //     $('.rightContainer .container').show();
+  //     $('#rightContainer .container').show();
   //     this_container.removeClass('maximized')
   //   }else{
-  //     $('.rightContainer .container').hide();
+  //     $('#rightContainer .container').hide();
   //     this_container.show();
   //     this_container.addClass('maximized');
   //   }

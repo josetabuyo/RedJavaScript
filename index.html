@@ -15,7 +15,7 @@
 				overflow-y: scroll;
 			}
 
-			.rightContainer{
+			#rightContainer{
 				position: absolute;
 				right: 0px;
 				top: 40px;
@@ -116,7 +116,7 @@
 				width: 39%;
 			}
 
-			.rightContainer .maximized {
+			#rightContainer .maximized {
 				top: 0% !important;
 				left: 0% !important;
 				height: 100% !important;
@@ -151,17 +151,6 @@
 			<div id="help" class="boton">
 				HELP
 			</div>
-			<div id="testSelector" class="boton">
-				TEST
-				<select>
-					<option value=""></option>
-					<option value="TestAudio">TestAudio</option>
-					<option value="TestAutomata">TestAutomata</option>
-					<option value="TestAsciiImage">TestAsciiImage</option>
-
-				</select>
-
-			</div>
 		</div>
 
 
@@ -179,9 +168,6 @@
 
 
 	<script src="GuiMatriz.js"></script>
-	<script src="TestAutomata.js"></script>
-	<script src="TestAudio.js"></script>
-	<script src="TestAsciiImage.js"></script>
 
 	<script src="red/Constructor.js"></script>
 
@@ -197,15 +183,24 @@
 	<script src="setups/setupRegiones.js"></script>
 	<script src="setups/setupGuiDendritas.js"></script>
 	<script src="setups/setupPresets.js"></script>
-
+	<script src="setups/setupTests.js"></script>
+	<script src="tests/Test.js"></script>
+	<script src="tests/TestAsciiImage.js"></script>
+	<script src="tests/TestAutomata.js"></script>
+	<script src="tests/TestAudio.js"></script>
 
 
 	<script>
 
-		//GLOBAL PARA FÁCIL DEBUG
+		//GLOBAL CONTEXT
 		var red;
 		var test;
 		var templates = {};
+		////
+
+
+
+
 
 		$(function(){
 
@@ -255,40 +250,16 @@
 			});
 
 
-
-
-
-			$('#testSelector>select').on('click', function(){
-				$(".rightContainer").hide();
-
-				var cmd = "test = new "+ $(this).val() +"({red: red})";
-				console.log(cmd);
-
-				try{
-					eval(cmd);
-					test.onStep(function(){
-						guiRed.refresh();
-					});
-
-					test.red = red;
-				}catch(e){
-					console.log(e)
-				}
-
-			});
-
-
-
-		  $('.rightContainer .container .toolbar>.maximize').on('click', function(){
+		  $('#rightContainer .container .toolbar>.maximize').on('click', function(){
 
 		    var this_container = $(this).parent().parent();
 
 
 		    if(this_container.hasClass('maximized')){
-		      $('.rightContainer .container').show();
+		      $('#rightContainer .container').show();
 		      this_container.removeClass('maximized')
 		    }else{
-		      $('.rightContainer .container').hide();
+		      $('#rightContainer .container').hide();
 		      this_container.show();
 		      this_container.addClass('maximized');
 		    }
