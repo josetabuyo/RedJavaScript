@@ -91,6 +91,12 @@ $(function(){
 
 		</div>
 
+		<li id="template_sly" class="template sly">
+			<div class="sly_ref">
+			</div>
+			<input class="sly_input" type="range" min="0" max="255" value="100" />
+		</li>
+
 	`);
 
 
@@ -496,9 +502,9 @@ $(function(){
 
 		var nameSly = $(item).text();
 
-		var newLi = $('#plantilla_sly').clone()
+		var newLi = $('#template_sly').clone()
 				.attr('id', nameSly+'_container')
-				.attr('class', 'sly')
+				.removeClass('template')
 				;
 
 		newLi.find('div.sly_ref').text(nameSly);

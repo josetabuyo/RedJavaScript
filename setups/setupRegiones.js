@@ -41,6 +41,9 @@ $(function(){
         vertical-align: middle;
         color: white;
       }
+
+
+
     </style>
 
 
@@ -63,8 +66,16 @@ $(function(){
 
       </div>
       <ul>
-        <li id="addRegion"><input type="text"/></li>
+        <li id="addRegion" ><input type="text" placeholder="Ingrese nueva región"/></li>
       </ul>
+
+
+      <li id="template_region" class="region template" >
+        <div class="region_ref">
+            Region #1
+        </div>
+      </li>
+
     </div>
   `);
 
@@ -72,8 +83,9 @@ $(function(){
   var addRegion = function(region){
 
 
-    var domRegion = $('#plantilla_region').clone()
+    var domRegion = $('#template_region').clone()
               .attr('id', 'region_' + region)
+              .removeClass('template')
               ;
     domRegion.find(".region_ref").text(region);
 

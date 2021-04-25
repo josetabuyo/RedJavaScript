@@ -278,6 +278,16 @@ $(function(){
       </div>
       <ul id="conectoma_dendritas" class="layers">
       </ul>
+
+
+      <li id="template_conectoma_dendrita" class="layer template">
+        <div class="idLayer">
+        </div>
+        <div class="data">
+          <input class="conectoma_dendrita_data" value="1.0,1.0" type="text"/>
+        </div>
+      </li>
+
     </div>
   `);
 
@@ -293,8 +303,9 @@ $(function(){
     onAddLayer: function(parent, idLayer){
 
 
-      var domDentdrita = $('#plantilla_conectoma_dendrita').clone()
+      var domDentdrita = $('#template_conectoma_dendrita').clone()
                 .attr('id', 'dendrita_nro_' + idLayer)
+                .removeClass("template")
                 ;
 
 
