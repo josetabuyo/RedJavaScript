@@ -54,42 +54,56 @@ class Neurona {
 		neurona.tensionSuperficial = valor;
 		neurona.valor = valor;
 	}
-	procesar (){
-		var neurona = this;
+
+
+  procesar (){
+    var neurona = this;
 
 
 
-		var maxValorDendrita = 0.0;
-		var minValorDendrita = 0.0;
+    var maxValorDendrita = 0.0;
+    var minValorDendrita = 0.0;
+    var dendritaMax;
+    var dendritaMin;
 
 
 
-		for(var iDendrita in neurona.dendritas){
-			var dendrita = neurona.dendritas[iDendrita];
-
-			dendrita.procesar();
-
-			if(maxValorDendrita < dendrita.valor){
-				maxValorDendrita = dendrita.valor;
-			}
-
-			if(minValorDendrita > dendrita.valor){
-				minValorDendrita = dendrita.valor;
-			}
-
-		};
 
 
-		this.setTension(maxValorDendrita + minValorDendrita);
+    for(var iDendrita in neurona.dendritas){
+      var dendrita = neurona.dendritas[iDendrita];
 
-		for(var iDendrita in neurona.dendritas){
-			var dendrita = neurona.dendritas[iDendrita];
+      dendrita.procesar();
 
-				this.entrenar(this.tensionSuperficial);
+      if(maxValorDendrita < dendrita.valor){
+        maxValorDendrita = dendrita.valor
+        dendritaMax = dendrita;
+      }
 
-		};
+      if(minValorDendrita > dendrita.valor){
+        minValorDendrita = dendrita.valor;
+        dendritaMin = dendrita;
+      }
 
-	}
+    };
+
+
+    var valor = maxValorDendrita + minValorDendrita;
+
+    if(valor > 0){
+      neurona.setTension(maxValorDendrita);
+      dendritaMax.entrenar(maxValorDendrita);
+    } else if (valor < 0) {
+      neurona.setTension(minValorDendrita);
+      dendritaMin.entrenar(minValorDendrita);
+    } else {
+      neurona.setTension(valor);
+    }
+
+
+  }
+
+
 
 	procesarPromedio (){
 		var neurona = this;
@@ -121,6 +135,43 @@ class Neurona {
 
 		neurona.setTension(valorDendritas);
 	}
+  procesarOld (){
+		var neurona = this;
+
+
+
+		var maxValorDendrita = 0.0;
+		var minValorDendrita = 0.0;
+
+
+
+		for(var iDendrita in neurona.dendritas){
+			var dendrita = neurona.dendritas[iDendrita];
+
+			dendrita.procesar();
+
+			if(maxValorDendrita < dendrita.valor){
+				maxValorDendrita = dendrita.valor;
+			}
+
+			if(minValorDendrita > dendrita.valor){
+				minValorDendrita = dendrita.valor;
+			}
+
+		};
+
+
+		this.setTension(maxValorDendrita + minValorDendrita);
+
+		for(var iDendrita in neurona.dendritas){
+			var dendrita = neurona.dendritas[iDendrita];
+
+			dendrita.entrenar(this.tensionSuperficial);
+
+		};
+
+	}
+
 	entrenar (valor){
 		var neurona = this;
 
