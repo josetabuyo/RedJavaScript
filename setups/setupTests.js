@@ -1,52 +1,61 @@
 $(function(){
 
 
-  $('#rightContainer').append(`
+  $('#leftContainer').append(`
 
     <style>
       #tests{
         position: absolute;
-        left: 50%;
-        top: 50%;
+        left: 0;
+        top: 20%;
         width: 50%;
         height: 50%;
       }
+
+
+      #tests #play{
+        width: 60px;
+      }
+      #tests #play.play{
+        background-color: #66AA66;
+      }
+      #tests #play.pause{
+        background-color: #AA6666;
+      }
+
     </style>
 
 
 
     <div id="tests" class="container">
       <div class="toolbar">
+        <div id="play" class="boton play" title="Play o Pause al test continuo">
+          Play
+        </div>
+        <div id="step" class="boton" title="Ejecuta solo un test">
+          Step
+        </div>
 
-        <div id="select" class="boton" title="Selecciona un test">
-          S
-        </div>
-        <div id="select_Accept" class="boton">
-          <select>
-            <option value=""></option>
-          </select>
-        </div>
+        <select title="Selecciona un test" placeholder="Selecciona un test">
+          <option value=""></option>
+        </select>
 
         <div class="maximize boton botonLeft" title="Maximizar">
 				#
 				</div>
+      </div>
+      <div class="body">
       </div>
 
     </div>
 
   `);
 
-  $('#tests>.toolbar #select_Accept').hide();
 
-  $('#tests>.toolbar #select').on('click', function(e){
-    event.preventDefault();
-    $('#tests>.toolbar #select_Accept').show();
-  });
+  $('#tests>.toolbar select').on('click', function(e){
 
 
-
-  $('#tests>.toolbar #select_Accept').on('click', function(e){
-
+    $('#tests .body>div').hide();
 
 
     try{
@@ -55,7 +64,7 @@ $(function(){
 
     }
 
-    var testString = $(this).find('select').val();
+    var testString = $(this).val();
 
 
     eval(`test = new ${testString}();`)
@@ -69,8 +78,39 @@ $(function(){
       guiRed.refresh();
     });
 
-    $('#tests>.toolbar #select_Accept').hide();
 
+  });
+
+
+
+
+
+  $('#tests>.toolbar #step').on('click', function(){
+    test.step();
+  });
+
+  $('#tests>.toolbar #play').on('click', function(){
+
+    if(typeof(test) == "undefined"){
+      alert("Falta elegir un test");
+      return;
+    };
+
+
+    var btn_play = $('#play');
+    btn_play.removeClass('pause');
+    btn_play.removeClass('play');
+
+
+    if(!test.running){
+      test.play();
+      btn_play.addClass('pause');
+      btn_play.text('Pause');
+    }else{
+      test.stop();
+      btn_play.addClass('play');
+      btn_play.text('Play');
+    }
   });
 
 

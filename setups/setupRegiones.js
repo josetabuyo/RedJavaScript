@@ -1,15 +1,18 @@
 $(function(){
 
 
-  $('#rightContainer').append(`
+  $('#leftContainer').append(`
 
     <style>
       #regiones{
         position: absolute;
-        left: 0px;
-        top: 0px;
+        left: 50%;
+        top: 50%;
         width: 50%;
         height: 50%;
+      }
+      #regiones .body{
+        overflow-y: scroll;
       }
 
       li#addRegion>input[type=text] {
@@ -65,9 +68,12 @@ $(function(){
 
 
       </div>
-      <ul>
-        <li id="addRegion" ><input type="text" placeholder="Ingrese nueva región"/></li>
-      </ul>
+
+      <div class="body">
+        <ul>
+          <li id="addRegion" ><input type="text" placeholder="Ingrese nueva región"/></li>
+        </ul>
+      </div>
 
 
       <li id="template_region" class="region template" >

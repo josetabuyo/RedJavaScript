@@ -843,18 +843,18 @@ class TestAutomata extends Test{
 
 
 $(function(){
-  $('#tests').append(`
+  $('#tests>.body').append(`
 		<style>
 			#TestAutomata_Container{
 				border-color: Yellow;
 			}
 			#TestAutomata_Container svg{
 				position: absolute;
-				right: 0px;
-				top: 40px;
-				width: 50%;
-				height: 90%;
-				border: solid 1px;
+
+        width: 100%;
+        height: 100%;
+
+        border: solid 1px green;
 				overflow: scroll;
 			}
 		</style>
@@ -864,10 +864,11 @@ $(function(){
 		</div>
 	`);
 
-  $('#tests>.toolbar #select_Accept select').append("<option value='TestAutomata'>TestAutomata</option>");
+  $('#tests>.toolbar select').append("<option value='TestAutomata'>TestAutomata</option>");
 
 
-  $("#tests>#TestAutomata_Container").hide()
+
+  $("#tests #TestAutomata_Container").hide()
 
 
 

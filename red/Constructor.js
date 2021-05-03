@@ -5,10 +5,6 @@ var Constructor = {
 		var _red = {
 			size: red.size,
 			box: red.box,
-
-			COEF_SINAPSIS_ENTRENAMIENTO				: Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO,
-			COEF_SINAPSIS_UMBRAL_PESO				: Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO,
-
 			neuronas: {}
 		};
 
@@ -65,8 +61,8 @@ var Constructor = {
 		red = new Red();
 
 
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO						= _red.COEF_SINAPSIS_ENTRENAMIENTO							;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO 							= _red.COEF_SINAPSIS_UMBRAL_PESO								;
+		COEF_SINAPSIS_ENTRENAMIENTO	  = _red.COEF_SINAPSIS_ENTRENAMIENTO ;
+		COEF_SINAPSIS_UMBRAL_PESO 		= _red.COEF_SINAPSIS_UMBRAL_PESO   ;
 
 
 		//REHIDRATO LAS NEURONAS
@@ -288,7 +284,7 @@ var Constructor = {
 			});
 
 			if(
-				(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO)
+				(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO)
 			){
 				dendrita.sinapsis[keyNeuronaSource] = sinapsis;
 				neuronaSource.axon.sinapsis[neuronaTarget.id] = sinapsis;
@@ -527,7 +523,7 @@ var Constructor = {
 						});
 
 						if(
-							(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO)
+							(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO)
 						){
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
@@ -578,7 +574,7 @@ var Constructor = {
 							opt.peso = Math.random()
 						};
 
-						if(opt.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
+						if(opt.peso > COEF_SINAPSIS_UMBRAL_PESO){
 
 							var sinapsis = new Sinapsis({
 								neurona_AxonEntrante: neurona_AxonEntrante,
@@ -668,7 +664,7 @@ var Constructor = {
 							});
 
 
-							if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
+							if(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO){
 								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 							}
@@ -786,7 +782,7 @@ var Constructor = {
 							});
 
 
-							if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
+							if(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO){
 								dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
 								red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
 							}
@@ -871,7 +867,7 @@ var Constructor = {
 						});
 
 
-						if(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO){
+						if(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO){
 							dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
 							red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
 						}
@@ -955,7 +951,7 @@ var Constructor = {
 						});
 
 						if(
-							(sinapsis.peso > sinapsis.COEF_SINAPSIS_UMBRAL_PESO)
+							(sinapsis.peso > COEF_SINAPSIS_UMBRAL_PESO)
 						){
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
 							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;

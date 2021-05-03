@@ -24,7 +24,7 @@ class TestAsciiImage extends Test{
       return
     }
 
-    $(`#tests>#TestAsciiImage_Container`).show()
+    $(`#tests #TestAsciiImage_Container`).show()
 
     test.canvas = document.querySelector("#TestAsciiImage_Container canvas");
 
@@ -144,15 +144,15 @@ class TestAsciiImage extends Test{
 
 /************** :TEST: ************/
 $(function(){
-  $('#tests').append(`
+  $('#tests>.body').append(`
 		<style>
 			#TestAsciiImage_Container{
         position: absolute;
 				border-color: Yellow;
-        left: 0px;
-        right: 0px;
-        top: 24px;
-        bottom: 0px;
+        left: 0%;
+        right: 0%;
+        top: 0%;
+        bottom: 0%;
 
 			}
 
@@ -174,7 +174,7 @@ $(function(){
 
 			#TestAsciiImage_Container svg{
 				position: absolute;
-        left: 10px;
+        left: 100px;
         top: 24px;
 				right: 24px;
         bottom: 0px;
@@ -190,9 +190,9 @@ $(function(){
 		</div>
 	`);
 
-  $('#tests>.toolbar #select_Accept select').append("<option value='TestAsciiImage'>TestAsciiImage</option>");
+  $('#tests>.toolbar select').append("<option value='TestAsciiImage'>TestAsciiImage</option>");
 
 
-  $("#tests>#TestAsciiImage_Container").hide()
+  $("#tests #TestAsciiImage_Container").hide()
 
 });

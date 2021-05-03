@@ -4,10 +4,10 @@ $(function(){
 		<style>
 			#guiRed_Container{
 				position: absolute;
-				left: 0px;
-				top: 40px;
-				right: 50%;
-				bottom: 0px;
+				left: 50%;
+				top: 0%;
+				right: 0%;
+				bottom: 0%;
 				overflow: hidden;
 				border: solid 3px;
 				border-color: violet;
@@ -16,25 +16,19 @@ $(function(){
 				display: none;
 			}
 
-
-
-
-
-			#rightContainer{
-				border-color: Purple;
-				display: block;
+			#guiRed_Container .body{
+				overflow: scroll;
 			}
-
 
 
 			#control {
 				border: solid 1px Purple;
 
 				position: absolute;
-				left: 50%;
-				top: 0px;
-				height: 50%;
+				left: 0%;
+				top: 70%;
 				width: 50%;
+				bottom: 0%;
 
 				background-color: black;
 
@@ -47,11 +41,10 @@ $(function(){
 			}
 		</style>
 
+
+
+
 		<div id="guiRed_Container"  class="guiMatrix container">
-			<div class="cels">
-				<svg id="guiRed_svg" width="10000px" height="10000px" >
-				</svg>
-			</div>
 			<div class="toolbar">
 				<div id="addNeurona" class="boton" title="Agregar neuronas">
 					N
@@ -62,6 +55,22 @@ $(function(){
 				<div id="watchConexiones" class="boton" title="Ver las conexiones de la neurona seleccionada">
 					W
 				</div>
+
+				<div id="presets" class="boton" title="Cargar una preset">
+					Pr
+					<select>
+						<option value=""></option>
+					</select>
+				</div>
+				<div id="loadRed" class="boton"  title="Carga una red guardada en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+					Lo
+				</div>
+				<div id="saveRed" class="boton" title="Guarda el estado de la red en un json. (se requiere FileBackend: un nodo Vortex corriendo en un node.js)">
+					Sa
+				</div>
+
+
+
 				<div class="maximize boton botonLeft" title="Maximizar">
 				#
 				</div>
@@ -74,19 +83,10 @@ $(function(){
 			</div>
 			<div id="toolbarInfo">
 			</div>
-		</div>
 
-		<div id="rightContainer">
-			<div id="control" class="container">
-				<div class="toolbar">
-					<div class="maximize boton botonLeft" title="Maximizar">
-					#
-					</div>
-				</div>
-				<ul id="coeficientes">
-					<li>COEF_SINAPSIS_ENTRENAMIENTO</li>
-					<li>COEF_SINAPSIS_UMBRAL_PESO</li>
-				<ul>
+			<div class="body">
+				<svg id="guiRed_svg" width="10000px" height="10000px" >
+				</svg>
 			</div>
 
 		</div>
@@ -392,22 +392,25 @@ $(function(){
 		var this_container = $(this).parent().parent();
 
 		if(this_container.attr('maximized') == 'true'){
-			$('#rightContainer').show();
+			$('#leftContainer').show();
 
 
 			this_container.css({
-				right: '50%'
+				left: '50%',
+				right: '0%'
 			});
 
 			this_container.attr('maximized', 'false');
 
 		}else{
 
-			$('#rightContainer').hide();
+			$('#leftContainer').hide();
 
 			this_container.show();
 
+
 			this_container.css({
+				left: '0%',
 				right: '0%'
 			});
 
@@ -441,33 +444,6 @@ $(function(){
 
 
 
-	var configSlyCoef = function(proto, nameSly, escala) {
-
-
-		if(!escala)escala=1;
-
-		var objSly = $('#'+ nameSly);
-
-
-		objSly.change(function(){
-			var value = ($(this).val() / 255);
-			value = value / escala;
-
-
-			proto[nameSly] = value.toFixed(3);
-
-			$(this).siblings().text(nameSly + ": " + proto[nameSly]);
-		});
-
-		objSly.val(proto[nameSly] * escala * 255);
-		objSly.siblings().text(nameSly + ": " + proto[nameSly]);
-	};
-
-	var setControlCoeficientes = function(){
-		configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_ENTRENAMIENTO', 100);
-		configSlyCoef(Sinapsis.prototype, 'COEF_SINAPSIS_UMBRAL_PESO');
-	};
-
 	$('#loadRed').on('click', function(){
 		var _redString = sessionStorage.getItem("_redString");
 		if(_redString==null){
@@ -498,23 +474,9 @@ $(function(){
 
 	});
 
-	$('ul#coeficientes>li').each(function(index, item){
 
-		var nameSly = $(item).text();
 
-		var newLi = $('#template_sly').clone()
-				.attr('id', nameSly+'_container')
-				.removeClass('template')
-				;
 
-		newLi.find('div.sly_ref').text(nameSly);
-
-		newLi.find('input.sly_input').attr('id', nameSly);
-
-		$(item).replaceWith(newLi)
-	})
-
-	setControlCoeficientes();
 
 
 

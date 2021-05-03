@@ -34,14 +34,16 @@ presets = {
 
     }
 
+
+
 		guiRed.setLayer(0, red.neuronas);
 
 		guiRed.refresh();
 
 
 		//SET COEFICIENTES
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
+		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
 
 		console.log('red created...');
 
@@ -94,8 +96,8 @@ presets = {
 
 
 		//SET COEFICIENTES
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
+		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
 
 
 
@@ -149,8 +151,8 @@ presets = {
 
 
 		//SET COEFICIENTES
-		Sinapsis.prototype.COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		Sinapsis.prototype.COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
+		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
 
 
 

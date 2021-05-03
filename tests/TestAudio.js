@@ -102,7 +102,7 @@ class TestAudio extends Test{
 		var index = 0;
 
 		//Ponemos base de ruido
-		for(key in red.regiones["ENTRADA"]){
+		for(var key in red.regiones["ENTRADA"]){
 
 			var neurona = red.neuronas[key];
 
@@ -123,7 +123,7 @@ class TestAudio extends Test{
 
 /************** :TEST: ************/
 $(function(){
-  $('#tests').append(`
+  $('#tests>.body').append(`
 		<style>
 			#TestAudio_Container{
 				border-color: Yellow;
@@ -142,10 +142,10 @@ $(function(){
 		</div>
 	`);
 
-  $('#tests>.toolbar #select_Accept select').append("<option value='TestAudio'>TestAudio</option>");
+  $('#tests>.toolbar select').append("<option value='TestAudio'>TestAudio</option>");
 
 
-  $("#tests>#TestAudio_Container").hide()
+  $("#tests #TestAudio_Container").hide()
 
 
 

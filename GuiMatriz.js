@@ -5,34 +5,19 @@ $(function(){
 			.guiMatrix{
 
 			}
-			.guiMatrix>.toolbar{
-				position: absolute;
-				left: 0px;
-				top: 0px;
-				width: 100%;
-				height: 24px;
-			}
-			.guiMatrix>.cels{
-				position: absolute;
-				left: 0px;
-				top: 0px;
-				width: 100%;
-				height: 100%;
-				overflow: scroll;
-			}
-			.guiMatrix>.cels>svg{
+			.guiMatrix svg{
 				position: absolute;
 				left: 0px;
 				top: 0px;
 			}
-			.guiMatrix>.layers{
+			.guiMatrix .layers{
 				position: absolute;
 				left: 0px;
-				top: 24px;
+				top: 0px;
 				width: 84px;
 			}
 
-			.guiMatrix>.layers>.layer>.idLayer{
+			.guiMatrix .layers>.layer>.idLayer{
 				float: left;
 				width: 20px;
 				height: 20px;
@@ -46,7 +31,7 @@ $(function(){
 				background-color: #FFFFFF;
 			}
 
-			.guiMatrix>.layers>.layer>.data{
+			.guiMatrix .layers>.layer>.data{
 				float: right;
 				top: 0px;
 				width: 60px;
@@ -57,7 +42,7 @@ $(function(){
 			}
 
 
-			.guiMatrix>.layers>.layer>.data>input{
+			.guiMatrix .layers>.layer>.data>input{
 				width: 100%;
 			}
 		</style>
