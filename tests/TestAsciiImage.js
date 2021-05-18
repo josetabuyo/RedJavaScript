@@ -184,7 +184,7 @@ $(function(){
 		</style>
 
 		<div id="TestAsciiImage_Container">
-			<input value="ABCD"></input>
+			<input value="AAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD"></input>
 			<canvas></canvas>
 			<svg></svg>
 		</div>
