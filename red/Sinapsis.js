@@ -39,7 +39,7 @@ class Sinapsis {
 		this.peso += (this.neurona_AxonEntrante.valor - this.peso) * valorEntrenamiento * COEF_SINAPSIS_ENTRENAMIENTO;
 
 
-		if(this.peso < this.COEF_SINAPSIS_UMBRAL_PESO){
+		if(this.peso < COEF_SINAPSIS_UMBRAL_PESO){
 			this.kill();
 			return;
 		}
@@ -52,8 +52,7 @@ class Sinapsis {
 	}
 
 	kill (){
-		var sinapsis = this;
-		delete sinapsis.dendrita.sinapsis[sinapsis.id];
+		delete this.dendrita.sinapsis[this.id];
 	}
 
 };

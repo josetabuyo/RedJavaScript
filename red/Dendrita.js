@@ -58,9 +58,8 @@ class Dendrita {
 		var sinapsis = dendrita.sinapsis;
 
 
-		// TODO: probar con
-		// dendrita.neurona.tensionSuperficial - tensionDendrita;
 		var meritoDentrita = dendrita.valor * modulador;
+
 
 
 		if(Object.keys(sinapsis).length > 0){
@@ -69,9 +68,19 @@ class Dendrita {
 				var sinap = sinapsis[key];
 
 				sinap.entrenar(meritoDentrita);
-			}
 
-		}
+      }
+
+		} else {
+      this.kill;
+    }
 
 	}
+
+
+
+  kill (){
+		delete this.neurona[this.id];
+	}
+
 };

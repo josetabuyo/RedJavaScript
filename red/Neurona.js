@@ -1,11 +1,10 @@
-
+var COEF_NEURONA_UMBRAL_ACTIVACION = 2
 /************** :NEURONA: ************/
 
 class Neurona {
   constructor(opt) {
 
 		$.extend(this, {
-			axon: null,
 			region: "INTERNA",
 			id: null,
 			dendritas: {},
@@ -42,12 +41,14 @@ class Neurona {
 
 	}
 	activar () {
-
-		if(this.tensionSuperficial > 0){
+    // this.valor = this.tensionSuperficial * COEF_NEURONA_UMBRAL_ACTIVACION;
+		if(this.tensionSuperficial > COEF_NEURONA_UMBRAL_ACTIVACION){
 			this.valor = 1;
 		}else{
 			this.valor = 0;
 		}
+
+
 	}
 	activarExternal (valor){
 		var neurona = this;
@@ -57,6 +58,12 @@ class Neurona {
 
 
   procesar (){
+    // tipo "fuzzy logic":
+    // entre las sinapsis, siempre, una AND fuzzy, dentro de la dendrita
+    // entre las dendritas, en este caso, una OR fuzzy que compite las dendritas negativas contra las poositivas, dentro de la neurona
+    //   gana la más grande en módulo.
+    //  se setea el valor de la diferencia entre minValorDendrita y maxValorDendrita.
+
     var neurona = this;
 
 
@@ -92,10 +99,10 @@ class Neurona {
 
     if(valor > 0){
       neurona.setTension(maxValorDendrita);
-      dendritaMax.entrenar(maxValorDendrita);
+      dendritaMax.entrenar(1);
     } else if (valor < 0) {
       neurona.setTension(minValorDendrita);
-      dendritaMin.entrenar(minValorDendrita);
+      dendritaMin.entrenar(1);
     } else {
       neurona.setTension(valor);
     }
@@ -172,13 +179,26 @@ class Neurona {
 
 	}
 
-	entrenar (valor){
+
+
+  entrenar (valor){
 		var neurona = this;
 
-		for(var iDendrita in neurona.dendritas){
-			neurona.dendritas[iDendrita].entrenar(valor);
-		};
+    if(Object.keys(neurona.dendritas).length > 0){
+      for(var iDendrita in neurona.dendritas){
+  			neurona.dendritas[iDendrita].entrenar(valor);
+  		};
+    }else{
+
+      this.kill;
+
+    }
+
 	}
+
+  kill (){
+    delete this.red.neuronas[this.id];
+  }
 
 }
 
