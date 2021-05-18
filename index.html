@@ -94,26 +94,6 @@
 
 
 
-			li.sly{
-				vertical-align: middle;
-			}
-
-			li.sly
-			div.sly_ref{
-				display: inline-block;
-				width: 40%;
-				height: 100%;
-				font-size: 9px;
-			}
-
-			li.sly
-			input.sly_input{
-				position: relative;
-				display: inline-block;
-				left: 18%;
-				width: 39%;
-			}
-
 			#leftContainer{
 				position: absolute;
 				left: 0%;
@@ -131,7 +111,19 @@
 				height: 100% !important;
 				width: 100% !important;
 			}
-
+			#overlay {
+				position: fixed; /* Sit on top of the page content */
+				display: none; /* Hidden by default */
+				width: 100%; /* Full width (cover the whole page) */
+				height: 100%; /* Full height (cover the whole page) */
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+				z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+				cursor: pointer; /* Add a pointer on hover */
+			}
 		</style>
 
 	</head>
@@ -142,18 +134,20 @@
 
 		</div>
 
+		<div id="overlay">
 
+		</div>
 
 	</body>
 
 
 
+
 	<script src="lib/jquery-2.1.3.min.js"></script>
 	<script src="lib/d3.v6.min.js"></script>
-
 	<script src="lib/jQuery.stringify.js"></script>
-
 	<script src="lib/snap.svg-min.js"></script>
+
 
 
 	<script src="GuiMatriz.js"></script>
@@ -185,6 +179,7 @@
 		var red;
 		var test;
 		var templates = {};
+
 		////
 
 
