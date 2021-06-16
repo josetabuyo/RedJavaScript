@@ -77,23 +77,27 @@ class TestAsciiImage extends Test{
     var $test = $("#TestAsciiImage_Container")
 
     if(typeof(test.index) == "undefined"){
-      test.index = 0
+      test.index = -test.altoPixel
     }
 
 
     var texto = $test.find("input").val()
-    var caracter = texto.substring(test.index, test.index+1);
 
-    if(test.index < texto.length-1){
+
+    // var caracter = texto.substring(test.index, test.index+1);
+
+    // if(test.index < texto.length-1){
+    if(test.index < (test.altoPixel*texto.length)){
       test.index++;
     }else{
-      test.index=0;
+      test.index= -test.altoPixel;
     }
 
     test.ctx.clearRect(0, 0, test.canvas.width, test.canvas.height);
     test.ctx.font = (test.altoPixel+1) + "px Arial";
     test.ctx.fillStyle = "blue";
-    test.ctx.fillText(caracter, 0, test.altoPixel-2);
+    // test.ctx.fillText(caracter, 0, test.altoPixel-2);
+    test.ctx.fillText(texto, -test.index, test.altoPixel-1);
 
 
     test.printEntrada();

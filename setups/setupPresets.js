@@ -43,7 +43,7 @@ presets = {
 
 			Constructor.insertarAxonesConMascara({
 				keyNeurona: keyNeurona,
-				mascara: conexionados.conexion_corona_kohonen
+				mascara: conexionados.kohonen_simple_espaciado
 			});
 
 		}
