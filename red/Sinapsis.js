@@ -47,7 +47,7 @@ class Sinapsis {
 	}
 
 	procesar (){
-		this.valor = this.neurona_AxonEntrante.valor * this.peso;
+		this.valor =  (1 - this.neurona_AxonEntrante.valor - this.peso);
 		return this.valor
 	}
 

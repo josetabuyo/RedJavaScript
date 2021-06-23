@@ -43,14 +43,18 @@ class Dendrita {
 				suma += sinapsis[key].procesar();
 			}
 
-
-			// Activacion Promedio
-			valor = suma / Object.keys(sinapsis).length;
 		}
 
-		dendrita.valor = valor * dendrita.peso;
 
-		return valor;
+    try{
+      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * window[dendrita.peso];
+    } catch {
+      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * dendrita.peso;
+    }
+
+
+
+		return dendrita.valor;
 	}
 
 	entrenar (modulador){
