@@ -43,7 +43,7 @@ presets = {
 
 			Constructor.insertarAxonesConMascara({
 				keyNeurona: keyNeurona,
-				mascara: conexionados.kohonen_simple_espaciado
+				mascara: conexionados.kohonen_sparced
 			});
 
 		}
@@ -135,10 +135,6 @@ presets = {
 
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
-
-
-
-
 
 
 		console.log('red created...');

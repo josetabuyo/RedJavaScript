@@ -278,7 +278,14 @@ $(function(){
 				for(keySinapsis in dendrita.sinapsis){
 
 					var sinapsis = dendrita.sinapsis[keySinapsis];
-					var pesoEfectivo = sinapsis.peso * dendrita.peso;
+
+					var pesoEfectivo;
+
+					if(typeof(dendrita.peso) === "string"){
+						pesoEfectivo = sinapsis.peso * window[dendrita.peso];
+					}else{
+						pesoEfectivo = sinapsis.peso * dendrita.peso;
+					}
 
 					var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
 
@@ -304,7 +311,13 @@ $(function(){
 
 					var celSinapsis = gui.layers[gui.sel.idLayer].cels[keySinapsis];
 
-					celSinapsis.svgObject.attr(_attr);
+					try {
+
+						celSinapsis.svgObject.attr(_attr);
+					} catch (e) {
+						debugger
+					}
+
 
 				}
 			}
