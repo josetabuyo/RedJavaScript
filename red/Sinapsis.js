@@ -1,6 +1,4 @@
 /************** :SINAPSIS: ************/
-var COEF_SINAPSIS_ENTRENAMIENTO = 0.002;
-var COEF_SINAPSIS_UMBRAL_PESO = 0.200;
 
 class Sinapsis {
   constructor(opt) {
@@ -47,7 +45,7 @@ class Sinapsis {
 	}
 
 	procesar (){
-		this.valor =  (1 - this.neurona_AxonEntrante.valor - this.peso);
+		this.valor =  1 - (this.peso - this.neurona_AxonEntrante.valor);
 		return this.valor
 	}
 

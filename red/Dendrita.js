@@ -46,13 +46,14 @@ class Dendrita {
 		}
 
 
+    var pesoEfectivo;
     try{
-      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * window[dendrita.peso];
+      pesoEfectivo = window[dendrita.peso];
     } catch {
-      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * dendrita.peso;
+      pesoEfectivo = dendrita.peso;
     }
 
-
+    dendrita.valor = (suma / Object.keys(sinapsis).length) * pesoEfectivo;
 
 		return dendrita.valor;
 	}
