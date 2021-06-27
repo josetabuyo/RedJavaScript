@@ -91,12 +91,6 @@ $(function(){
 
 		</div>
 
-		<li id="template_sly" class="template sly">
-			<div class="sly_ref">
-			</div>
-			<input class="sly_input" type="range" min="0" max="255" value="100" />
-		</li>
-
 	`);
 
 

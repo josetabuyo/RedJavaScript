@@ -267,7 +267,8 @@ var Constructor = {
 		var neuronaTarget = this.red.neuronas[keyNeuronaTarget];
 
 		var dendrita = new Dendrita({
-			neurona: neuronaTarget
+			neurona: neuronaTarget,
+			peso: PESO_DENDRITA_ENTRADA
 		});
 
 

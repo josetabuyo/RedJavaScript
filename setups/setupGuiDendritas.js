@@ -1,5 +1,3 @@
-var PESO_DENDRITA_CERCANA = 0.8
-var PESO_DENDRITA_INHIBIDORA = -1.0
 
 $(function(){
 

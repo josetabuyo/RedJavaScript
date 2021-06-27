@@ -3,9 +3,21 @@
 var configSlyCoef = function(coef, escala) {
 
 
-	if(!escala)escala=1;
 
-	var objSly = $('#'+ coef);
+	var newLi = $('#template_sly').clone()
+			.attr('id', coef +'_container')
+			.removeClass('template')
+			;
+
+	newLi.find('div.sly_ref').text(coef);
+
+	var objSly = newLi.find('input.sly_input')
+
+	objSly.attr('id', coef);
+
+
+
+	if(!escala)escala=1;
 
 
 	objSly.change(function(){
@@ -19,15 +31,22 @@ var configSlyCoef = function(coef, escala) {
 
 	objSly.val(window[coef] * escala * 255);
 	objSly.siblings().text(coef + ": " + window[coef]);
+
+
+	return newLi;
 };
 
 
 var setControlCoeficientes = function(){
-	configSlyCoef("COEF_SINAPSIS_ENTRENAMIENTO", 100);
-	configSlyCoef("COEF_SINAPSIS_UMBRAL_PESO");
-	configSlyCoef("COEF_NEURONA_UMBRAL_ACTIVACION", .1);
-	configSlyCoef("PESO_DENDRITA_CERCANA");
-	configSlyCoef("PESO_DENDRITA_INHIBIDORA", -1);
+
+	$('#control #coeficientes').empty();
+
+	$('#control #coeficientes').append(configSlyCoef("COEF_SINAPSIS_ENTRENAMIENTO", 100));
+	$('#control #coeficientes').append(configSlyCoef("COEF_SINAPSIS_UMBRAL_PESO"));
+	$('#control #coeficientes').append(configSlyCoef("COEF_NEURONA_UMBRAL_ACTIVACION", .1));
+	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_CERCANA"));
+	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_INHIBIDORA", -1));
+	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_ENTRADA"));
 
 };
 
@@ -66,33 +85,22 @@ $(function(){
 			</div>
 			<div class="body">
 
-				<ul id="coeficientes">
-					<li id="COEF_SINAPSIS_ENTRENAMIENTO">COEF_SINAPSIS_ENTRENAMIENTO</li>
-					<li id="COEF_SINAPSIS_UMBRAL_PESO">COEF_SINAPSIS_UMBRAL_PESO</li>
-					<li id="COEF_NEURONA_UMBRAL_ACTIVACION">COEF_NEURONA_UMBRAL_ACTIVACION</li>
-					<li id="PESO_DENDRITA_CERCANA">PESO_DENDRITA_CERCANA</li>
-					<li id="PESO_DENDRITA_INHIBIDORA">PESO_DENDRITA_INHIBIDORA</li>
-				<ul>
+				<ul id="coeficientes" />
+
+
+
+
+				<li id="template_sly" class="template sly">
+					<div class="sly_ref">
+					</div>
+					<input class="sly_input" type="range" min="0" max="255" value="100" />
+				</li>
 
 			</div>
 		</div>
 	`);
 
-	$('#control #coeficientes>li').each(function(index, item){
 
-		var coef = $(item).text();
-
-		var newLi = $('#template_sly').clone()
-				.attr('id', coef +'_container')
-				.removeClass('template')
-				;
-
-		newLi.find('div.sly_ref').text(coef);
-
-		newLi.find('input.sly_input').attr('id', coef);
-
-		$(item).replaceWith(newLi)
-	})
 
 	setControlCoeficientes();
 

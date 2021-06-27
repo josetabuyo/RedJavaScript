@@ -1,4 +1,3 @@
-var COEF_NEURONA_UMBRAL_ACTIVACION = 2
 /************** :NEURONA: ************/
 
 class Neurona {
