@@ -1,19 +1,19 @@
 
 
-var configSlyCoef = function(coef, escala) {
+var configSlyCoef = function(_coef, escala) {
 
 
 
 	var newLi = $('#template_sly').clone()
-			.attr('id', coef +'_container')
+			.attr('id', _coef +'_container')
 			.removeClass('template')
 			;
 
-	newLi.find('div.sly_ref').text(coef);
+	newLi.find('div.sly_ref').text(_coef);
 
 	var objSly = newLi.find('input.sly_input')
 
-	objSly.attr('id', coef);
+	objSly.attr('id', _coef);
 
 
 
@@ -24,13 +24,13 @@ var configSlyCoef = function(coef, escala) {
 		var value = ($(this).val() / 255);
 		value = value / escala;
 
-		window[coef] = parseFloat(value.toFixed(3));
+		config[_coef] = parseFloat(value.toFixed(3));
 
-		$(this).siblings().text(coef + ": " + window[coef]);
+		$(this).siblings().text(_coef + ": " + config[_coef]);
 	});
 
-	objSly.val(window[coef] * escala * 255);
-	objSly.siblings().text(coef + ": " + window[coef]);
+	objSly.val(config[_coef] * escala * 255);
+	objSly.siblings().text(_coef + ": " + config[_coef]);
 
 
 	return newLi;

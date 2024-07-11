@@ -52,7 +52,7 @@ $(function(){
   `);
 
 
-  $('#tests>.toolbar select').on('click', function(e){
+  $('#tests>.toolbar select').on('change', function(e){
 
 
     $('#tests .body>div').hide();
@@ -66,6 +66,9 @@ $(function(){
 
     var testString = $(this).val();
 
+    if(testString == ""){
+      return;
+    }
 
     eval(`test = new ${testString}();`)
 
@@ -80,10 +83,6 @@ $(function(){
 
 
   });
-
-
-
-
 
   $('#tests>.toolbar #step').on('click', function(){
     test.step();

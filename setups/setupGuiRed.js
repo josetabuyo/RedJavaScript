@@ -273,14 +273,7 @@ $(function(){
 
 					var sinapsis = dendrita.sinapsis[keySinapsis];
 
-					var pesoEfectivo;
-
-					if(typeof(dendrita.peso) === "string"){
-						pesoEfectivo = sinapsis.peso * window[dendrita.peso];
-					}else{
-						pesoEfectivo = sinapsis.peso * dendrita.peso;
-					}
-
+					var pesoEfectivo = sinapsis.peso * dendrita.peso;
 					var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
 
 					var _attr = {};

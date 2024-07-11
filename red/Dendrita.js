@@ -42,17 +42,13 @@ class Dendrita {
 			for(var key in sinapsis){
 				suma += sinapsis[key].procesar();
 			}
+			
+			dendrita.valor = (suma / Object.keys(sinapsis).length) * dendrita.peso;
 
+			debugCheckValue(dendrita.valor, [-1,1]);
+
+			// dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * dendrita.peso;
 		}
-
-
-    try{
-      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * window[dendrita.peso];
-    } catch {
-      dendrita.valor = (1 - (suma  / Object.keys(sinapsis).length)) * dendrita.peso;
-    }
-
-
 
 		return dendrita.valor;
 	}
@@ -61,30 +57,24 @@ class Dendrita {
 		var dendrita = this;
 		var sinapsis = dendrita.sinapsis;
 
-
 		var meritoDentrita = dendrita.valor * modulador;
 
-
-
-		if(Object.keys(sinapsis).length > 0){
-
-			for(var key in sinapsis){
-				var sinap = sinapsis[key];
-
-				sinap.entrenar(meritoDentrita);
-
-      }
-
-		} else {
-      this.kill;
-    }
+		for(var key in sinapsis){
+			var sinap = sinapsis[key];
+			sinap.entrenar(meritoDentrita);
+		}
 
 	}
 
+	delete_sinapsis (id){
+		delete this.sinapsis[id];
+		if(Object.keys(this.sinapsis).length == 0){
+			this.kill();
+		}
+	}
 
-
-  kill (){
-		delete this.neurona[this.id];
+  	kill (){
+		this.neurona.delete_dendrita(this.id);
 	}
 
 };

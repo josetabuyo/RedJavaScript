@@ -71,7 +71,7 @@ $(function(){
 
       <div class="body">
         <ul>
-          <li id="addRegion" ><input type="text" placeholder="Ingrese nueva región"/></li>
+          <li id="addRegion" ><input type="text" placeholder="Ingrese nueva region"/></li>
         </ul>
       </div>
 

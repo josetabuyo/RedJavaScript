@@ -55,9 +55,9 @@ presets = {
 
 
 		//SET COEFICIENTES
-		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
-
+		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
+		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
+		
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
 
@@ -77,9 +77,6 @@ presets = {
 
 	default: function(){
 
-
-
-
 		console.log(`
 			Setting preset: default
 			=====================
@@ -88,8 +85,6 @@ presets = {
 
 		`);
 
-
-
 		//crear red
 		red = new Red();
 		Constructor.red = red;
@@ -97,17 +92,15 @@ presets = {
 
 		Constructor.addNeuronasBox(
 			{ x: 0, y: 0 },
-			{ x: 80, y: 40 },
+			{ x: 40, y: 20 },
 			{
 				region: "INTERNA"
 			}
 		);
 
-
-
 		Constructor.addNeuronasBox(
-			{ x: 0, y: 50 },
-			{ x: 7, y: 57 },
+			{ x: 0, y: 25 },
+			{ x: 7, y: 32 },
 			{
 				region: "ENTRADA"
 			}
@@ -118,7 +111,7 @@ presets = {
 
 		  Constructor.insertarAxonesConMascara({
 		    keyNeurona: keyNeurona,
-		    mascara: conexionados.conexion_corona_kohonen
+		    mascara: conexionados.kohonen_simple
 		  });
 
 		}
@@ -130,8 +123,8 @@ presets = {
 
 
 		//SET COEFICIENTES
-		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
+		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
+		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
 
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
@@ -200,14 +193,10 @@ presets = {
 
 
 		//SET COEFICIENTES
-		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
-
+		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
+		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
 
 		Constructor.conectarRegiones(["ENTRADA", "SALIDA"]);
-
-
-
 
 		console.log('red created...');
 
@@ -242,14 +231,14 @@ presets = {
 
 
 
-    for(var keyNeurona in red.regiones["SALIDA"]){
+		for(var keyNeurona in red.regiones["SALIDA"]){
 
-      Constructor.insertarAxonesConMascara({
-        keyNeurona: keyNeurona,
-        mascara: conexionados.lvq
-      });
+		Constructor.insertarAxonesConMascara({
+			keyNeurona: keyNeurona,
+			mascara: conexionados.lvq
+		});
 
-    }
+		}
 
 		$('#tests select').val("TestAudio");
 		$('#tests select').click();
@@ -259,13 +248,9 @@ presets = {
 
 		guiRed.refresh();
 
-
 		//SET COEFICIENTES
-		COEF_SINAPSIS_ENTRENAMIENTO= 0.002;
-		COEF_SINAPSIS_UMBRAL_PESO= 0.2;
-
-
-
+		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
+		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
 
 		console.log('red created...');
 
@@ -282,28 +267,36 @@ $(function(){
 
 	});
 
-
-
 	var $presets_select = $('#presets>select');
-
 
 	keysPresets = Object.keys(presets);
 	for(iTemplatePresets in keysPresets){
 		$presets_select.append("<option value='" + keysPresets[iTemplatePresets] + "'>" + keysPresets[iTemplatePresets] + "</option>");
 	}
 
-	$presets_select.on('click', function(){
+	$presets_select.on('change', function(){
+		
+		if($(this).val() != ""){
+			
+			if (confirm("Do you want to load the preset: " + $(this).val())) {
+				
+				console.log("Loading preset: " + $(this).val());
 
-		$("#overlay").hide().show(0);
-
-
-		presets[$(this).val()]();
-
-
-		$("#overlay").hide();
-
-		$(this).hide();
-
+				$("#overlay").hide().show(0);
+	
+	
+				presets[$(this).val()]();
+	
+	
+				$("#overlay").hide();
+	
+				$(this).hide();
+	
+			
+			} else {
+				return 0;
+			}
+		}
 	});
 
 	//////////////////////////////////////// GUI PRESET /////////////////////////////////////

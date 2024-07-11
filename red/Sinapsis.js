@@ -1,6 +1,4 @@
 /************** :SINAPSIS: ************/
-var COEF_SINAPSIS_ENTRENAMIENTO = 0.002;
-var COEF_SINAPSIS_UMBRAL_PESO = 0.200;
 
 class Sinapsis {
   constructor(opt) {
@@ -18,7 +16,8 @@ class Sinapsis {
 
 		if(!sinapsis.peso){
 			sinapsis.peso = Math.random();
-			if(this.peso < COEF_SINAPSIS_UMBRAL_PESO){
+			
+			if(this.peso < config["COEF_SINAPSIS_UMBRAL_PESO"]){
 				sinapsis.kill();
 			}
 		}
@@ -36,23 +35,34 @@ class Sinapsis {
 	entrenar (valorEntrenamiento){
 
 
-		this.peso += (this.neurona_AxonEntrante.valor - this.peso) * valorEntrenamiento * COEF_SINAPSIS_ENTRENAMIENTO;
-
-
-		if(this.peso < COEF_SINAPSIS_UMBRAL_PESO){
+		this.peso += (this.neurona_AxonEntrante.valor - this.peso) * valorEntrenamiento * config["COEF_SINAPSIS_ENTRENAMIENTO"];
+		
+		if(this.peso < config["COEF_SINAPSIS_UMBRAL_PESO"]){
 			this.kill();
 			return;
 		}
+		if(this.peso > 1){
+			this.peso = 1;
+		}
+
+		debugCheckValue(this.peso, [0,1]);
+
+		
 
 	}
 
 	procesar (){
-		this.valor =  (1 - this.neurona_AxonEntrante.valor - this.peso);
+		// this.valor =  1 - (this.peso - this.neurona_AxonEntrante.valor);
+		
+		this.valor =  this.peso * this.neurona_AxonEntrante.valor;
+		debugCheckValue(this.valor, [0,1]);
+
 		return this.valor
 	}
 
 	kill (){
-		delete this.dendrita.sinapsis[this.id];
+		// removing from parent
+		this.dendrita.delete_sinapsis(this.id);
 	}
 
 };

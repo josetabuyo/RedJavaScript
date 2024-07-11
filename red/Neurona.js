@@ -40,14 +40,12 @@ class Neurona {
 
 	}
 	activar () {
-    // this.valor = this.tensionSuperficial * COEF_NEURONA_UMBRAL_ACTIVACION;
-		if(this.tensionSuperficial > COEF_NEURONA_UMBRAL_ACTIVACION){
+    	// this.valor = this.tensionSuperficial * config["COEF_NEURONA_UMBRAL_ACTIVACION"];
+		if(this.tensionSuperficial > config["COEF_NEURONA_UMBRAL_ACTIVACION"]){
 			this.valor = 1;
 		}else{
 			this.valor = 0;
 		}
-
-
 	}
 	activarExternal (valor){
 		var neurona = this;
@@ -96,6 +94,8 @@ class Neurona {
 
     var valor = maxValorDendrita + minValorDendrita;
 
+	debugCheckValue(valor, [-1,1]);
+	
     if(valor > 0){
       neurona.setTension(maxValorDendrita);
       dendritaMax.entrenar(1);
@@ -141,7 +141,7 @@ class Neurona {
 
 		neurona.setTension(valorDendritas);
 	}
-  procesarOld (){
+  	procesarOld (){
 		var neurona = this;
 
 
@@ -180,24 +180,33 @@ class Neurona {
 
 
 
-  entrenar (valor){
+  	entrenar (valor){
 		var neurona = this;
 
-    if(Object.keys(neurona.dendritas).length > 0){
-      for(var iDendrita in neurona.dendritas){
-  			neurona.dendritas[iDendrita].entrenar(valor);
-  		};
-    }else{
+		if(Object.keys(neurona.dendritas).length > 0){
+			for(var iDendrita in neurona.dendritas){
+				neurona.dendritas[iDendrita].entrenar(valor);
+			};
+		
+		// }else{
+		// 	this.kill;
 
-      this.kill;
-
-    }
+		}
 
 	}
 
-  kill (){
-    delete this.red.neuronas[this.id];
-  }
+
+	delete_dendrita (id){
+		delete this.dendritas[id];
+		
+		if(Object.keys(this.dendritas).length == 0){
+			this.kill();
+		}
+	}
+
+  	kill (){
+    	delete this.red.neuronas[this.id];
+  	}
 
 }
 
