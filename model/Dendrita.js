@@ -25,6 +25,9 @@ class Dendrita {
 
 		}
 
+		if(dendrita.neurona == null){
+			debugger
+		}
 		dendrita.neurona.dendritas[dendrita.id] = dendrita;
 
 	}
@@ -34,7 +37,6 @@ class Dendrita {
 
 		var sinapsis = dendrita.sinapsis;
 
-		var valor;
 		var suma = 0.0;
 
 		if(Object.keys(sinapsis).length > 0){
@@ -57,11 +59,9 @@ class Dendrita {
 		var dendrita = this;
 		var sinapsis = dendrita.sinapsis;
 
-		var meritoDentrita = dendrita.valor * modulador;
-
 		for(var key in sinapsis){
 			var sinap = sinapsis[key];
-			sinap.entrenar(meritoDentrita);
+			sinap.entrenar(modulador);
 		}
 
 	}

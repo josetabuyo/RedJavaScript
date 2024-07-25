@@ -31,14 +31,13 @@ presets = {
 
 
 		Constructor.addNeuronasBox(
-			{ x: 0, y: 30 },
-			{ x: 7, y: 37 },
+			{ x: 0, y: 25 },
+			{ x: 10, y: 35 },
 			{
 				region: "ENTRADA"
 			}
 		);
-
-
+		
 		for(var keyNeurona in red.regiones["INTERNA"]){
 
 			Constructor.insertarAxonesConMascara({
@@ -55,8 +54,8 @@ presets = {
 
 
 		//SET COEFICIENTES
-		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
-		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.1)
 		
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
@@ -77,22 +76,14 @@ presets = {
 
 	default: function(){
 
-		console.log(`
-			Setting preset: default
-			=====================
-					COEF_SINAPSIS_ENTRENAMIENTO = 0.002
-					COEF_SINAPSIS_UMBRAL_PESO = 0.2
-
-		`);
-
 		//crear red
 		red = new Red();
 		Constructor.red = red;
 
-
 		Constructor.addNeuronasBox(
 			{ x: 0, y: 0 },
 			{ x: 40, y: 20 },
+			//{ x: 1, y: 1 },
 			{
 				region: "INTERNA"
 			}
@@ -100,7 +91,7 @@ presets = {
 
 		Constructor.addNeuronasBox(
 			{ x: 0, y: 25 },
-			{ x: 7, y: 32 },
+			{ x: 10, y: 35 },
 			{
 				region: "ENTRADA"
 			}
@@ -123,9 +114,11 @@ presets = {
 
 
 		//SET COEFICIENTES
-		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
-		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
-
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
+		
+		console.log("============ Configs ============");
+		console.log(config);
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
 
@@ -193,9 +186,9 @@ presets = {
 
 
 		//SET COEFICIENTES
-		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
-		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
-
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
+		
 		Constructor.conectarRegiones(["ENTRADA", "SALIDA"]);
 
 		console.log('red created...');
@@ -249,9 +242,9 @@ presets = {
 		guiRed.refresh();
 
 		//SET COEFICIENTES
-		config["COEF_SINAPSIS_ENTRENAMIENTO"]= 0.002;
-		config["COEF_SINAPSIS_UMBRAL_PESO"]= 0.2;
-
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
+		
 		console.log('red created...');
 
 	}

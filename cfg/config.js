@@ -1,4 +1,11 @@
 var config = {
+    setConfig: function(key, value){
+        this[key] = value;
+        this.onSetConfg(key, value);
+    },
+    onSetConfg: function(key){
+        return;
+	},
     "COEF_SINAPSIS_ENTRENAMIENTO": 0,    
     "COEF_SINAPSIS_UMBRAL_PESO":  0.2,
     "COEF_NEURONA_UMBRAL_ACTIVACION":  0,

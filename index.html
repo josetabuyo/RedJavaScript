@@ -152,12 +152,13 @@
 
 	<script src="GuiMatriz.js"></script>
 
-	<script src="red/Constructor.js"></script>
-	<script src="red/Config.js"></script>
-	<script src="red/Red.js"></script>
-	<script src="red/Neurona.js"></script>
-	<script src="red/Dendrita.js"></script>
-	<script src="red/Sinapsis.js"></script>
+	<script src="model/Constructor.js"></script>
+	<script src="cfg/config.js"></script>
+	<script src="cfg/conexionados.js"></script>
+	<script src="model/Red.js"></script>
+	<script src="model/Neurona.js"></script>
+	<script src="model/Dendrita.js"></script>
+	<script src="model/Sinapsis.js"></script>
 
 
 	<script src="setups/setupOnboarding.js"></script>
@@ -165,6 +166,7 @@
 	<script src="setups/setupConfig.js"></script>
 	<script src="setups/setupRegiones.js"></script>
 	<script src="setups/setupGuiDendritas.js"></script>
+	
 	<script src="setups/setupPresets.js"></script>
 	<script src="setups/setupTests.js"></script>
 	<script src="tests/Test.js"></script>
@@ -178,8 +180,6 @@
 		//GLOBAL CONTEXT
 		var red;
 		var test;
-		var templates = {};
-
 		////
 
 
@@ -215,7 +215,6 @@
 	<script>
 		$(function(){
 			d3.selectAll('svg').on('contextmenu', function(data, index) {
-
 				event.preventDefault();
 			});
 		});

@@ -60,8 +60,8 @@ var Constructor = {
 
 		red = new Red();
 
-		config["COEF_SINAPSIS_ENTRENAMIENTO"]= _red.COEF_SINAPSIS_ENTRENAMIENTO;
-		config["COEF_SINAPSIS_UMBRAL_PESO"]= _red.COEF_SINAPSIS_UMBRAL_PESO;
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", _red.COEF_SINAPSIS_ENTRENAMIENTO)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", _red.COEF_SINAPSIS_UMBRAL_PESO)
 
 		//REHIDRATO LAS NEURONAS
 		for(var key in _red.neuronas){
@@ -119,6 +119,20 @@ var Constructor = {
 
 	},
 
+	onKillNeurona: function(key){
+
+		return;
+	},
+
+	killNeurona: function(key){
+		
+		delete red.regiones[red.neuronas[key].region][key];
+		delete red.neuronas_process[key];
+		delete red.neuronas[key];
+
+		this.onKillNeurona(key)
+	},
+	
 	addNeurona: function(_neurona){
 
 		if(_neurona.region == "ENTRADA"){
@@ -249,8 +263,7 @@ var Constructor = {
 			for(var keyNeuronaTarget in this.red.regiones[keyRegionTarget]){
 
 				keyNeuronaArrayConector = keyNeuronaArrayConector.concat(Object.keys(this.red.regiones[keyRegionSource]));
-				keyNeuronaArrayConector.unshift(keyNeuronaTarget
-				 );
+				keyNeuronaArrayConector.unshift(keyNeuronaTarget);
 				this.conectarNeuronas(keyNeuronaArrayConector);
 			}
 		}
@@ -263,6 +276,10 @@ var Constructor = {
 		var keyNeuronaTarget = keyNeuronas.shift()
 
 		var neuronaTarget = this.red.neuronas[keyNeuronaTarget];
+		
+		if(typeof(neuronaTarget) == "undefined"){
+			return
+		}
 
 		var dendrita = new Dendrita({
 			neurona: neuronaTarget,

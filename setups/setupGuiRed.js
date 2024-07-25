@@ -126,11 +126,7 @@ $(function(){
 
 		},
 		onRemoveCell: function(key){
-
-			delete red.regiones[red.neuronas[key].region][key];
-			delete red.neuronas_process[key];
-			delete red.neuronas[key];
-
+			Constructor.killNeurona(key)
 		},
 		onRefreshCell: function(key, svgObject){
 			var gui = this;
@@ -256,8 +252,6 @@ $(function(){
 			}else{
 				gui.neuronaWatch = null
 			}
-
-
 		},
 
 		neuronaWatch: null,
@@ -272,6 +266,7 @@ $(function(){
 				for(keySinapsis in dendrita.sinapsis){
 
 					var sinapsis = dendrita.sinapsis[keySinapsis];
+					
 
 					var pesoEfectivo = sinapsis.peso * dendrita.peso;
 					var neurona_AxonEntrante = sinapsis.neurona_AxonEntrante;
@@ -302,7 +297,7 @@ $(function(){
 
 						celSinapsis.svgObject.attr(_attr);
 					} catch (e) {
-						debugger
+						// debugger
 					}
 
 
@@ -346,6 +341,15 @@ $(function(){
 		}
 
 	});
+	Constructor.onKillNeurona = function(key){
+		pos = {
+			x: key.slice(1, key.indexOf("x")),
+			y: key.slice(key.indexOf("y") + 1),
+		}
+		
+		guiRed.removeCell(pos);
+	}
+
 
 	$('#guiRed_Container>.toolbar>#addNeurona').on('click', function(e){
 		guiRed.tool1 = "addCell";

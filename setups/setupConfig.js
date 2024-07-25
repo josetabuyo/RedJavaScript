@@ -18,6 +18,7 @@ var configSlyCoef = function(_coef, escala) {
 
 
 	if(!escala)escala=1;
+	objSly.attr('escala', escala);
 
 
 	objSly.change(function(){
@@ -25,7 +26,7 @@ var configSlyCoef = function(_coef, escala) {
 		value = value / escala;
 
 		config[_coef] = parseFloat(value.toFixed(3));
-
+		
 		$(this).siblings().text(_coef + ": " + config[_coef]);
 	});
 
@@ -40,13 +41,24 @@ var configSlyCoef = function(_coef, escala) {
 var setControlCoeficientes = function(){
 
 	$('#control #coeficientes').empty();
-
+	
+	
 	$('#control #coeficientes').append(configSlyCoef("COEF_SINAPSIS_ENTRENAMIENTO", 100));
 	$('#control #coeficientes').append(configSlyCoef("COEF_SINAPSIS_UMBRAL_PESO"));
-	$('#control #coeficientes').append(configSlyCoef("COEF_NEURONA_UMBRAL_ACTIVACION", .1));
+	$('#control #coeficientes').append(configSlyCoef("COEF_NEURONA_UMBRAL_ACTIVACION", 1));
 	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_CERCANA"));
 	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_INHIBIDORA", -1));
 	$('#control #coeficientes').append(configSlyCoef("PESO_DENDRITA_ENTRADA"));
+
+	config.onSetConfg = function(_coef, value){
+		var objSly = $('#'+_coef);
+		
+		value = value * objSly.attr('escala');
+		
+		objSly.val(Math.round(value * 255));
+		
+		objSly.siblings().text(_coef + ": " + config[_coef]);
+	};
 
 };
 

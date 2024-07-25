@@ -11,7 +11,7 @@ class TestAsciiImage extends Test{
       prefix: '',
       escala: 25,
 
-      altoPixel: 8,
+      altoPixel: 11,
       pixelBig:{}
 
     }, opt);
@@ -57,18 +57,9 @@ class TestAsciiImage extends Test{
           "stroke" 				: "#111111",
           "fill" 					: "#000000"
         });
-
-
       }
-
     }
-
-
-
-
-
   }
-
 
   step() {
     //drawVisual = requestAnimationFrame(test.step);
@@ -81,19 +72,26 @@ class TestAsciiImage extends Test{
       // test.index = -test.altoPixel
       test.index = 0
     }
+
+    // Choosing a random character
+    var random = Math.random() * texto.length;
+    var index = Math.floor(random);
     
-    
-    if(test.index < texto.length){
-      test.index++;
-    }else{
-      test.index = 0;
+    var new_index = index;
+
+    if(index >= texto.length){
+      new_index = index - texto.length + 1;
+    }else if(index < 0){
+      new_index = index + texto.length;
     }
-
-
     
+    
+    var caracter = texto.substring(new_index, new_index+1);
+    test.index = new_index;
 
-
-    var caracter = texto.substring(test.index, test.index+1);
+    if(caracter==""){
+      debugger
+    }
 
     // if(test.index < (test.altoPixel*texto.length)){
     //   test.index++;
@@ -101,14 +99,11 @@ class TestAsciiImage extends Test{
     //   test.index= -test.altoPixel;
     // }
 
-
-
     test.ctx.clearRect(0, 0, test.canvas.width, test.canvas.height);
     test.ctx.font = (test.altoPixel+1) + "px Arial";
     test.ctx.fillStyle = "blue";
-    test.ctx.fillText(caracter, 0, test.altoPixel-2);
+    test.ctx.fillText(caracter, 1, test.altoPixel-1);
     // test.ctx.fillText(texto, -test.index, test.altoPixel-1);
-
 
     test.printEntrada();
 
@@ -122,13 +117,15 @@ class TestAsciiImage extends Test{
 
 
 
-
     for(var x=0; x<test.altoPixel; x++){
       for(var y=0; y<test.altoPixel; y++){
 
         var data = test.ctx.getImageData(x, y, 1, 1).data;
         var valorActivacion = data[2]
 
+        if(valorActivacion==0){
+          valorActivacion = Math.floor(Math.random() * 255);
+        }
 
         var key = Constructor.keyByCoord(x, y);
 
@@ -137,19 +134,20 @@ class TestAsciiImage extends Test{
         });
 
         key = Object.keys(red.regiones["ENTRADA"])[index]
-        var neurona = red.neuronas[key];
-
+        
         index++;
+        
+        
+        var neurona = red.neuronas[key];
+        if(typeof(neurona) == "undefined"){
+          continue
+        }
+        
         neurona.activarExternal(valorActivacion / 255);
-
 
       }
     }
-
-
   }
-
-
 }
 
 
@@ -198,7 +196,7 @@ $(function(){
 		</style>
 
 		<div id="TestAsciiImage_Container">
-			<input value="DEBUG"></input>
+			<input value="XO"></input>
 			<canvas></canvas>
 			<svg></svg>
 		</div>

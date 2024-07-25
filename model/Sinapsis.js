@@ -11,15 +11,13 @@ class Sinapsis {
 			valor: 0
 		}, opt);
 
-
 		var sinapsis = this;
 
 		if(!sinapsis.peso){
 			sinapsis.peso = Math.random();
-			
-			if(this.peso < config["COEF_SINAPSIS_UMBRAL_PESO"]){
-				sinapsis.kill();
-			}
+			while(this.peso < config["COEF_SINAPSIS_UMBRAL_PESO"]){
+				sinapsis.peso = Math.random()
+			};
 		}
 
 		sinapsis.neurona_AxonEntrante = sinapsis.dendrita.neurona.red.neuronas[sinapsis.id];
@@ -46,15 +44,13 @@ class Sinapsis {
 		}
 
 		debugCheckValue(this.peso, [0,1]);
-
 		
-
 	}
 
 	procesar (){
-		// this.valor =  1 - (this.peso - this.neurona_AxonEntrante.valor);
+		this.valor =  1 - Math.abs(this.peso - this.neurona_AxonEntrante.valor);
 		
-		this.valor =  this.peso * this.neurona_AxonEntrante.valor;
+		// this.valor =  this.peso * this.neurona_AxonEntrante.valor;
 		debugCheckValue(this.valor, [0,1]);
 
 		return this.valor
