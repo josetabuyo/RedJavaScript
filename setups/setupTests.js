@@ -78,41 +78,59 @@ $(function(){
     });
 
     test.onStep(function(){
+
       guiRed.refresh();
+    });
+
+    test.onStop(function(){
+      
+      btn_play.addClass('play');
+      btn_play.text('Play');
     });
 
 
   });
 
   $('#tests>.toolbar #step').on('click', function(){
+    red.procesar();
     test.step();
   });
 
   $('#tests>.toolbar #play').on('click', function(){
 
-    if(typeof(test) == "undefined"){
-      alert("Falta elegir un test");
-      return;
-    };
+    
 
 
     var btn_play = $('#play');
-    btn_play.removeClass('pause');
-    btn_play.removeClass('play');
-
-
+    
     if(!test.running){
       test.play();
+
+      btn_play.removeClass('play');
       btn_play.addClass('pause');
       btn_play.text('Pause');
     }else{
       test.stop();
+      
+      btn_play.removeClass('pause');
       btn_play.addClass('play');
       btn_play.text('Play');
     }
+
+    
+    
+
   });
 
 
+  test = new TestDummy();
 
+  test.start({
+    red: red
+  });
+
+  test.onStep(function(){
+    guiRed.refresh();
+  });
 
 });

@@ -1,80 +1,44 @@
 presets = {
-
-	entrada_ascci: function(){
-
-
-
-
-		console.log(`
-			Setting preset: entrada_ascci
-			=====================
-					COEF_SINAPSIS_ENTRENAMIENTO = 0.002
-					COEF_SINAPSIS_UMBRAL_PESO = 0.2
-
-		`);
-
-
+	default: function(){
 
 		//crear red
 		red = new Red();
 		Constructor.red = red;
 
-
 		Constructor.addNeuronasBox(
-			{ x: 0, y: 0 },
-			{ x: 30, y: 20 },
+			{ x: 20, y: 0 },
+			{ x: 50, y: 30 },
+			//{ x: 1, y: 1 },
 			{
 				region: "INTERNA"
 			}
 		);
 
-
-
-		Constructor.addNeuronasBox(
-			{ x: 0, y: 25 },
-			{ x: 10, y: 35 },
-			{
-				region: "ENTRADA"
-			}
-		);
-		
 		for(var keyNeurona in red.regiones["INTERNA"]){
 
-			Constructor.insertarAxonesConMascara({
-				keyNeurona: keyNeurona,
-				mascara: conexionados.kohonen_sparced
-			});
+		  Constructor.insertarAxonesConMascara({
+		    keyNeurona: keyNeurona,
+		    mascara: conexionados.kohonen_simple
+		  });
 
 		}
-
-
+		
 		guiRed.setLayer(0, red.neuronas);
 
 		guiRed.refresh();
-
-
+		
 		//SET COEFICIENTES
 		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
-		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.1)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
 		
-
-		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
-
-
-
-
-
+		console.log("============ Configs ============");
+		console.log(config);
 
 		console.log('red created...');
 
-
-		console.log('ATTENTION!!!!!!!!');
-		console.log('please select a test');
-
-
 	},
 
-	default: function(){
+	entrada_ascci: function(){
 
 		//crear red
 		red = new Red();
@@ -83,7 +47,6 @@ presets = {
 		Constructor.addNeuronasBox(
 			{ x: 0, y: 0 },
 			{ x: 40, y: 20 },
-			//{ x: 1, y: 1 },
 			{
 				region: "INTERNA"
 			}
@@ -121,16 +84,16 @@ presets = {
 		console.log(config);
 
 		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
-
+		
 
 		console.log('red created...');
 
-
-		console.log('ATTENTION!!!!!!!!');
-		console.log('please select a test');
+		$('#tests select').val("TestAsciiImage");
+		$('#tests select').change();
 
 
 	},
+
 	desa_audio: function(){
 
 		console.log(`
@@ -194,7 +157,7 @@ presets = {
 		console.log('red created...');
 
 		$('#tests select').val("TestAudio");
-		$('#tests select').click();
+		$('#tests select').change();
 
 	},
 
@@ -234,7 +197,7 @@ presets = {
 		}
 
 		$('#tests select').val("TestAudio");
-		$('#tests select').click();
+		$('#tests select').change();
 
 
 		guiRed.setLayer(0, red.neuronas);

@@ -8,7 +8,6 @@ class TestAsciiImage extends Test{
     $.extend(test, {
       entrada: null,
       salida: null,
-      prefix: '',
       escala: 25,
 
       altoPixel: 11,
@@ -68,21 +67,25 @@ class TestAsciiImage extends Test{
     var $test = $("#TestAsciiImage_Container")
     var texto = $test.find("input").val();
 
+    // Choosing a random character
+    // var random = Math.random() * texto.length;
+    // var index = Math.floor(random);
+
     if(typeof(test.index) == "undefined"){
       // test.index = -test.altoPixel
-      test.index = 0
+      test.index = -1 // the first thing will be to add 1
     }
 
-    // Choosing a random character
-    var random = Math.random() * texto.length;
-    var index = Math.floor(random);
-    
-    var new_index = index;
+    // Choosing the next character
+    var new_index;
+    var index = test.index + 1;
 
     if(index >= texto.length){
-      new_index = index - texto.length + 1;
+      new_index = index - texto.length;
     }else if(index < 0){
       new_index = index + texto.length;
+    }else {
+      new_index = index;
     }
     
     
@@ -196,7 +199,7 @@ $(function(){
 		</style>
 
 		<div id="TestAsciiImage_Container">
-			<input value="XO"></input>
+			<input value="XXXXXXXXXXXXXXOOOOOOOOOOOOOOOO"></input>
 			<canvas></canvas>
 			<svg></svg>
 		</div>
