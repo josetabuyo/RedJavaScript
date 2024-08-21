@@ -7,7 +7,7 @@ $(function(){
       #tests{
         position: absolute;
         left: 0;
-        top: 20%;
+        top: 23%;
         width: 50%;
         height: 50%;
       }
@@ -29,13 +29,6 @@ $(function(){
 
     <div id="tests" class="container">
       <div class="toolbar">
-        <div id="play" class="boton play" title="Play o Pause al test continuo">
-          Play
-        </div>
-        <div id="step" class="boton" title="Ejecuta solo un test">
-          Step
-        </div>
-
         <select title="Selecciona un test" placeholder="Selecciona un test">
           <option value=""></option>
         </select>
@@ -53,8 +46,7 @@ $(function(){
 
 
   $('#tests>.toolbar select').on('change', function(e){
-
-
+    
     $('#tests .body>div').hide();
 
 
@@ -77,60 +69,12 @@ $(function(){
       red: red
     });
 
-    test.onStep(function(){
-
-      guiRed.refresh();
-    });
-
-    test.onStop(function(){
-      
-      btn_play.addClass('play');
-      btn_play.text('Play');
-    });
-
-
   });
-
-  $('#tests>.toolbar #step').on('click', function(){
-    red.procesar();
-    test.step();
-  });
-
-  $('#tests>.toolbar #play').on('click', function(){
-
-    
-
-
-    var btn_play = $('#play');
-    
-    if(!test.running){
-      test.play();
-
-      btn_play.removeClass('play');
-      btn_play.addClass('pause');
-      btn_play.text('Pause');
-    }else{
-      test.stop();
-      
-      btn_play.removeClass('pause');
-      btn_play.addClass('play');
-      btn_play.text('Play');
-    }
-
-    
-    
-
-  });
-
-
+  
   test = new TestDummy();
 
   test.start({
     red: red
   });
-
-  test.onStep(function(){
-    guiRed.refresh();
-  });
-
+  
 });
