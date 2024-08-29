@@ -22,8 +22,6 @@ class Sinapsis {
 
 		sinapsis.neurona_AxonEntrante = sinapsis.dendrita.neurona.red.neuronas[sinapsis.id];
 
-		sinapsis.neurona_AxonEntrante.axon.sinapsis[sinapsis.dendrita.neurona.id] = sinapsis;
-
 		sinapsis.dendrita.sinapsis[sinapsis.id] = sinapsis;
 
 

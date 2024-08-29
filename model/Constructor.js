@@ -193,7 +193,6 @@ var Constructor = {
 	makeEntradaNeurona: function(neurona){
 
 		_neurona = new NeuronaEntrada(neurona);
-		_neurona.axon = neurona.axon;
 		// re-apunto
 		neurona.red.neuronas[neurona.id] = _neurona;
 		// saco de la lista de process
@@ -222,8 +221,6 @@ var Constructor = {
 				var keyNeurona = "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
 				neurona.region = "SALIDA";
-				neurona.axon.sinapsis = {};
-
 			}
 		}
 	},
@@ -303,7 +300,6 @@ var Constructor = {
 				(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"])
 			){
 				dendrita.sinapsis[keyNeuronaSource] = sinapsis;
-				neuronaSource.axon.sinapsis[neuronaTarget.id] = sinapsis;
 			}
 		}
 
@@ -527,10 +523,7 @@ var Constructor = {
 					if(keyNeurona_AxonEntrante != neurona.id){
 
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
-						var axonEntrante = neurona_AxonEntrante.axon;
-
-
-
+						
 						var sinapsis = new Sinapsis({
 							neurona_AxonEntrante: neurona_AxonEntrante,
 							dendrita: dendrita,
@@ -542,7 +535,6 @@ var Constructor = {
 							(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"])
 						){
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 						}
 					}
 				}
@@ -584,8 +576,7 @@ var Constructor = {
 						var keyNeurona_AxonEntrante = "x"+ex+"y"+ey;
 
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
-						var axonEntrante = neurona_AxonEntrante.axon;
-
+						
 						if(!opt.peso){
 							opt.peso = Math.random()
 						};
@@ -599,7 +590,6 @@ var Constructor = {
 							});
 
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[keyNeurona] = sinapsis;
 						}
 					}
 				}
@@ -670,8 +660,6 @@ var Constructor = {
 
 						if(keyNeurona_AxonEntrante != neurona.id){
 
-							var axonEntrante = neurona_AxonEntrante.axon;
-
 							var sinapsis = new Sinapsis({
 								neurona_AxonEntrante: neurona_AxonEntrante,
 								dendrita: dendrita,
@@ -681,7 +669,6 @@ var Constructor = {
 
 							if(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"]){
 								dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-								red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 							}
 						}
 					}
@@ -799,7 +786,6 @@ var Constructor = {
 
 							if(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"]){
 								dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
-								red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
 							}
 
 							cantSinapsis++;
@@ -884,7 +870,6 @@ var Constructor = {
 
 						if(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"]){
 							dendrita.sinapsis[neurona_AxonEntrante.id] = sinapsis;
-							red.neuronas[neurona_AxonEntrante.id].axon.sinapsis[neurona.id] = sinapsis;
 						}
 					}
 				});
@@ -957,8 +942,6 @@ var Constructor = {
 
 						var neurona_AxonEntrante = red.neuronas[keyNeurona_AxonEntrante];
 
-						var axonEntrante = neurona_AxonEntrante.axon;
-
 						var sinapsis = new Sinapsis({
 							neurona_AxonEntrante: neurona_AxonEntrante,
 							dendrita: dendrita,
@@ -969,7 +952,6 @@ var Constructor = {
 							(sinapsis.peso > config["COEF_SINAPSIS_UMBRAL_PESO"])
 						){
 							dendrita.sinapsis[keyNeurona_AxonEntrante] = sinapsis;
-							red.neuronas[keyNeurona_AxonEntrante].axon.sinapsis[neurona.id] = sinapsis;
 						}
 					}
 				}

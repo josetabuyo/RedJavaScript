@@ -8,10 +8,6 @@ class Neurona {
 			id: null,
 			dendritas: {},
 			tensionSuperficial: 0,
-			axon: {
-				sinapsis: {}
-			}
-
 		}, opt);
 
 		var neurona = this;
