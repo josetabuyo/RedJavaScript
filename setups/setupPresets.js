@@ -1,4 +1,146 @@
 presets = {
+	test_automata: function(){
+		
+		//crear red
+		red = new Red();
+		Constructor.red = red;
+
+		
+		let borderEntradaSemiSize = 10
+		center = {x:30, y: 20}
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
+			{ x: center.x + borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
+			{
+				region: "ENTRADA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x + borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
+			{ x: center.x + borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
+			{
+				region: "ENTRADA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
+			{ x: center.x + borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
+			{
+				region: "ENTRADA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
+			{ x: center.x - borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
+			{
+				region: "ENTRADA"
+			}
+		);
+
+
+
+
+
+		borderEntradaSemiSize = 6;
+		
+		borderWeight = 3;
+
+		center = {x:30, y: 20}
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
+			{
+				region: "INTERNA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x + borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			{
+				region: "INTERNA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y + borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			{
+				region: "INTERNA"
+			}
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x - borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			{
+				region: "INTERNA"
+			}
+		);
+
+		
+
+
+
+
+
+
+
+		borderEntradaSemiSize = 0;
+		
+		borderWeight = 2;
+
+		center = {x:30, y: 20}
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
+			{
+				region: "SALIDA"
+			}
+		);
+
+
+
+		for(var keyNeurona in red.regiones["INTERNA"]){
+
+		  Constructor.insertarAxonesConMascara({
+		    keyNeurona: keyNeurona,
+		    mascara: conexionados.kohonen_simple
+		  });
+
+		}
+
+
+		guiRed.setLayer(0, red.neuronas);
+
+		guiRed.refresh();
+
+
+		//SET COEFICIENTES
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
+		
+		console.log("============ Configs ============");
+		console.log(config);
+
+		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
+		
+
+		console.log('red created...');
+
+		$('#tests select').val("TestAutomata");
+		$('#tests select').change();
+
+
+	},
+
+
 	default: function(){
 
 		//crear red
