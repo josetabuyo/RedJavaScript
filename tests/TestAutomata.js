@@ -1,48 +1,48 @@
-class TestAutomata extends Test{
+class TestAutomata extends Test {
 
-  start (opt) {
+	start(opt) {
 
-    var test = this;
+		var test = this;
 
-    $.extend(test, {
-      NOISE_LEVEL: 0.01,
-      running: false,
-      estado: {
-        current:	{
-          neuronaCoord: {x:null, y:null}
-        }
-      },
-      patron: {
-        mapaCelda: [],
-        entrada: [0,0,0,1,1,1,0,0,1,1,1,0,0,0],
-        salida: [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
-      },
-      testInterval: null,
-      foco: null,
-      offset: 0,
-
-
-
-  		entrada: null,
-  		salida: null,
-  		noise: true,
+		$.extend(test, {
+			NOISE_LEVEL: 0.01,
+			running: false,
+			estado: {
+				current: {
+					neuronaCoord: { x: null, y: null }
+				}
+			},
+			patron: {
+				mapaCelda: [],
+				entrada: [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0],
+				salida: [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+			},
+			testInterval: null,
+			foco: null,
+			offset: 0,
 
 
 
-      context: {
-        automata: null,
-        externo: null,
-        debugMode: false,
-        motor: [0.0, 0.0, 0.0, 0.0]
-      }
-    }, opt);
+			entrada: null,
+			salida: null,
+			noise: true,
 
 
 
-    if(Object.keys(test.red.neuronas).length == 0){
-      alert("Debe existir al menos una neurona");
-      return
-    }
+			context: {
+				automata: null,
+				externo: null,
+				debugMode: false,
+				motor: [0.0, 0.0, 0.0, 0.0]
+			}
+		}, opt);
+
+
+
+		if (Object.keys(test.red.neuronas).length == 0) {
+			alert("Debe existir al menos una neurona");
+			return
+		}
 
 
 
@@ -62,12 +62,12 @@ class TestAutomata extends Test{
 
 
 		var fondo = test.snap.group(
-			test.snap.rect(0,0, test.svg.width(), test.svg.height())
+			test.snap.rect(0, 0, test.svg.width(), test.svg.height())
 		);
 		fondo.attr({
 			fill: "#000000"
 		});
-		fondo.click(function(){
+		fondo.click(function () {
 			test.context.debugMode = !test.context.debugMode;
 		});
 
@@ -82,16 +82,16 @@ class TestAutomata extends Test{
 
 		test.context.automata = automata;
 
-		test.addExterno({color: "rgb(255,0,0)"});
-		test.addExterno({color: "rgb(255,0,0)"});
-		test.addExterno({color: "rgb(255,0,0)"});
+		test.addExterno({ color: "rgb(255,0,0)" });
+		test.addExterno({ color: "rgb(255,0,0)" });
+		test.addExterno({ color: "rgb(255,0,0)" });
 
-		test.addExterno({color: "rgb(0,255,0)"});
-		test.addExterno({color: "rgb(0,255,0)"});
-		test.addExterno({color: "rgb(0,255,0)"});
+		test.addExterno({ color: "rgb(0,255,0)" });
+		test.addExterno({ color: "rgb(0,255,0)" });
+		test.addExterno({ color: "rgb(0,255,0)" });
 
 
-		$('body').on('keydown', function(e){
+		$('body').on('keydown', function (e) {
 			var motor = test.context.motor;
 
 			switch (e.which) {
@@ -111,7 +111,7 @@ class TestAutomata extends Test{
 
 
 		});
-		$('body').on('keyup', function(e){
+		$('body').on('keyup', function (e) {
 			var motor = test.context.motor;
 
 			switch (e.which) {
@@ -144,24 +144,24 @@ class TestAutomata extends Test{
 
 
 
-  desplazamientoConstante(){
+	desplazamientoConstante() {
 		var test = this;
 
-		var testIndex =  test.estado.current.neuronaCoord.x;
+		var testIndex = test.estado.current.neuronaCoord.x;
 
-		if(testIndex == null){
+		if (testIndex == null) {
 			testIndex = Math.round(test.red.size.x / 2);
-			test.estado.current.neuronaCoord = {x: testIndex, y: test.red.size.y - 1};
+			test.estado.current.neuronaCoord = { x: testIndex, y: test.red.size.y - 1 };
 		}
 
 
-		for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
-			for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
+		for (var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++) {
+			for (var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++) {
 				var valor;
 
-				if(test.noise){
+				if (test.noise) {
 					valor = Math.random() * test.NOISE_LEVEL;
-				}else{
+				} else {
 					valor = 0;
 				}
 
@@ -175,11 +175,11 @@ class TestAutomata extends Test{
 		}
 
 
-		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
+		for (var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++) {
 			var x = testIndex - iEntrada;
 			var y = test.red.size.y - 1;
 
-			if(x < 0){
+			if (x < 0) {
 				x = test.red.size.x + x;
 			}
 
@@ -196,14 +196,14 @@ class TestAutomata extends Test{
 
 
 		test.estado.current.neuronaCoord.x++;
-		if(test.estado.current.neuronaCoord.x >= test.red.size.x){
+		if (test.estado.current.neuronaCoord.x >= test.red.size.x) {
 			test.estado.current.neuronaCoord.x = 0;
 		}
 
 	}
 
 
-	printEntrada (){
+	printEntrada() {
 		var test = this;
 
 
@@ -211,13 +211,13 @@ class TestAutomata extends Test{
 
 
 
-		for(var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++){
-			for(var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++){
+		for (var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++) {
+			for (var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++) {
 				var valor = 0;
 
-				if(test.noise){
+				if (test.noise) {
 					valor = Math.random() * test.NOISE_LEVEL;
-				}else{
+				} else {
 					valor = 0;
 				}
 
@@ -231,26 +231,26 @@ class TestAutomata extends Test{
 
 
 
-		if(!test.foco){
+		if (!test.foco) {
 			test.foco = test.red.size.x / 2;
 		}
 
-		for(var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++){
+		for (var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++) {
 
 			var x = test.foco - iEntrada + Math.round(test.patron.entrada.length / 2) + test.offset;
 			var y = test.red.size.y - 1;
 
-			if(x < 0){
+			if (x < 0) {
 				x = x + test.red.size.x;
 			}
 
-			if(x > test.red.size.x - 1){
+			if (x > test.red.size.x - 1) {
 				x = x - test.red.size.x;
 			}
 
 
 			var index = test.patron.entrada.length - 1 - iEntrada;
-			try{
+			try {
 				var keyNeurona = Constructor.keyByCoord(x, y);
 				var valor = test.patron.entrada[index];
 
@@ -258,14 +258,14 @@ class TestAutomata extends Test{
 				test.red.neuronas[keyNeurona].activarExternal(valor);
 
 
-			}catch(e){
+			} catch (e) {
 				debugger;
 			}
 
 		}
 	}
 
-	obtenerSalida (modo){
+	obtenerSalida(modo) {
 
 		//tomo el centro de masa (x,y) de la salida
 		var sumaTension = 0.0;
@@ -275,28 +275,28 @@ class TestAutomata extends Test{
 			y: 0.0
 		};
 
-		for(var i = test.boxSalida.x0; i <= test.boxSalida.x1; i++){
-			for(var j = test.boxSalida.y0; j <= test.boxSalida.y1; j++){
+		for (var i = test.boxSalida.x0; i <= test.boxSalida.x1; i++) {
+			for (var j = test.boxSalida.y0; j <= test.boxSalida.y1; j++) {
 
 				var keyNeurona = "x" + i + "y" + j;
 				var neurona = test.red.neuronas[keyNeurona];
 
 				sumaTension += neurona.tensionSuperficial;
-				sumaProducto.x += neurona.tensionSuperficial * (i+1);
-				sumaProducto.y += neurona.tensionSuperficial * (j+1);
+				sumaProducto.x += neurona.tensionSuperficial * (i + 1);
+				sumaProducto.y += neurona.tensionSuperficial * (j + 1);
 
-				if(neurona.tensionSuperficial > 1){
+				if (neurona.tensionSuperficial > 1) {
 					// DEBUG: no debería pasar esto
 					debugger;
 				}
 
 
-				if(sumaTension > test.boxSalida.x1){
+				if (sumaTension > test.boxSalida.x1) {
 					// DEBUG: no debería pasar esto
 					debugger;
 				}
 
-				if(sumaTension > sumaProducto.x){
+				if (sumaTension > sumaProducto.x) {
 					// DEBUG: no debería pasar esto
 					debugger;
 				}
@@ -306,7 +306,7 @@ class TestAutomata extends Test{
 		}
 
 
-		if(sumaTension > 0){
+		if (sumaTension > 0) {
 			var mediaX = sumaProducto.x / sumaTension * 1.0;
 		}
 
@@ -315,34 +315,34 @@ class TestAutomata extends Test{
 
 	}
 
-	debugEstandar(){
+	debugEstandar() {
 		var test = this;
 
 		test.printEntrada();
 		test.onStep();
 	}
 
-	printEntrada(){
+	printEntrada() {
 
-		if(Object.keys(red.regiones["ENTRADA"]).length = 0){
+		if (Object.keys(red.regiones["ENTRADA"]).length = 0) {
 			return;
 		}
 
 
 		//Ponemos base de ruido
-		for(key in red.regiones["ENTRADA"]){
+		for (key in red.regiones["ENTRADA"]) {
 
 			var neurona = red.neuronas[key];
 
-			if(test.noise){
+			if (test.noise) {
 				neurona.activarExternal(Math.random() * test.NOISE_LEVEL);
-			}else{
+			} else {
 				neurona.activarExternal(0);
 			}
 		}
 
 
-		var printExterno = function(externo){
+		var printExterno = function (externo) {
 
 			var bb = externo.getBBox();
 			var rad = (bb.width / 2)
@@ -369,7 +369,7 @@ class TestAutomata extends Test{
 
 			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
 
-			if(distancia > rad * 16) return; /// Estaría muy lejos, no lo vería
+			if (distancia > rad * 16) return; /// Estaría muy lejos, no lo vería
 
 
 			var anguloOffset = Math.atan2(rad, distancia);
@@ -386,35 +386,35 @@ class TestAutomata extends Test{
 			var keysbyindex = Object.keys(red.regiones["ENTRADA"]);
 
 
-			var pixelMax = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMax);
-			var pixelMin = Math.round((keysbyindex.length / (2*Math.PI)) * anguloMin);
+			var pixelMax = Math.round((keysbyindex.length / (2 * Math.PI)) * anguloMax);
+			var pixelMin = Math.round((keysbyindex.length / (2 * Math.PI)) * anguloMin);
 
 			var vColor = test.getColor(externo);
 
 
-			for(var i = pixelMin; i <= pixelMax; i++){
+			for (var i = pixelMin; i <= pixelMax; i++) {
 				var index = i;
 
-				if((index < 0)) {
-					index+= keysbyindex.length;
-				}else if((index > keysbyindex.length)) {
-					index-= keysbyindex.length;
+				if ((index < 0)) {
+					index += keysbyindex.length;
+				} else if ((index > keysbyindex.length)) {
+					index -= keysbyindex.length;
 				}
 
 
 
 
-				try{
+				try {
 					var keyNeurona = keysbyindex[index];
 
 
 					var valor;
-					if 		((index % 3)==0) valor = Math.round(vColor[0]/255);
-					else if ((index % 3)==1) valor = Math.round(vColor[1]/255);
-					else if ((index % 3)==2) valor = Math.round(vColor[2]/255);
+					if ((index % 3) == 0) valor = Math.round(vColor[0] / 255);
+					else if ((index % 3) == 1) valor = Math.round(vColor[1] / 255);
+					else if ((index % 3) == 2) valor = Math.round(vColor[2] / 255);
 
-					test.red.neuronas[keyNeurona].activarExternal(valor );
-				}catch(e){
+					test.red.neuronas[keyNeurona].activarExternal(valor);
+				} catch (e) {
 					console.log(e);
 				}
 			}
@@ -426,13 +426,13 @@ class TestAutomata extends Test{
 
 		};
 
-		test.snap.selectAll('.externo').forEach(function(externo){
-		    printExterno(externo);
+		test.snap.selectAll('.externo').forEach(function (externo) {
+			printExterno(externo);
 		});
 
 	}
 
-	debugPrintEntrada(){
+	debugPrintEntrada() {
 		// TODO: para debuggear mockeo los ojos usando el motor
 		var motor = test.context.motor;
 
@@ -524,7 +524,7 @@ class TestAutomata extends Test{
 
 	addExterno(opt) {
 		test = this
-		if(!opt)opt={};
+		if (!opt) opt = {};
 
 		opt = $.extend(true, {}, {
 			pos: {
@@ -553,17 +553,17 @@ class TestAutomata extends Test{
 
 	}
 
-	getColor (externo){
+	getColor(externo) {
 
 		var colorString = externo.attr('fill');
 
-		colorString = colorString.replace('rgb(', '').replace(')','');
+		colorString = colorString.replace('rgb(', '').replace(')', '');
 
 		return colorString.split(', ');
 	}
 
 
-	step (){
+	step() {
 		var test = this;
 
 		var paso = 5;
@@ -577,9 +577,9 @@ class TestAutomata extends Test{
 
 
 
-		var moverExterno = function(externo){
+		var moverExterno = function (externo) {
 			//TODO: quitar cuando no se requiera mas
-			if(test.context.debugMode) return;
+			if (test.context.debugMode) return;
 
 			//mover los elementos del mundito: externo, enemigos, etc
 
@@ -596,15 +596,15 @@ class TestAutomata extends Test{
 			};
 
 
-			if(!(pos.y > test.svg.height())){
-				externo.transform( 'T' + pos.x + ',' + pos.y);
-			}else{
+			if (!(pos.y > test.svg.height())) {
+				externo.transform('T' + pos.x + ',' + pos.y);
+			} else {
 
 				var vColor = test.getColor(externo);
 				externo.remove();
 
 				test.addExterno({
-					pos:{
+					pos: {
 						y: 0
 					},
 					color: "rgb(" + vColor[0] + "," + vColor[1] + "," + vColor[2] + ")"
@@ -614,8 +614,8 @@ class TestAutomata extends Test{
 
 
 
-		test.snap.selectAll('.externo').forEach(function(externo){
-		    moverExterno(externo);
+		test.snap.selectAll('.externo').forEach(function (externo) {
+			moverExterno(externo);
 		});
 
 
@@ -634,7 +634,7 @@ class TestAutomata extends Test{
 
 
 
-		var distancia = function(externo){
+		var distancia = function (externo) {
 
 			var bb = externo.getBBox();
 			var radExterno = (bb.width / 2)
@@ -678,35 +678,35 @@ class TestAutomata extends Test{
 			color: null
 		};
 
-		test.snap.selectAll('.externo').forEach(function(externo){
+		test.snap.selectAll('.externo').forEach(function (externo) {
 
 			var distanciaExterno = distancia(externo);
-		    if(distanciaExterno < 0 ){
+			if (distanciaExterno < 0) {
 
-		    	var penetracion = -distanciaExterno;
+				var penetracion = -distanciaExterno;
 
 
 				var vColor = test.getColor(externo);
 
 
-				if(penetracion > solapamiento.penetracion){
-			    	solapamiento = {
+				if (penetracion > solapamiento.penetracion) {
+					solapamiento = {
 						penetracion: penetracion,
 						color: vColor
 					};
-		    	}
+				}
 
-		    }
+			}
 		});
 
 
 		var COEF_DOLOR = 0.01;
 
 
-		var setCoef = function(proto, nameSly, valor, escala){
-			var objSly = $('#'+ nameSly);
+		var setCoef = function (proto, nameSly, valor, escala) {
+			var objSly = $('#' + nameSly);
 
-			if(!escala)escala=1;
+			if (!escala) escala = 1;
 
 			objSly.val(valor * escala * 255);
 			proto[nameSly] = valor;
@@ -717,29 +717,29 @@ class TestAutomata extends Test{
 
 
 		// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
-		if(solapamiento.penetracion > 0){
+		if (solapamiento.penetracion > 0) {
 
 			var valor;
 
-	    	if(solapamiento.color[0]==255){
-	    		//MALO
+			if (solapamiento.color[0] == 255) {
+				//MALO
 				valor = (1 - solapamiento.penetracion);
-	    	}else{
-	    		//BUENO
+			} else {
+				//BUENO
 				valor = solapamiento.penetracion;
-	    	}
+			}
 
 
 			valor = valor * COEF_DOLOR;
 
-		  //setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
+			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
 
 
 		} else {
 
 			//var valor = Sinapsis.prototype.DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO;
 			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
-	  }
+		}
 
 
 
@@ -770,16 +770,16 @@ class TestAutomata extends Test{
 
 
 		//TODO: quitar cuando no se requiera mas
-		if(!test.context.debugMode){
+		if (!test.context.debugMode) {
 
-			if(Object.keys(red.salida).length == 0){
+			if (Object.keys(red.salida).length == 0) {
 				return;
 			}
 
 
 			var keys = Object.keys(red.salida);
 
-			for(key in keys){
+			for (key in keys) {
 
 				var neurona = red.salida[keys[key]];
 
@@ -788,7 +788,7 @@ class TestAutomata extends Test{
 				var indiceMotor = Math.floor((key / keys.length) * motor.length);
 
 
-				if(! isNaN(neurona.tensionSuperficial)){
+				if (!isNaN(neurona.tensionSuperficial)) {
 
 					motor[indiceMotor] += neurona.tensionSuperficial;
 
@@ -799,11 +799,11 @@ class TestAutomata extends Test{
 
 
 
-		for(iMotor in motor){
+		for (iMotor in motor) {
 			//lo normalizo
-			if(sumaTensionTotalSalida){
+			if (sumaTensionTotalSalida) {
 				motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
-			}else{
+			} else {
 				motor[iMotor] = 0.0;
 			}
 
@@ -829,12 +829,12 @@ class TestAutomata extends Test{
 			y: (bb.y + (bb.height / 2)) + (vel.y * paso)
 		};
 
-		if(pos.x < 0) pos.x = test.svg.width();
-		if(pos.y < 0) pos.y = test.svg.height();
-		if(pos.x > test.svg.width()) pos.x = 0;
-		if(pos.y > test.svg.height()) pos.y = 0;
+		if (pos.x < 0) pos.x = test.svg.width();
+		if (pos.y < 0) pos.y = test.svg.height();
+		if (pos.x > test.svg.width()) pos.x = 0;
+		if (pos.y > test.svg.height()) pos.y = 0;
 
-		automata.transform( 'T' + pos.x + ',' + pos.y);
+		automata.transform('T' + pos.x + ',' + pos.y);
 
 	}
 }
@@ -842,8 +842,8 @@ class TestAutomata extends Test{
 
 
 
-$(function(){
-  $('#tests>.body').append(`
+$(function () {
+	$('#tests>.body').append(`
 		<style>
 			#TestAutomata_Container{
 				border-color: Yellow;
@@ -864,11 +864,11 @@ $(function(){
 		</div>
 	`);
 
-  $('#tests>.toolbar select').append("<option value='TestAutomata'>TestAutomata</option>");
+	$('#tests>.toolbar select').append("<option value='TestAutomata'>TestAutomata</option>");
 
 
 
-  $("#tests #TestAutomata_Container").hide()
+	$("#tests #TestAutomata_Container").hide()
 
 
 
