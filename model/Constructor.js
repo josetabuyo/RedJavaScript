@@ -148,23 +148,62 @@ var Constructor = {
 		}
 
 	},
-	addNeuronasBox: function(from, to, opt){
-
+	addNeuronasBox: function(from, to, opt) {
 		var construct = this;
-
-		for(var x=from.x; x <= to.x; x++){
-			for(var y=from.y; y <= to.y; y++){
-
+	
+		// Determine step direction for x and y
+		var xStep = from.x <= to.x ? 1 : -1;
+		var yStep = from.y <= to.y ? 1 : -1;
+	
+		// Iterate over the x and y ranges, accounting for negative ranges
+		for (var x = from.x; (xStep === 1 ? x <= to.x : x >= to.x); x += xStep) {
+			for (var y = from.y; (yStep === 1 ? y <= to.y : y >= to.y); y += yStep) {
 				construct.addNeurona($.extend({
-					id: construct.keyByCoord(x,y),
+					id: construct.keyByCoord(x, y),
 					dendritas: {},
 					red: red
 				}, opt));
-
 			}
 		}
+	},
+	
+	addNeutonaBoxEmpty: (
+		borderEntradaSemiSize,
+		borderWeight,
+		center,
+		opt
+	) => {
+
+		
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
+			opt
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x + borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			opt
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y + borderEntradaSemiSize - borderWeight },
+			opt
+		);
+
+		Constructor.addNeuronasBox(
+			{ x: center.x - borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
+			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+			opt
+		);
 
 	},
+
+
+
+
 
 
 

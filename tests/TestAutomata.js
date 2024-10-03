@@ -7,32 +7,21 @@ class TestAutomata extends Test {
 		$.extend(test, {
 			NOISE_LEVEL: 0.01,
 			running: false,
-			estado: {
-				current: {
-					neuronaCoord: { x: null, y: null }
-				}
-			},
-			patron: {
-				mapaCelda: [],
-				entrada: [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0],
-				salida: [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0]
-			},
-			testInterval: null,
-			foco: null,
-			offset: 0,
-
-
 
 			entrada: null,
 			salida: null,
 			noise: true,
-
-
-
+			cant_external_agents: 6,
+			paso: 2,
+			size: {
+				automata: 15,
+				externo: 15,
+			},
+			
 			context: {
 				automata: null,
 				externo: null,
-				debugMode: false,
+				debugMode: true,
 				motor: [0.0, 0.0, 0.0, 0.0]
 			}
 		}, opt);
@@ -65,31 +54,32 @@ class TestAutomata extends Test {
 			test.snap.rect(0, 0, test.svg.width(), test.svg.height())
 		);
 		fondo.attr({
-			fill: "#000000"
+			fill: "#111111"
 		});
+		
 		fondo.click(function () {
 			test.context.debugMode = !test.context.debugMode;
 		});
-
-
-		var automata = test.snap.group(
-			test.snap.circle(0, 0, 30)
-		);
-		automata.attr({
-			fill: "rgb(0,0,255)"
+		
+		test.context.automata = test.addAgent({
+			class: "automata",
+			color: "rgb(0,0,255)",
+			pos: {
+				x: 200,
+				y: 150
+			},
+			size: test.size.automata
 		});
-		automata.transform('T200,150');
-
-		test.context.automata = automata;
-
-		test.addExterno({ color: "rgb(255,0,0)" });
-		test.addExterno({ color: "rgb(255,0,0)" });
-		test.addExterno({ color: "rgb(255,0,0)" });
-
-		test.addExterno({ color: "rgb(0,255,0)" });
-		test.addExterno({ color: "rgb(0,255,0)" });
-		test.addExterno({ color: "rgb(0,255,0)" });
-
+		
+		
+		for (let i = 0; i < test.cant_external_agents; i++) {
+			test.addAgent({
+				class: "externo",
+				color: i >= test.cant_external_agents / 2 ?  "rgb(255,0,0)" :  "rgb(0,255,0)",
+				size: test.size.externo
+			});
+		}
+		
 
 		$('body').on('keydown', function (e) {
 			var motor = test.context.motor;
@@ -131,139 +121,6 @@ class TestAutomata extends Test {
 		});
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	desplazamientoConstante() {
-		var test = this;
-
-		var testIndex = test.estado.current.neuronaCoord.x;
-
-		if (testIndex == null) {
-			testIndex = Math.round(test.red.size.x / 2);
-			test.estado.current.neuronaCoord = { x: testIndex, y: test.red.size.y - 1 };
-		}
-
-
-		for (var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++) {
-			for (var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++) {
-				var valor;
-
-				if (test.noise) {
-					valor = Math.random() * test.NOISE_LEVEL;
-				} else {
-					valor = 0;
-				}
-
-				var keyNeurona = Constructor.keyByCoord(i, j);
-
-				test.red.neuronas[keyNeurona].activarExternal(valor);
-
-
-
-			}
-		}
-
-
-		for (var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++) {
-			var x = testIndex - iEntrada;
-			var y = test.red.size.y - 1;
-
-			if (x < 0) {
-				x = test.red.size.x + x;
-			}
-
-			var index = test.patron.entrada.length - 1 - iEntrada;
-
-			var keyNeuronaEntrada = Constructor.keyByCoord(x, y);
-			test.red.neuronas[keyNeuronaEntrada].activarExternal(test.patron.entrada[index]);
-
-			var keyNeuronaSalida = Constructor.keyByCoord(x, 0);
-			test.red.neuronas[keyNeuronaSalida].activarExternal(test.patron.salida[index]);
-
-		}
-
-
-
-		test.estado.current.neuronaCoord.x++;
-		if (test.estado.current.neuronaCoord.x >= test.red.size.x) {
-			test.estado.current.neuronaCoord.x = 0;
-		}
-
-	}
-
-
-	printEntrada() {
-		var test = this;
-
-
-
-
-
-
-		for (var i = test.boxEntrada.x0; i <= test.boxEntrada.x1; i++) {
-			for (var j = test.boxEntrada.y0; j <= test.boxEntrada.y1; j++) {
-				var valor = 0;
-
-				if (test.noise) {
-					valor = Math.random() * test.NOISE_LEVEL;
-				} else {
-					valor = 0;
-				}
-
-				var keyNeurona = Constructor.keyByCoord(i, j);
-
-				test.red.neuronas[keyNeurona].activarExternal(valor);
-
-			}
-		}
-
-
-
-
-		if (!test.foco) {
-			test.foco = test.red.size.x / 2;
-		}
-
-		for (var iEntrada = 0; iEntrada < test.patron.entrada.length; iEntrada++) {
-
-			var x = test.foco - iEntrada + Math.round(test.patron.entrada.length / 2) + test.offset;
-			var y = test.red.size.y - 1;
-
-			if (x < 0) {
-				x = x + test.red.size.x;
-			}
-
-			if (x > test.red.size.x - 1) {
-				x = x - test.red.size.x;
-			}
-
-
-			var index = test.patron.entrada.length - 1 - iEntrada;
-			try {
-				var keyNeurona = Constructor.keyByCoord(x, y);
-				var valor = test.patron.entrada[index];
-
-
-				test.red.neuronas[keyNeurona].activarExternal(valor);
-
-
-			} catch (e) {
-				debugger;
-			}
-
-		}
-	}
 
 	obtenerSalida(modo) {
 
@@ -522,7 +379,8 @@ class TestAutomata extends Test {
 
 	}
 
-	addExterno(opt) {
+	
+	addAgent(opt) {
 		test = this
 		if (!opt) opt = {};
 
@@ -531,27 +389,28 @@ class TestAutomata extends Test {
 				x: Math.round((Math.random() * test.svg.width())),
 				y: Math.round((Math.random() * test.svg.height())),
 			},
-			color: "#AABBAA"
+			color: "#AABBAA",
+			size: 15,
+			class: "externo"
 		}, opt);
 
-
-
-		var externo = test.snap.group(
-			test.snap.circle(0, 0, 30)
+		var agent = test.snap.group(
+			test.snap.circle(0, 0, opt.size)
 		);
 
-		externo.attr({
+		agent.attr({
 			fill: opt.color,
-			class: "externo"
+			class: opt.class
 		});
 
+		agent.transform("T" + opt.pos.x + "," + opt.pos.y);
 
-		externo.transform("T" + opt.pos.x + "," + opt.pos.y);
-
-
-		return externo;
-
+		return agent;
 	}
+
+
+
+
 
 	getColor(externo) {
 
@@ -566,15 +425,10 @@ class TestAutomata extends Test {
 	step() {
 		var test = this;
 
-		var paso = 5;
-
 		var automata = test.context.automata;
-
-
 
 		/// PASO 1:
 		/// ACTUALIZA EXTERNOS
-
 
 
 		var moverExterno = function (externo) {
@@ -591,8 +445,8 @@ class TestAutomata extends Test {
 			var bb = externo.getBBox();
 
 			var pos = {
-				x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-				y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+				x: (bb.x + (bb.width / 2)) + (vel.x * test.paso),
+				y: (bb.y + (bb.height / 2)) + (vel.y * test.paso)
 			};
 
 
@@ -603,7 +457,7 @@ class TestAutomata extends Test {
 				var vColor = test.getColor(externo);
 				externo.remove();
 
-				test.addExterno({
+				test.addAgent({
 					pos: {
 						y: 0
 					},
@@ -612,27 +466,17 @@ class TestAutomata extends Test {
 			}
 		};
 
-
-
 		test.snap.selectAll('.externo').forEach(function (externo) {
 			moverExterno(externo);
 		});
-
-
-
 
 		/// PASO 2:
 		/// PROYECTA EN RETINA
 		test.printEntrada();
 
-
+		
 		/// PASO 3:
 		/// DETECTAR COLICIONES
-
-
-
-
-
 
 		var distancia = function (externo) {
 
@@ -732,6 +576,8 @@ class TestAutomata extends Test {
 
 			valor = valor * COEF_DOLOR;
 
+			SEGUIRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+			
 			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
 
 
@@ -750,23 +596,15 @@ class TestAutomata extends Test {
 		super.step();
 
 
-
-
-
-
-
 		/// PASO 5:
 		/// LEE SALIDAS MUEVE MOTORES
 
-		var motor = [0.0, 0.0, 0.0, 0.0];;
+		var motor = [0.0, 0.0, 0.0, 0.0];
 
 
 		var COEF_LOCAL_POW_MOTOR = 2;
 
 		var sumaTensionTotalSalida = 0.0;
-
-
-
 
 
 		//TODO: quitar cuando no se requiera mas
@@ -799,7 +637,7 @@ class TestAutomata extends Test {
 
 
 
-		for (iMotor in motor) {
+		for (let iMotor in motor) {
 			//lo normalizo
 			if (sumaTensionTotalSalida) {
 				motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
@@ -825,8 +663,8 @@ class TestAutomata extends Test {
 		var bb = automata.getBBox();
 
 		var pos = {
-			x: (bb.x + (bb.width / 2)) + (vel.x * paso),
-			y: (bb.y + (bb.height / 2)) + (vel.y * paso)
+			x: (bb.x + (bb.width / 2)) + (vel.x * test.paso),
+			y: (bb.y + (bb.height / 2)) + (vel.y * test.paso)
 		};
 
 		if (pos.x < 0) pos.x = test.svg.width();

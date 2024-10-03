@@ -6,104 +6,42 @@ presets = {
 		Constructor.red = red;
 
 		
-		let borderEntradaSemiSize = 10
-		center = {x:30, y: 20}
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
-			{ x: center.x + borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
-			{
-				region: "ENTRADA"
-			}
-		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x + borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
-			{ x: center.x + borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
-			{
-				region: "ENTRADA"
-			}
-		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
-			{ x: center.x + borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
-			{
-				region: "ENTRADA"
-			}
-		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize, y: center.y - borderEntradaSemiSize },
-			{ x: center.x - borderEntradaSemiSize, y: center.y + borderEntradaSemiSize },
-			{
-				region: "ENTRADA"
-			}
-		);
-
-
-
-
-
-		borderEntradaSemiSize = 6;
 		
-		borderWeight = 3;
-
-		center = {x:30, y: 20}
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
-			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
-			{
-				region: "INTERNA"
-			}
+		let center = {x:30, y: 20}
+		
+		Constructor.addNeutonaBoxEmpty(
+			10,
+			0,
+			center,
+			{region: "ENTRADA"}
 		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x + borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
-			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
-			{
-				region: "INTERNA"
-			}
+		Constructor.addNeutonaBoxEmpty(
+			6,
+			3,
+			center,
+			{region: "INTERNA"}
 		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y + borderEntradaSemiSize - borderWeight },
-			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
-			{
-				region: "INTERNA"
-			}
+		Constructor.addNeutonaBoxEmpty(
+			0,
+			1,
+			center,
+			{region: "SALIDA"}
 		);
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
-			{ x: center.x - borderEntradaSemiSize + borderWeight, y: center.y + borderEntradaSemiSize + borderWeight },
-			{
-				region: "INTERNA"
-			}
-		);
-
+		
+		Constructor.conectarRegiones(["INTERNA", "SALIDA"]);
 		
 
-
-
-
-
-
-
-		borderEntradaSemiSize = 0;
+		// borderEntradaSemiSize = 0;
 		
-		borderWeight = 2;
+		// borderWeight = 2;
 
-		center = {x:30, y: 20}
-
-		Constructor.addNeuronasBox(
-			{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
-			{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
-			{
-				region: "SALIDA"
-			}
-		);
+		// Constructor.addNeuronasBox(
+		// 	{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
+		// 	{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
+		// 	{
+		// 		region: "SALIDA"
+		// 	}
+		// );
 
 
 
