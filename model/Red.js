@@ -17,6 +17,7 @@ class Red {
 		red.regiones["ENTRADA"] = {}
 		red.regiones["SALIDA"] = {}
 		red.regiones["INTERNA"] = {}
+		red.regiones["DOLOR"] = {}
 
 		/*DEPRECATED*/
 		/*Para mantener interfaz cómoda y común*/

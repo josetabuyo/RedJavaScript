@@ -1,11 +1,138 @@
 presets = {
-	test_automata: function(){
+	test_automata_plane: function(){
+		
+		//crear red
+		red = new Red();
+		Constructor.red = red;
+		
+		let center = {x:0, y: 0};
+		
+		let stack_region_data = [
+			{
+				region: "SALIDA",
+				height: 1,
+				width: 30
+			},
+			{
+				region: "INTERNA",
+				height: 8,
+				width: 30
+			},
+			{
+				region: "ENTRADA",
+				height: 1,
+				width: 30
+			},
+		];
+		
+
+		var i_border_offset = 0;
+		var sum_heigth = 0;
+
+		for(region_data_index in stack_region_data){
+			let region_data = stack_region_data[region_data_index];
+			
+			i_border_offset++;
+			
+			
+			Constructor.addNeuronasBox(
+				{
+					x: center.x,
+					y: center.y
+						+ sum_heigth
+						+ i_border_offset
+				},
+				{
+					x: center.x 
+						+ region_data.width,
+					y: center.y
+						+ sum_heigth
+						+ region_data.height - 1
+						+ i_border_offset
+				},
+				{
+					region: region_data.region
+				}
+			);
+
+			sum_heigth+=region_data.height-1;
+
+		}
+
+		Constructor.addNeuronasBox(
+			{
+				x: center.x - 2,
+				y: center.y + 1
+			},
+			{
+				x: center.x - 2,
+				y: center.y
+					+ sum_heigth
+					+ i_border_offset
+					
+			},
+			{
+				region: "DOLOR"
+			}
+		);
+
+		Constructor.eachNeuronaRegion("ENTRADA", function(neurona){
+			Constructor.makeEntradaNeurona(neurona);			
+		});
+
+		Constructor.eachNeuronaRegion("DOLOR", function(neurona){
+			Constructor.makeEntradaNeurona(neurona);
+		});
+
+		Constructor.conectarRegiones({peso: 1}, ["INTERNA", "SALIDA"]);
+		Constructor.conectarRegiones({peso: 1}, ["ENTRADA", "INTERNA"]);
+		
+		
+		Constructor.conectarRegiones({peso: -1}, ["DOLOR", "INTERNA"]);
+		Constructor.conectarRegiones({peso: -1}, ["DOLOR", "SALIDA"]);
+		
+
+		var regiones = {...red.regiones["INTERNA"], ...red.regiones["SALIDA"]}
+		for(var keyNeurona in regiones){
+
+		  Constructor.insertarAxonesConMascara({
+		    keyNeurona: keyNeurona,
+		    mascara: conexionados.mini_feed_foward_inhibido
+		  });
+
+		}
+
+
+		guiRed.setLayer(0, red.neuronas);
+
+		guiRed.refresh();
+
+
+		//SET COEFICIENTES
+		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.001)
+		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
+		
+		console.log("============ Configs ============");
+		console.log(config);
+
+		
+		
+
+		console.log('red created...');
+
+		$('#tests select').val("TestAutomata");
+		$('#tests select').change();
+
+
+	},
+
+
+	test_automata_square: function(){
 		
 		//crear red
 		red = new Red();
 		Constructor.red = red;
 
-		
 		
 		let center = {x:30, y: 20}
 		
@@ -28,22 +155,8 @@ presets = {
 			{region: "SALIDA"}
 		);
 		
-		Constructor.conectarRegiones(["INTERNA", "SALIDA"]);
+		Constructor.conectarRegiones({peso: 1}, ["INTERNA", "SALIDA"]);
 		
-
-		// borderEntradaSemiSize = 0;
-		
-		// borderWeight = 2;
-
-		// Constructor.addNeuronasBox(
-		// 	{ x: center.x - borderEntradaSemiSize - borderWeight, y: center.y - borderEntradaSemiSize - borderWeight },
-		// 	{ x: center.x + borderEntradaSemiSize + borderWeight, y: center.y - borderEntradaSemiSize + borderWeight },
-		// 	{
-		// 		region: "SALIDA"
-		// 	}
-		// );
-
-
 
 		for(var keyNeurona in red.regiones["INTERNA"]){
 
@@ -67,7 +180,7 @@ presets = {
 		console.log("============ Configs ============");
 		console.log(config);
 
-		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
+		Constructor.conectarRegiones({peso: 1}, ["ENTRADA", "INTERNA"]);
 		
 
 		console.log('red created...');
@@ -163,7 +276,7 @@ presets = {
 		console.log("============ Configs ============");
 		console.log(config);
 
-		Constructor.conectarRegiones(["ENTRADA", "INTERNA"]);
+		Constructor.conectarRegiones({peso: 1}, ["ENTRADA", "INTERNA"]);
 		
 
 		console.log('red created...');
@@ -232,7 +345,7 @@ presets = {
 		config.setConfig("COEF_SINAPSIS_ENTRENAMIENTO", 0.002)
 		config.setConfig("COEF_SINAPSIS_UMBRAL_PESO", 0.2)
 		
-		Constructor.conectarRegiones(["ENTRADA", "SALIDA"]);
+		Constructor.conectarRegiones({peso: 1}, ["ENTRADA", "SALIDA"]);
 
 		console.log('red created...');
 
@@ -313,25 +426,11 @@ $(function(){
 	$presets_select.on('change', function(){
 		
 		if($(this).val() != ""){
-			
-			if (confirm("Do you want to load the preset: " + $(this).val())) {
-				
-				console.log("Loading preset: " + $(this).val());
-
-				$("#overlay").hide().show(0);
-	
-	
-				presets[$(this).val()]();
-	
-	
-				$("#overlay").hide();
-	
-				$(this).hide();
-	
-			
-			} else {
-				return 0;
-			}
+			console.log("Loading preset: " + $(this).val());
+			$("#overlay").hide().show(0);
+			presets[$(this).val()]();
+			$("#overlay").hide();
+			$(this).hide();
 		}
 	});
 

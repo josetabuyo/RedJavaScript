@@ -163,7 +163,7 @@ $(function(){
   $('#regiones>.toolbar #conectar_Accept').on('click', function(e){
 
     e.preventDefault();
-    Constructor.conectarRegiones(Constructor.keyRegionArrayConector);
+    Constructor.conectarRegiones({peso: 1}, Constructor.keyRegionArrayConector);
 
     var keyRegionSource = Constructor.keyRegionArrayConector.shift();
 

@@ -252,14 +252,14 @@ var Constructor = {
 
 	},
 
-	makeSalida: function(box){
+	setRegion: function(box, region){
 
 		for(var i = box.x0; i <= box.x1; i++){
 			for(var j = box.y0; j <= box.y1; j++){
 
 				var keyNeurona = "x" + i + "y" + j;
 				var neurona = red.neuronas[keyNeurona];
-				neurona.region = "SALIDA";
+				neurona.region = region;
 			}
 		}
 	},
@@ -285,8 +285,17 @@ var Constructor = {
 		this["modo_" + opt.modo](opt);
 	},
 
+	eachNeuronaRegion: function(keyRegion, callback){
 
-	conectarRegiones: function(keyRegiones){
+		for(var keyNeuronaTarget in this.red.regiones[keyRegion]){
+
+
+			
+			callback(this.red.regiones[keyRegion][keyNeuronaTarget]);
+		}
+	},
+
+	conectarRegiones: function(opt_dendrita, keyRegiones){
 
 		var keyRegionSource = keyRegiones[0];
 
@@ -300,7 +309,7 @@ var Constructor = {
 
 				keyNeuronaArrayConector = keyNeuronaArrayConector.concat(Object.keys(this.red.regiones[keyRegionSource]));
 				keyNeuronaArrayConector.unshift(keyNeuronaTarget);
-				this.conectarNeuronas(keyNeuronaArrayConector);
+				this.conectarNeuronas(opt_dendrita, keyNeuronaArrayConector);
 			}
 		}
 
@@ -308,7 +317,7 @@ var Constructor = {
 
 	},
 
-	conectarNeuronas: function(keyNeuronas){
+	conectarNeuronas: function(opt_dendrita, keyNeuronas){
 		var keyNeuronaTarget = keyNeuronas.shift()
 
 		var neuronaTarget = this.red.neuronas[keyNeuronaTarget];
@@ -316,12 +325,11 @@ var Constructor = {
 		if(typeof(neuronaTarget) == "undefined"){
 			return
 		}
-
-		var dendrita = new Dendrita({
-			neurona: neuronaTarget,
-			peso: config["PESO_DENDRITA_ENTRADA"]
-		});
-
+		
+		
+		var dendrita = new Dendrita($.extend({
+			neurona: neuronaTarget
+		}, opt_dendrita));
 
 		for(var iKeyNeuronaSource in keyNeuronas){
 

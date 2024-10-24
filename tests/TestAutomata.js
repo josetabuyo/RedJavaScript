@@ -11,8 +11,9 @@ class TestAutomata extends Test {
 			entrada: null,
 			salida: null,
 			noise: true,
-			cant_external_agents: 6,
+			cant_external_agents: 10,
 			paso: 2,
+			automata_speed: 2,
 			size: {
 				automata: 15,
 				externo: 15,
@@ -65,7 +66,7 @@ class TestAutomata extends Test {
 			class: "automata",
 			color: "rgb(0,0,255)",
 			pos: {
-				x: 200,
+				x: 100,
 				y: 150
 			},
 			size: test.size.automata
@@ -179,6 +180,104 @@ class TestAutomata extends Test {
 		test.onStep();
 	}
 
+	printDolor() {
+
+		if (Object.keys(red.regiones["DOLOR"]).length = 0) {
+			return;
+		}
+		
+		var automata = test.context.automata;
+
+		var distancia = function (externo) {
+
+			var bb = externo.getBBox();
+			var radExterno = (bb.width / 2)
+
+			var posExterno = {
+				x: (bb.x + radExterno),
+				y: (bb.y + radExterno)
+			};
+
+			var bb = automata.getBBox();
+			var radAutomata = (bb.width / 2)
+
+			var posAutomata = {
+				x: (bb.x + radAutomata),
+				y: (bb.y + radAutomata)
+			};
+
+			var vec = {
+				x: (posAutomata.x - posExterno.x),
+				y: -(posAutomata.y - posExterno.y)
+			};
+
+
+			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+
+
+			return (distancia - radExterno - radAutomata) / (2 * radAutomata);
+
+
+
+		}
+
+
+
+		var solapamiento = {
+			penetracion: 0,
+			color: null
+		};
+
+		test.snap.selectAll('.externo').forEach(function (externo) {
+
+			var distanciaExterno = distancia(externo);
+			if (distanciaExterno < 0) {
+
+				var penetracion = -distanciaExterno;
+
+
+				var vColor = test.getColor(externo);
+
+
+				if (penetracion > solapamiento.penetracion) {
+					solapamiento = {
+						penetracion: penetracion,
+						color: vColor
+					};
+				}
+
+			}
+		});
+
+		if (solapamiento.penetracion > 0) {
+
+			var valor;			
+			
+			// el color rojo le hace mal
+			if (solapamiento.color[0] == 255) {
+				//MALO
+				valor = solapamiento.penetracion;
+			} else {
+				//BUENO
+			}
+
+		}
+
+		
+		Constructor.eachNeuronaRegion("DOLOR", function(neurona){
+			neurona.activarExternal(0);
+		});
+		
+
+		var keysbyindex = Object.keys(red.regiones["DOLOR"]);
+		var max_index = Math.ceil(keysbyindex.length * valor);
+		for(let indexNeurona = 0; indexNeurona < max_index; indexNeurona++){
+			test.red.neuronas[keysbyindex[indexNeurona]].activarExternal(1);
+			
+		}
+		
+	}
+	
 	printEntrada() {
 
 		if (Object.keys(red.regiones["ENTRADA"]).length = 0) {
@@ -219,8 +318,8 @@ class TestAutomata extends Test {
 			};
 
 			var vec = {
-				x: (posAutomata.x - posExterno.x),
-				y: -(posAutomata.y - posExterno.y)
+				x: -(posAutomata.x - posExterno.x),
+				y: (posAutomata.y - posExterno.y)
 			};
 
 
@@ -237,18 +336,13 @@ class TestAutomata extends Test {
 			var anguloMax = anguloCentro + anguloOffset;
 			var anguloMin = anguloCentro - anguloOffset;
 
-
-
-
 			var keysbyindex = Object.keys(red.regiones["ENTRADA"]);
-
 
 			var pixelMax = Math.round((keysbyindex.length / (2 * Math.PI)) * anguloMax);
 			var pixelMin = Math.round((keysbyindex.length / (2 * Math.PI)) * anguloMin);
 
 			var vColor = test.getColor(externo);
-
-
+			
 			for (var i = pixelMin; i <= pixelMax; i++) {
 				var index = i;
 
@@ -257,9 +351,6 @@ class TestAutomata extends Test {
 				} else if ((index > keysbyindex.length)) {
 					index -= keysbyindex.length;
 				}
-
-
-
 
 				try {
 					var keyNeurona = keysbyindex[index];
@@ -471,124 +562,12 @@ class TestAutomata extends Test {
 		});
 
 		/// PASO 2:
-		/// PROYECTA EN RETINA
+		/// SE PROYECTA VISTA EN RETINA (hoy región llamada ENTRADA)
 		test.printEntrada();
 
-		
 		/// PASO 3:
-		/// DETECTAR COLICIONES
-
-		var distancia = function (externo) {
-
-			var bb = externo.getBBox();
-			var radExterno = (bb.width / 2)
-
-			var posExterno = {
-				x: (bb.x + radExterno),
-				y: (bb.y + radExterno)
-			};
-
-			var bb = automata.getBBox();
-			var radAutomata = (bb.width / 2)
-
-			var posAutomata = {
-				x: (bb.x + radAutomata),
-				y: (bb.y + radAutomata)
-			};
-
-			var vec = {
-				x: (posAutomata.x - posExterno.x),
-				y: -(posAutomata.y - posExterno.y)
-			};
-
-
-			var distancia = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
-
-
-			return (distancia - radExterno - radAutomata) / (2 * radAutomata);
-
-
-
-		}
-
-
-
-
-
-
-
-		var solapamiento = {
-			penetracion: 0,
-			color: null
-		};
-
-		test.snap.selectAll('.externo').forEach(function (externo) {
-
-			var distanciaExterno = distancia(externo);
-			if (distanciaExterno < 0) {
-
-				var penetracion = -distanciaExterno;
-
-
-				var vColor = test.getColor(externo);
-
-
-				if (penetracion > solapamiento.penetracion) {
-					solapamiento = {
-						penetracion: penetracion,
-						color: vColor
-					};
-				}
-
-			}
-		});
-
-
-		var COEF_DOLOR = 0.01;
-
-
-		var setCoef = function (proto, nameSly, valor, escala) {
-			var objSly = $('#' + nameSly);
-
-			if (!escala) escala = 1;
-
-			objSly.val(valor * escala * 255);
-			proto[nameSly] = valor;
-
-			objSly.siblings().text(nameSly + ": " + proto[nameSly]);
-
-		};
-
-
-		// ESTIMULOS HORMONALES AL SISTEMA POR PENETRACION
-		if (solapamiento.penetracion > 0) {
-
-			var valor;
-
-			if (solapamiento.color[0] == 255) {
-				//MALO
-				valor = (1 - solapamiento.penetracion);
-			} else {
-				//BUENO
-				valor = solapamiento.penetracion;
-			}
-
-
-			valor = valor * COEF_DOLOR;
-
-			SEGUIRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-			
-			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
-
-
-		} else {
-
-			//var valor = Sinapsis.prototype.DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO;
-			//setCoef(Sinapsis.prototype, "DEPRECATED COEF _SINAPSIS_ ENTRENAMIENTO", valor, 100);
-		}
-
-
-
+		/// SE DETECTA COLICIONES, CALCULAR DOLOR y SE PROYECTA EN REGION NOCISEPTORA, (hoy llamada DOLOR)
+		test.printDolor();
 
 
 		/// PASO 4:
@@ -602,24 +581,20 @@ class TestAutomata extends Test {
 		var motor = [0.0, 0.0, 0.0, 0.0];
 
 
-		var COEF_LOCAL_POW_MOTOR = 2;
-
 		var sumaTensionTotalSalida = 0.0;
 
 
-		//TODO: quitar cuando no se requiera mas
 		if (!test.context.debugMode) {
 
-			if (Object.keys(red.salida).length == 0) {
+			if (Object.keys(red.regiones["SALIDA"]).length == 0) {
 				return;
 			}
-
-
-			var keys = Object.keys(red.salida);
+			
+			var keys = Object.keys(red.regiones["SALIDA"]);
 
 			for (key in keys) {
 
-				var neurona = red.salida[keys[key]];
+				var neurona = red.regiones["SALIDA"][keys[key]];
 
 
 
@@ -636,11 +611,11 @@ class TestAutomata extends Test {
 		}
 
 
-
+		/// SEGUIR !!!!! mirar porqué no se mueve		
 		for (let iMotor in motor) {
 			//lo normalizo
 			if (sumaTensionTotalSalida) {
-				motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * COEF_LOCAL_POW_MOTOR;
+				motor[iMotor] = motor[iMotor] / sumaTensionTotalSalida * test.automata_speed;
 			} else {
 				motor[iMotor] = 0.0;
 			}
@@ -652,8 +627,6 @@ class TestAutomata extends Test {
 
 		/// PASO 6:
 		/// ACTUALIZA POSICION DEL AUTOMATA
-
-
 
 		var vel = {
 			x: motor[1] - motor[0],
